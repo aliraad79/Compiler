@@ -4,6 +4,7 @@
 from enum import Enum
 from typing import List
 import string
+import re
 
 
 class TokenType(Enum):
@@ -165,9 +166,20 @@ def get_next_char():
     return char[pointer - 1 :]
 
 
-def add_token_to_file(token):
-    with open("tokens.txt", "w") as file:
-        pass
+token_array = []
+
+
+def add_token_to_array(token):
+    _type = ""
+    for regex in TokenType:
+        if re.search(regex.value, token):
+            _type = regex.name
+
+    if _type == "" or _type == TokenType.WHITESPACE.name:
+        print("TOKEN NOT FOUND : ", token)
+    else:
+        print("TOKEN is ", print_pretty(token), "with type ", _type)
+        token_array.append((token, _type, lineno))
 
 
 def add_error_to_file(string):
@@ -221,6 +233,8 @@ if __name__ == "__main__":
         # print_pretty(charachter)
 
         is_valid = False
+        if charachter == "":
+            break
 
         # Algo
         if len(selected_nodes) == 0:
@@ -234,9 +248,15 @@ if __name__ == "__main__":
             charachter = next_charachter
             next_charachter = get_next_char()
         else:
-            print("TOKEN is ", print_pretty("".join(get_buffffer(False))))
+            add_token_to_array("".join(get_buffffer(False)))
 
         if charachter == "\n":
             lineno += 1
-        if charachter == "":
-            break
+
+    with open("tokens.txt", "w") as file:
+        for i in range(0, lineno + 1):
+            _string = ""
+            for token in token_array:
+                if token[2] == i:
+                    _string += f" ({token[1]}, {token[0]}) "
+            file.write(f"{i +1 }. {_string}\n")
