@@ -10,12 +10,12 @@ import re
 
 
 class TokenType(Enum):
-    COMMENT = "(\/\*.*\/\*|\/\/.*\n)"  # or EOF
+    COMMENT = "(\/\*(\*(?!\/)|[^*])*\*\/)|(\/\/.*/n)"  # or EOF
     ID = "[A-Za-z][A-Za-z0-9]*"
-    KEYWORD = "(if|else|void|int|repeat|break|untill|return)"
+    KEYWORD = "if|else|void|int|repeat|break|untill|return"
     NUM = "[0-9]+"
-    SYMBOL = "(;|:|,|\[|\]|\(|\)|{|}+|-|\*|=|<|==)"
-    WHITESPACE = "(\x09|\x0A|\x0B|\x0C|\x20)"
+    SYMBOL = ";|:|,|\[|\]|\(|\)|{|}+|-|\*|=|<|=="
+    WHITESPACE = "\x09|\x0A|\x0B|\x0C|\x20"
 
 
 class LexicalError(Enum):
@@ -34,7 +34,7 @@ class Node:
         self.is_end = is_end
 
     def __repr__(self):
-        return f"{self.char} with {len(self.nexts) if self.nexts else 0} nexts"
+        return f"{print_pretty(self.char)} with {len(self.nexts) if self.nexts else 0} nexts"
 
 
 class Token:
@@ -82,64 +82,64 @@ def create_dfa_tree():
     # Create keyword tree
     keyword_tree = []
     # if
-    No_f = Node("f", [], is_end=True)
-    No_i = Node("i", [No_f], is_start=True)
-    keyword_tree.append(No_i)
+    Node_f = Node("f", [], is_end=True)
+    Node_i = Node("i", [Node_f], is_start=True)
+    keyword_tree.append(Node_i)
 
     # int
-    No_t = Node("t", [], is_end=True)
-    No_n = Node("n", [No_t])
-    No_i = Node("i", [No_n], is_start=True)
-    keyword_tree.append(No_i)
+    Node_t = Node("t", [], is_end=True)
+    Node_n = Node("n", [Node_t])
+    Node_i = Node("i", [Node_n], is_start=True)
+    keyword_tree.append(Node_i)
 
     # else
-    No_e = Node("e", [], is_end=True)
-    No_s = Node("s", [No_e])
-    No_l = Node("l", [No_s])
-    No_e_1 = Node("e", [No_l], is_start=True)
-    keyword_tree.append(No_e_1)
+    Node_e = Node("e", [], is_end=True)
+    Node_s = Node("s", [Node_e])
+    Node_l = Node("l", [Node_s])
+    Node_e_1 = Node("e", [Node_l], is_start=True)
+    keyword_tree.append(Node_e_1)
 
     # void
-    No_d = Node("d", [], is_end=True)
-    No_i = Node("i", [No_d])
-    No_o = Node("o", [No_i])
-    No_v = Node("v", [No_o], is_start=True)
-    keyword_tree.append(No_v)
+    Node_d = Node("d", [], is_end=True)
+    Node_i = Node("i", [Node_d])
+    Node_o = Node("o", [Node_i])
+    Node_v = Node("v", [Node_o], is_start=True)
+    keyword_tree.append(Node_v)
 
     # repeat
-    No_t = Node("t", [], is_end=True)
-    No_a = Node("a", [No_t])
-    No_e = Node("e", [No_a])
-    No_p = Node("p", [No_e])
-    No_e_1 = Node("e", [No_p])
-    No_r = Node("r", [No_e_1], is_start=True)
-    keyword_tree.append(No_r)
+    Node_t = Node("t", [], is_end=True)
+    Node_a = Node("a", [Node_t])
+    Node_e = Node("e", [Node_a])
+    Node_p = Node("p", [Node_e])
+    Node_e_1 = Node("e", [Node_p])
+    Node_r = Node("r", [Node_e_1], is_start=True)
+    keyword_tree.append(Node_r)
 
     # break
-    No_k = Node("k", [], is_end=True)
-    No_a = Node("a", [No_k])
-    No_e = Node("e", [No_a])
-    No_r = Node("r", [No_e])
-    No_b = Node("b", [No_r], is_start=True)
-    keyword_tree.append(No_b)
+    Node_k = Node("k", [], is_end=True)
+    Node_a = Node("a", [Node_k])
+    Node_e = Node("e", [Node_a])
+    Node_r = Node("r", [Node_e])
+    Node_b = Node("b", [Node_r], is_start=True)
+    keyword_tree.append(Node_b)
 
     # untill
-    No_l = Node("l", [], is_end=True)
-    No_l_1 = Node("l", [No_l])
-    No_i = Node("i", [No_l_1])
-    No_t = Node("t", [No_i])
-    No_n = Node("n", [No_t])
-    No_u = Node("u", [No_n], is_start=True)
-    keyword_tree.append(No_u)
+    Node_l = Node("l", [], is_end=True)
+    Node_l_1 = Node("l", [Node_l])
+    Node_i = Node("i", [Node_l_1])
+    Node_t = Node("t", [Node_i])
+    Node_n = Node("n", [Node_t])
+    Node_u = Node("u", [Node_n], is_start=True)
+    keyword_tree.append(Node_u)
 
     # return
-    No_n = Node("n", [], is_end=True)
-    No_r = Node("r", [No_n])
-    No_u = Node("u", [No_r])
-    No_t = Node("t", [No_u])
-    No_e = Node("e", [No_t])
-    No_r_1 = Node("r", [No_e], is_start=True)
-    keyword_tree.append(No_r_1)
+    Node_n = Node("n", [], is_end=True)
+    Node_r = Node("r", [Node_n])
+    Node_u = Node("u", [Node_r])
+    Node_t = Node("t", [Node_u])
+    Node_e = Node("e", [Node_t])
+    Node_r_1 = Node("r", [Node_e], is_start=True)
+    keyword_tree.append(Node_r_1)
 
     # Create identifier tree
     id_tree = []
@@ -158,7 +158,53 @@ def create_dfa_tree():
     for i in string.ascii_letters:
         exec(f"node_{i}.nexts = id_tree", locals(), globals())
 
-    return [*symbol_tree, *whitespace_tree, *number_tree, *keyword_tree, *id_tree]
+    # Create Comment
+    comment_tree = []
+
+    # //
+    double_slash_tree = []
+
+    node_new_line = Node("\n", [], is_end=True)
+    Node_slash = Node("/", [node_new_line])
+    Node_slash_1 = Node("/", [Node_slash], is_start=True)
+
+    letters_and_numbers = string.ascii_letters + "".join(str(i) for i in range(11)) + " "
+    for i in letters_and_numbers:
+        exec(f'node_{i} = Node("{i}", [])', locals(), globals())
+        exec(f"double_slash_tree.append(node_{i})", locals(), globals())
+
+    middel_tree = [node_new_line, *double_slash_tree]
+    for i in letters_and_numbers:
+        exec(f"node_{i}.nexts = middel_tree", locals(), globals())
+
+    Node_slash.nexts = middel_tree
+    comment_tree.append(Node_slash_1)
+
+    # /* . */
+    slash_star_tree = []
+    Node_star = Node("*", [])
+    Node_slash = Node("/", [Node_star], is_start=True)
+
+    Node_slash_2 = Node("/", [], is_end=True)
+    Node_star_2 = Node("*", [Node_slash_2])
+
+    middel_tree = [Node_star_2, *double_slash_tree]
+
+    for i in letters_and_numbers:
+        exec(f"node_{i}.nexts = middel_tree", locals(), globals())
+        exec(f"slash_star_tree.append(node_{i})", locals(), globals())
+
+    Node_star.nexts = [Node_star_2, *slash_star_tree]
+    comment_tree.append(Node_slash)
+
+    return [
+        *symbol_tree,
+        *whitespace_tree,
+        *number_tree,
+        *keyword_tree,
+        *id_tree,
+        *comment_tree,
+    ]
 
 
 def get_next_char():
@@ -199,6 +245,7 @@ buffer: List[str] = []
 
 if __name__ == "__main__":
     dfa_tree = create_dfa_tree()
+    print(dfa_tree)
     while True:
 
         # Fill char and next char with buffer otherwise get them from input file
@@ -233,12 +280,17 @@ if __name__ == "__main__":
                 if node.char == next_char:
                     is_valid = True
                     break
+        
         if is_valid:
             char = next_char
             next_char = get_next_char()
         else:
             add_token_to_array(get_token_from_buffer())
 
+        if line_number == 2:
+            print(line_number + 1, print_pretty(char), print_pretty(next_char), buffer)
+            print(is_valid)
+            print("Nodes", selected_nodes)
         # next line
         if char == "\n":
             line_number += 1
