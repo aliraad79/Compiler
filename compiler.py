@@ -3,6 +3,8 @@
 # No prints please
 from enum import Enum
 from typing import List
+from utils import print_pretty
+from file import add_tokens_to_file
 import string
 import re
 
@@ -42,17 +44,21 @@ class Token:
 
 
 def create_dfa_tree():
-    symbols = [";", ":", ",", "[", "]", "(", ")", "{", "}", "+", "-", "*", "=", "<"]
+
+    # Create Symbol nodes
     symbol_tree = []
-    for i in symbols:
+    for i in [";", ":", ",", "[", "]", "(", ")", "{", "}", "+", "-", "*", "=", "<"]:
         symbol_tree.append(Node(i, [], is_start=True, is_end=True))
+    # Add == to symbol tree
     symbol_tree.append(Node("=", [Node("=", [], is_end=True)], is_start=True))
 
+    # Create whitespace tree
     whitespace_tree = []
     white_spaces = ["\x09", "\x0A", "\x0B", "\x0C", "\x20"]
     for i in white_spaces:
         whitespace_tree.append(Node(i, [], is_start=True, is_end=True))
 
+    # Create num tree
     for i in range(10):
         exec(
             f'node_{i} = Node("{i}", [], is_start=True, is_end=True)',
@@ -72,6 +78,8 @@ def create_dfa_tree():
     node_9.nexts = [node_0,node_1,node_2,node_3,node_4,node_5,node_6,node_7,node_8]
     number_tree =  [node_0,node_1,node_2,node_3,node_4,node_5,node_6,node_7,node_8,node_9]
     # fmt: on
+
+    # Create keyword tree
     keyword_tree = []
     # if
     No_f = Node("f", [], is_end=True)
@@ -88,8 +96,8 @@ def create_dfa_tree():
     No_e = Node("e", [], is_end=True)
     No_s = Node("s", [No_e])
     No_l = Node("l", [No_s])
-    No_e = Node("e", [No_l], is_start=True)
-    keyword_tree.append(No_e)
+    No_e_1 = Node("e", [No_l], is_start=True)
+    keyword_tree.append(No_e_1)
 
     # void
     No_d = Node("d", [], is_end=True)
@@ -103,8 +111,8 @@ def create_dfa_tree():
     No_a = Node("a", [No_t])
     No_e = Node("e", [No_a])
     No_p = Node("p", [No_e])
-    No_e = Node("e", [No_p])
-    No_r = Node("r", [No_e], is_start=True)
+    No_e_1 = Node("e", [No_p])
+    No_r = Node("r", [No_e_1], is_start=True)
     keyword_tree.append(No_r)
 
     # break
@@ -117,8 +125,8 @@ def create_dfa_tree():
 
     # untill
     No_l = Node("l", [], is_end=True)
-    No_l = Node("l", [No_l])
-    No_i = Node("i", [No_l])
+    No_l_1 = Node("l", [No_l])
+    No_i = Node("i", [No_l_1])
     No_t = Node("t", [No_i])
     No_n = Node("n", [No_t])
     No_u = Node("u", [No_n], is_start=True)
@@ -130,9 +138,10 @@ def create_dfa_tree():
     No_u = Node("u", [No_r])
     No_t = Node("t", [No_u])
     No_e = Node("e", [No_t])
-    No_r = Node("r", [No_e], is_start=True)
-    keyword_tree.append(No_r)
+    No_r_1 = Node("r", [No_e], is_start=True)
+    keyword_tree.append(No_r_1)
 
+    # Create identifier tree
     id_tree = []
 
     for i in range(11):
@@ -152,10 +161,6 @@ def create_dfa_tree():
     return [*symbol_tree, *whitespace_tree, *number_tree, *keyword_tree, *id_tree]
 
 
-pointer: int = 0
-buffer: List[str] = []
-
-
 def get_next_char():
     global pointer, buffer
 
@@ -166,97 +171,76 @@ def get_next_char():
     return char[pointer - 1 :]
 
 
-token_array = []
-
-
-def add_token_to_array(token):
+def add_token_to_array(token) -> None:
     _type = ""
     for regex in TokenType:
         if re.search(regex.value, token):
-            _type = regex.name
+            _type = regex
 
-    if _type == "" or _type == TokenType.WHITESPACE.name:
-        print("TOKEN NOT FOUND : ", token)
-    else:
-        print("TOKEN is ", print_pretty(token), "with type ", _type)
-        token_array.append((token, _type, lineno))
+    if _type != "" and _type != TokenType.WHITESPACE:
+        token_dict.setdefault(line_number, []).append(Token(_type.name, token))
 
 
-def add_error_to_file(string):
-    with open("lexical_errors.txt", "w") as file:
-        pass
-
-
-def add_error_to_file(symbol: str):
-    with open("symbol_table.txt", "w") as file:
-        pass
-
-
-def print_pretty(char):
-    phrase = char
-    if char == "\n":
-        phrase = "\\n"
-    elif char == "\t":
-        phrase = "\\t"
-    elif char == " ":
-        phrase = "space"
-    elif char == "":
-        phrase = "EOF"
-    return phrase
-
-
-def get_buffffer(to_end=True):
+def get_token_from_buffer():
     global buffer
-    l = len(buffer) if to_end else len(buffer) - 1
-    i = buffer[:l]
-    if to_end:
-        buffer = []
-    else:
-        # print("BUGFER", buffer)
-        buffer = [buffer[l]]
-    return i
+
+    length = len(buffer) - 1
+    token = buffer[:length]
+    buffer = [buffer[length]]
+    return "".join(token)
 
 
-lineno: int = 0
+# global vars
+token_dict: dict[int : List[Token]] = {}
+line_number: int = 0
+pointer = 0
+buffer: List[str] = []
+
+
 if __name__ == "__main__":
     dfa_tree = create_dfa_tree()
     while True:
+
+        # Fill char and next char with buffer otherwise get them from input file
         if buffer == []:
-            charachter = get_next_char()
-            next_charachter = get_next_char()
+            char = get_next_char()
+            next_char = get_next_char()
         else:
-            charachter = buffer[-1]
-            next_charachter = get_next_char() if len(buffer) <= 1 else buffer[-2]
+            if len(buffer) > 1:
+                char = buffer[-2]
+                next_char = buffer[-1]
+            else:
+                char = buffer[-1]
+                next_char = get_next_char()
 
-        selected_nodes = [node for node in dfa_tree if node.char == charachter]
-
-        # print_pretty(charachter)
-
-        is_valid = False
-        if charachter == "":
+        # end of file
+        if char == "":
             break
 
-        # Algo
+        # dfa nodes that is in start position an can be continued
+        selected_nodes = [node for node in dfa_tree if node.char == char]
+
+        # Algorithm
+
+        # No way to go in dfa tree --> possible token in buffer
         if len(selected_nodes) == 0:
-            print("TOKEN is ", "".join(get_buffffer(False)))
+            add_token_to_array(get_token_from_buffer())
+
+        # Check if next character possibly can be append to our current state
+        is_valid = False
         for option in selected_nodes:
             for node in option.nexts:
-                if node.char == next_charachter:
+                if node.char == next_char:
                     is_valid = True
                     break
         if is_valid:
-            charachter = next_charachter
-            next_charachter = get_next_char()
+            char = next_char
+            next_char = get_next_char()
         else:
-            add_token_to_array("".join(get_buffffer(False)))
+            add_token_to_array(get_token_from_buffer())
 
-        if charachter == "\n":
-            lineno += 1
+        # next line
+        if char == "\n":
+            line_number += 1
 
-    with open("tokens.txt", "w") as file:
-        for i in range(0, lineno + 1):
-            _string = ""
-            for token in token_array:
-                if token[2] == i:
-                    _string += f" ({token[1]}, {token[0]}) "
-            file.write(f"{i +1 }. {_string}\n")
+    add_tokens_to_file(line_number, token_dict)
