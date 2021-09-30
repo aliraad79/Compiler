@@ -164,11 +164,14 @@ def create_dfa_tree():
     # //
     double_slash_tree = []
 
-    node_new_line = Node("\n", [], is_end=True)
-    Node_slash = Node("/", [node_new_line])
+    Node_slash = Node("/", [])
     Node_slash_1 = Node("/", [Node_slash], is_start=True)
 
-    letters_and_numbers = string.ascii_letters + "".join(str(i) for i in range(11)) + " "
+    node_new_line = Node("\n", [], is_end=True)
+
+    node_space = Node("\x20")
+    double_slash_tree.append(node_space)
+    letters_and_numbers = string.ascii_letters + "".join(str(i) for i in range(11))
     for i in letters_and_numbers:
         exec(f'node_{i} = Node("{i}", [])', locals(), globals())
         exec(f"double_slash_tree.append(node_{i})", locals(), globals())
@@ -176,6 +179,8 @@ def create_dfa_tree():
     middel_tree = [node_new_line, *double_slash_tree]
     for i in letters_and_numbers:
         exec(f"node_{i}.nexts = middel_tree", locals(), globals())
+
+    node_space.nexts = middel_tree
 
     Node_slash.nexts = middel_tree
     comment_tree.append(Node_slash_1)
@@ -195,7 +200,7 @@ def create_dfa_tree():
         exec(f"slash_star_tree.append(node_{i})", locals(), globals())
 
     Node_star.nexts = [Node_star_2, *slash_star_tree]
-    comment_tree.append(Node_slash)
+    # comment_tree.append(Node_slash)
 
     return [
         *symbol_tree,
@@ -245,7 +250,7 @@ buffer: List[str] = []
 
 if __name__ == "__main__":
     dfa_tree = create_dfa_tree()
-    print(dfa_tree)
+    next_selected_nodes = []
     while True:
 
         # Fill char and next char with buffer otherwise get them from input file
@@ -265,8 +270,11 @@ if __name__ == "__main__":
             break
 
         # dfa nodes that is in start position an can be continued
-        selected_nodes = [node for node in dfa_tree if node.char == char]
-
+        if next_selected_nodes == []:
+            selected_nodes = [node for node in dfa_tree if node.char == char]
+        else:
+            selected_nodes = next_selected_nodes
+            next_selected_nodes = []
         # Algorithm
 
         # No way to go in dfa tree --> possible token in buffer
@@ -275,22 +283,24 @@ if __name__ == "__main__":
 
         # Check if next character possibly can be append to our current state
         is_valid = False
+        temp = []
         for option in selected_nodes:
             for node in option.nexts:
                 if node.char == next_char:
+                    temp.append(node)
                     is_valid = True
-                    break
-        
+
+        # if line_number == 2:
+        #     print(line_number + 1, print_pretty(char), print_pretty(next_char), buffer)
+        #     print(is_valid)
+        #     # print("Nodes", selected_nodes)
         if is_valid:
             char = next_char
             next_char = get_next_char()
+            next_selected_nodes = temp
         else:
             add_token_to_array(get_token_from_buffer())
 
-        if line_number == 2:
-            print(line_number + 1, print_pretty(char), print_pretty(next_char), buffer)
-            print(is_valid)
-            print("Nodes", selected_nodes)
         # next line
         if char == "\n":
             line_number += 1
