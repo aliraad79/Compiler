@@ -20,8 +20,8 @@ def add_tokens_to_file(line_number: int, token_dict):
             _string = ""
             try:
                 for token in token_dict[i]:
-                    _string += f" ({token.type}, {token.lexeme}) "
-                file.write(f"{i + 1}. {_string}\n")
+                    _string += f"({token.type}, {token.lexeme}) "
+                file.write(f"{i + 1}.  {_string}\n")
             except KeyError:
                 # if one line hasn't any token
                 pass
