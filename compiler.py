@@ -4,16 +4,15 @@
 from enum import Enum
 from typing import List
 from utils import print_pretty
-from file import add_tokens_to_file,add_symbols_to_symbol_table
-import string
+from file import add_tokens_to_file, add_symbols_to_symbol_table
 import re
 
 
 class TokenType(Enum):
     COMMENT = "(\/\*(\*(?!\/)|[^*])*\*\/)|(\/\/.*/n)"  # or EOF
-    ID = "[A-Za-z][A-Za-z0-9]*"
+    ID = "^[A-Za-z][A-Za-z0-9]*"
     KEYWORD = "if|else|void|int|repeat|break|until|return"
-    NUM = "[0-9]+"
+    NUM = "^[0-9]+"
     SYMBOL = ";|:|,|\[|\]|\(|\)|{|}|\+|-|\*|=|<|=="
     WHITESPACE = "\x09|\x0A|\x0B|\x0C|\x20"
 
@@ -56,166 +55,14 @@ class Token:
         self.lexeme = lexeme
 
 
-def create_dfa_tree():
-
-    # Create Symbol nodes
-    symbol_tree = []
-    for i in [";", ":", ",", "[", "]", "(", ")", "{", "}", "+", "-", "*", "=", "<"]:
-        symbol_tree.append(Node(i, [], is_start=True, is_end=True))
-    # Add == to symbol tree
-    symbol_tree.append(Node("=", [Node("=", [], is_end=True)], is_start=True))
-
-    # Create whitespace tree
-    whitespace_tree = []
-    white_spaces = ["\x09", "\x0A", "\x0B", "\x0C", "\x20"]
-    for i in white_spaces:
-        whitespace_tree.append(Node(i, [], is_start=True, is_end=True))
-
-    # Create num tree
-    for i in range(10):
-        exec(
-            f'node_{i} = Node("{i}", [], is_start=True, is_end=True)',
-            locals(),
-            globals(),
-        )
-    # fmt: off
-    node_0.nexts = [node_1,node_2,node_3,node_4,node_5,node_6,node_7,node_8,node_9]
-    node_1.nexts = [node_0,node_2,node_3,node_4,node_5,node_6,node_7,node_8,node_9]
-    node_2.nexts = [node_0,node_1,node_3,node_4,node_5,node_6,node_7,node_8,node_9]
-    node_3.nexts = [node_0,node_1,node_2,node_4,node_5,node_6,node_7,node_8,node_9]
-    node_4.nexts = [node_0,node_1,node_2,node_3,node_5,node_6,node_7,node_8,node_9]
-    node_5.nexts = [node_0,node_1,node_2,node_3,node_4,node_6,node_7,node_8,node_9]
-    node_6.nexts = [node_0,node_1,node_2,node_3,node_4,node_5,node_7,node_8,node_9]
-    node_7.nexts = [node_0,node_1,node_2,node_3,node_4,node_5,node_6,node_8,node_9]
-    node_8.nexts = [node_0,node_1,node_2,node_3,node_4,node_5,node_6,node_7,node_9]
-    node_9.nexts = [node_0,node_1,node_2,node_3,node_4,node_5,node_6,node_7,node_8]
-    number_tree =  [node_0,node_1,node_2,node_3,node_4,node_5,node_6,node_7,node_8,node_9]
-    # fmt: on
-
-    # Create keyword tree
-    keyword_tree = []
-    # if
-    Node_f = Node("f", [], is_end=True)
-    Node_i = Node("i", [Node_f], is_start=True)
-    keyword_tree.append(Node_i)
-
-    # int
-    Node_t = Node("t", [], is_end=True)
-    Node_n = Node("n", [Node_t])
-    Node_i = Node("i", [Node_n], is_start=True)
-    keyword_tree.append(Node_i)
-
-    # else
-    Node_e = Node("e", [], is_end=True)
-    Node_s = Node("s", [Node_e])
-    Node_l = Node("l", [Node_s])
-    Node_e_1 = Node("e", [Node_l], is_start=True)
-    keyword_tree.append(Node_e_1)
-
-    # void
-    Node_d = Node("d", [], is_end=True)
-    Node_i = Node("i", [Node_d])
-    Node_o = Node("o", [Node_i])
-    Node_v = Node("v", [Node_o], is_start=True)
-    keyword_tree.append(Node_v)
-
-    # repeat
-    Node_t = Node("t", [], is_end=True)
-    Node_a = Node("a", [Node_t])
-    Node_e = Node("e", [Node_a])
-    Node_p = Node("p", [Node_e])
-    Node_e_1 = Node("e", [Node_p])
-    Node_r = Node("r", [Node_e_1], is_start=True)
-    keyword_tree.append(Node_r)
-
-    # break
-    Node_k = Node("k", [], is_end=True)
-    Node_a = Node("a", [Node_k])
-    Node_e = Node("e", [Node_a])
-    Node_r = Node("r", [Node_e])
-    Node_b = Node("b", [Node_r], is_start=True)
-    keyword_tree.append(Node_b)
-
-    # until
-    Node_l = Node("l", [], is_end=True)
-    Node_i = Node("i", [Node_l])
-    Node_t = Node("t", [Node_i])
-    Node_n = Node("n", [Node_t])
-    Node_u = Node("u", [Node_n], is_start=True)
-    keyword_tree.append(Node_u)
-
-    # return
-    Node_n = Node("n", [], is_end=True)
-    Node_r = Node("r", [Node_n])
-    Node_u = Node("u", [Node_r])
-    Node_t = Node("t", [Node_u])
-    Node_e = Node("e", [Node_t])
-    Node_r_1 = Node("r", [Node_e], is_start=True)
-    keyword_tree.append(Node_r_1)
-
-    # Create identifier tree
-    id_tree = []
-    middle_tree = []
-
-    for i in range(11):
-        exec(f'node_{i} = Node("{i}", [], is_end=True)', locals(), globals())
-        exec(f"middle_tree.append(node_{i})", locals(), globals())
-    for alphabet in string.ascii_letters:
-        exec(
-            f'node_{alphabet} = Node("{alphabet}", [], is_start=True, is_end=True)',
-            locals(),
-            globals(),
-        )
-        exec(f"middle_tree.append(node_{alphabet})", locals(), globals())
-
-    for i in string.ascii_letters:
-        exec(f"node_{i}.nexts = middle_tree", locals(), globals())
-        exec(f"id_tree.append(node_{i})", locals(), globals())
-
-    # Create Comment
-    comment_tree = []
-
-    # //
-    node_new_line = Node("\n", [], is_end=True)
-    node_universal = Node("Universal", is_universal=True)
-    node_universal.nexts = [node_universal]
-    node_universal.next_universal_nodes = [node_new_line]
-
-    Node_slash = Node("/", [node_universal])
-    Node_slash_1 = Node("/", [Node_slash], is_start=True)
-
-    comment_tree.append(Node_slash_1)
-
-    # /* . */
-    Node_slash_2 = Node("/", [], is_end=True)
-    Node_star_2 = Node("*", [Node_slash_2])
-    node_universal = Node("Universal", is_universal=True)
-    node_universal.nexts = [node_universal]
-    node_universal.next_universal_nodes = [Node_star_2]
-
-    Node_star = Node("*", [node_universal])
-    Node_slash = Node("/", [Node_star], is_start=True)
-
-    comment_tree.append(Node_slash)
-
-    return [
-        *symbol_tree,
-        *whitespace_tree,
-        *number_tree,
-        *keyword_tree,
-        *id_tree,
-        *comment_tree,
-    ]
-
-
 def get_next_char():
-    global pointer, buffer
+    global char_pointer, buffer
 
-    pointer += 1
+    char_pointer += 1
     with open("input.txt", "r") as file:
-        char = file.read(pointer)
-    buffer.append(char[pointer - 1 :])
-    return char[pointer - 1 :]
+        char = file.read(char_pointer)
+    buffer.append(char[char_pointer - 1 :])
+    return char[char_pointer - 1 :]
 
 
 def add_token_to_array(token) -> None:
@@ -223,10 +70,10 @@ def add_token_to_array(token) -> None:
     for regex in TokenType:
         if re.search(regex.value, token):
             _type = regex
+    
 
-    if _type != "":
-        if _type != TokenType.WHITESPACE:
-            token_dict.setdefault(line_number, []).append(Token(_type.name, token))
+    if _type not in ["",TokenType.WHITESPACE, TokenType.COMMENT]:
+        token_dict.setdefault(line_number, []).append(Token(_type.name, token))
         if _type in [TokenType.ID, TokenType.KEYWORD]:
             symbol_list.update([token])
 
@@ -243,12 +90,16 @@ def get_token_from_buffer():
 # global vars
 token_dict: dict[int : List[Token]] = {}
 symbol_list: set[str] = set()
-line_number: int = 0
-pointer = 0
+error_list: List[str] = []
+
 buffer: List[str] = []
+line_number: int = 0
+char_pointer = 0
 
 
 if __name__ == "__main__":
+    from dfa_tree import create_dfa_tree
+
     dfa_tree = create_dfa_tree()
     next_selected_nodes = []
     while True:
@@ -282,29 +133,42 @@ if __name__ == "__main__":
             add_token_to_array(get_token_from_buffer())
 
         # Check if next character possibly can be append to our current state
-        is_valid = False
-        second_valid = False
-        temp = []
-        second_temp = []
+        can_be_continued = False
+        is_reach_end_of_universal = False
+        next_nodes = []
+        not_universal_next_nodes = []
         for option in selected_nodes:
             for node in option.nexts:
                 if node.is_equal(next_char):
-                    temp.append(node)
-                    is_valid = True
+                    next_nodes.append(node)
+                    can_be_continued = True
                     for j in option.next_universal_nodes:
-                        if j.char == next_char:
-                            second_temp.append(j)
-                            second_valid = True
+                        if j.char == next_char :
+                            not_universal_next_nodes.append(j)
+                            is_reach_end_of_universal = True
 
-        # if line_number == 3:
-        #     print(line_number + 1, print_pretty(char), print_pretty(next_char), buffer)
-        #     print(is_valid)
-        #     print("Nodes", selected_nodes)
-        #     print("SEcond temp ", second_temp)
-        if is_valid and not second_valid:
+        if buffer == [] and not can_be_continued:
+            error_list.append(LexicalError.INVALID_INPUT.value + str(line_number))
+        if line_number == 18:
+            print(f"------- {line_number} -------")
+            print(
+                f"Current char : {print_pretty(char)} Next char : {print_pretty(next_char)}"
+            )
+            print(f"Buffer = {buffer}")
+            print(f"Can be continued {can_be_continued}")
+            print(f"Is reach end of universal {is_reach_end_of_universal}")
+            print(
+                f"Selected Nodes = {selected_nodes}\n\t\tWith nexts = {selected_nodes[0].nexts if len(selected_nodes) >= 1 else None}"
+            )
+            print(f"End of universal condition = {not_universal_next_nodes}")
+        if can_be_continued and not is_reach_end_of_universal:
             char = next_char
             next_char = get_next_char()
-            next_selected_nodes = temp if second_temp == [] else second_temp
+            next_selected_nodes = (
+                next_nodes
+                if not_universal_next_nodes == []
+                else not_universal_next_nodes
+            )
         else:
             add_token_to_array(get_token_from_buffer())
 

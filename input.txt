@@ -1,57 +1,39 @@
-// zero point
-
-int hell(int id){
-	re%peat {
-		if (1000 < scars)
-			break;
-		else
-			scars = 1scars + 1;
-	} until (1 < 0)
-	// now we have scars
-	return party(id);
-}
-
-int party(int id) {
-	repeat {
-		scars = scars - 1;
-		happiness = happiness + 1;
-	} until (scars == 0)
-	// The lower you fall the higher youll fly
-	return party(id);
-}
-
-int ids[3000];
-int configs[3000];
-void main(void){
-	int equity;
-	int effort;
-	int scars;
-	int pr;
-	effort  = 0;
-	scars = 0;
-	pr = 5;
-	configs[1] = 0;
-	equity  = 10;
-	equity  = 10 + 3;
-	ids[1] = 3333;
-	ids[2] = 4444;
-	if (configs[1] /*comment*/ == 1){
-		// I dont want to die without any scars
-		repeat {
-			scars = scars + 1;
-			effort = effort + 10;
-			pr = pr + 50;
-		} until (10 < scars)
-		party(ids[1]);
+int b;
+int foo(int d, int e){
+    int f;
+	void foo2(int k[]){
+		return k[0] + k[1];	
 	}
-	else
-	{
-		repeat {
-			effort = effort + 1;
-			equity = equity + 10;
-		} until (1000 < equity)
-		// The things you used to own now they own you
-		hell(ids[1]);
+	int fff[2];
+	fff[0] = d;
+	fff[1] = d + 1;
+	f = foo2(fff);
+	b = e + f;
+	repeat{
+		f = f + d;
+		d = d - 1;
+		if (d == )
+			break;
+		else d = 1;
+	}until(0 < d)
+	//comment1
+	return f + b;
+}
+int arr[3];
+void main(void){
+	int a;
+	a = -3 + +11;
+	b = 5 * a + foo(a, a);
+	arr[1] = b + -3;
+	arr[2] = foo(arr[0], arr[1]);
+	if (b /* comment2 */ == 3){
+		arr[0] = -7;	
 	}
 	return;
+}
+
+int foo(int d, int e){
+    int a;
+    a = 5;
+    repeat {if (a == 5) break; else a = a + 1;} until (10 < a)
 }
