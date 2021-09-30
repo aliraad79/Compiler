@@ -3,7 +3,7 @@
 # No prints please
 from enum import Enum
 from typing import List
-from utils import print_pretty
+from utils import print_pretty, print_log
 from file import add_tokens_to_file, add_symbols_to_symbol_table
 import re
 
@@ -11,7 +11,7 @@ import re
 class TokenType(Enum):
     COMMENT = "(\/\*(\*(?!\/)|[^*])*\*\/)|(\/\/.*/n)"  # or EOF
     ID = "^[A-Za-z][A-Za-z0-9]*"
-    KEYWORD = "if|else|void|int|repeat|break|until|return"
+    KEYWORD = "^(if|else|void|int|repeat|break|until|return)$"
     NUM = "^[0-9]+"
     SYMBOL = ";|:|,|\[|\]|\(|\)|{|}|\+|-|\*|=|<|=="
     WHITESPACE = "\x09|\x0A|\x0B|\x0C|\x20"
@@ -70,9 +70,8 @@ def add_token_to_array(token) -> None:
     for regex in TokenType:
         if re.search(regex.value, token):
             _type = regex
-    
 
-    if _type not in ["",TokenType.WHITESPACE, TokenType.COMMENT]:
+    if _type not in ["", TokenType.WHITESPACE, TokenType.COMMENT]:
         token_dict.setdefault(line_number, []).append(Token(_type.name, token))
         if _type in [TokenType.ID, TokenType.KEYWORD]:
             symbol_list.update([token])
@@ -95,7 +94,6 @@ error_list: List[str] = []
 buffer: List[str] = []
 line_number: int = 0
 char_pointer = 0
-
 
 if __name__ == "__main__":
     from dfa_tree import create_dfa_tree
@@ -143,24 +141,23 @@ if __name__ == "__main__":
                     next_nodes.append(node)
                     can_be_continued = True
                     for j in option.next_universal_nodes:
-                        if j.char == next_char :
+                        if j.char == next_char:
                             not_universal_next_nodes.append(j)
                             is_reach_end_of_universal = True
 
         if buffer == [] and not can_be_continued:
             error_list.append(LexicalError.INVALID_INPUT.value + str(line_number))
-        if line_number == 18:
-            print(f"------- {line_number} -------")
-            print(
-                f"Current char : {print_pretty(char)} Next char : {print_pretty(next_char)}"
+        if True:
+            print_log(
+                buffer,
+                char,
+                next_char,
+                selected_nodes,
+                can_be_continued,
+                is_reach_end_of_universal,
+                not_universal_next_nodes,
+                line_number=21,
             )
-            print(f"Buffer = {buffer}")
-            print(f"Can be continued {can_be_continued}")
-            print(f"Is reach end of universal {is_reach_end_of_universal}")
-            print(
-                f"Selected Nodes = {selected_nodes}\n\t\tWith nexts = {selected_nodes[0].nexts if len(selected_nodes) >= 1 else None}"
-            )
-            print(f"End of universal condition = {not_universal_next_nodes}")
         if can_be_continued and not is_reach_end_of_universal:
             char = next_char
             next_char = get_next_char()
