@@ -4,7 +4,7 @@
 from enum import Enum
 from typing import List
 from utils import print_pretty
-from file import add_tokens_to_file
+from file import add_tokens_to_file,add_symbols_to_symbol_table
 import string
 import re
 
@@ -12,9 +12,9 @@ import re
 class TokenType(Enum):
     COMMENT = "(\/\*(\*(?!\/)|[^*])*\*\/)|(\/\/.*/n)"  # or EOF
     ID = "[A-Za-z][A-Za-z0-9]*"
-    KEYWORD = "if|else|void|int|repeat|break|untill|return"
+    KEYWORD = "if|else|void|int|repeat|break|until|return"
     NUM = "[0-9]+"
-    SYMBOL = ";|:|,|\[|\]|\(|\)|{|}+|-|\*|=|<|=="
+    SYMBOL = ";|:|,|\[|\]|\(|\)|{|}|\+|-|\*|=|<|=="
     WHITESPACE = "\x09|\x0A|\x0B|\x0C|\x20"
 
 
@@ -27,11 +27,24 @@ class LexicalError(Enum):
 
 
 class Node:
-    def __init__(self, char, nexts: List["Node"] = [], is_start=False, is_end=False):
+    def __init__(
+        self,
+        char,
+        nexts: List["Node"] = [],
+        is_start=False,
+        is_end=False,
+        is_universal=False,
+        next_universal_nodes: List["Node"] = [],
+    ):
         self.char = char
         self.nexts = nexts
         self.is_start = is_start
         self.is_end = is_end
+        self.is_universal = is_universal
+        self.next_universal_nodes = next_universal_nodes
+
+    def is_equal(self, other):
+        return True if self.is_universal else self.char == other
 
     def __repr__(self):
         return f"{print_pretty(self.char)} with {len(self.nexts) if self.nexts else 0} nexts"
@@ -123,10 +136,9 @@ def create_dfa_tree():
     Node_b = Node("b", [Node_r], is_start=True)
     keyword_tree.append(Node_b)
 
-    # untill
+    # until
     Node_l = Node("l", [], is_end=True)
-    Node_l_1 = Node("l", [Node_l])
-    Node_i = Node("i", [Node_l_1])
+    Node_i = Node("i", [Node_l])
     Node_t = Node("t", [Node_i])
     Node_n = Node("n", [Node_t])
     Node_u = Node("u", [Node_n], is_start=True)
@@ -143,64 +155,48 @@ def create_dfa_tree():
 
     # Create identifier tree
     id_tree = []
+    middle_tree = []
 
     for i in range(11):
         exec(f'node_{i} = Node("{i}", [], is_end=True)', locals(), globals())
-        exec(f"id_tree.append(node_{i})", locals(), globals())
+        exec(f"middle_tree.append(node_{i})", locals(), globals())
     for alphabet in string.ascii_letters:
         exec(
             f'node_{alphabet} = Node("{alphabet}", [], is_start=True, is_end=True)',
             locals(),
             globals(),
         )
-        exec(f"id_tree.append(node_{alphabet})", locals(), globals())
+        exec(f"middle_tree.append(node_{alphabet})", locals(), globals())
 
     for i in string.ascii_letters:
-        exec(f"node_{i}.nexts = id_tree", locals(), globals())
+        exec(f"node_{i}.nexts = middle_tree", locals(), globals())
+        exec(f"id_tree.append(node_{i})", locals(), globals())
 
     # Create Comment
     comment_tree = []
 
     # //
-    double_slash_tree = []
+    node_new_line = Node("\n", [], is_end=True)
+    node_universal = Node("Universal", is_universal=True)
+    node_universal.nexts = [node_universal]
+    node_universal.next_universal_nodes = [node_new_line]
 
-    Node_slash = Node("/", [])
+    Node_slash = Node("/", [node_universal])
     Node_slash_1 = Node("/", [Node_slash], is_start=True)
 
-    node_new_line = Node("\n", [], is_end=True)
-
-    node_space = Node("\x20")
-    double_slash_tree.append(node_space)
-    letters_and_numbers = string.ascii_letters + "".join(str(i) for i in range(11))
-    for i in letters_and_numbers:
-        exec(f'node_{i} = Node("{i}", [])', locals(), globals())
-        exec(f"double_slash_tree.append(node_{i})", locals(), globals())
-
-    middel_tree = [node_new_line, *double_slash_tree]
-    for i in letters_and_numbers:
-        exec(f"node_{i}.nexts = middel_tree", locals(), globals())
-
-    node_space.nexts = middel_tree
-
-    Node_slash.nexts = middel_tree
     comment_tree.append(Node_slash_1)
 
     # /* . */
-    slash_star_tree = []
-    Node_star = Node("*", [])
-    Node_slash = Node("/", [Node_star], is_start=True)
-
     Node_slash_2 = Node("/", [], is_end=True)
     Node_star_2 = Node("*", [Node_slash_2])
+    node_universal = Node("Universal", is_universal=True)
+    node_universal.nexts = [node_universal]
+    node_universal.next_universal_nodes = [Node_star_2]
 
-    middel_tree = [Node_star_2, *double_slash_tree]
+    Node_star = Node("*", [node_universal])
+    Node_slash = Node("/", [Node_star], is_start=True)
 
-    for i in letters_and_numbers:
-        exec(f"node_{i}.nexts = middel_tree", locals(), globals())
-        exec(f"slash_star_tree.append(node_{i})", locals(), globals())
-
-    Node_star.nexts = [Node_star_2, *slash_star_tree]
-    # comment_tree.append(Node_slash)
+    comment_tree.append(Node_slash)
 
     return [
         *symbol_tree,
@@ -228,8 +224,11 @@ def add_token_to_array(token) -> None:
         if re.search(regex.value, token):
             _type = regex
 
-    if _type != "" and _type != TokenType.WHITESPACE:
-        token_dict.setdefault(line_number, []).append(Token(_type.name, token))
+    if _type != "":
+        if _type != TokenType.WHITESPACE:
+            token_dict.setdefault(line_number, []).append(Token(_type.name, token))
+        if _type in [TokenType.ID, TokenType.KEYWORD]:
+            symbol_list.update([token])
 
 
 def get_token_from_buffer():
@@ -243,6 +242,7 @@ def get_token_from_buffer():
 
 # global vars
 token_dict: dict[int : List[Token]] = {}
+symbol_list: set[str] = set()
 line_number: int = 0
 pointer = 0
 buffer: List[str] = []
@@ -283,21 +283,28 @@ if __name__ == "__main__":
 
         # Check if next character possibly can be append to our current state
         is_valid = False
+        second_valid = False
         temp = []
+        second_temp = []
         for option in selected_nodes:
             for node in option.nexts:
-                if node.char == next_char:
+                if node.is_equal(next_char):
                     temp.append(node)
                     is_valid = True
+                    for j in option.next_universal_nodes:
+                        if j.char == next_char:
+                            second_temp.append(j)
+                            second_valid = True
 
-        # if line_number == 2:
+        # if line_number == 3:
         #     print(line_number + 1, print_pretty(char), print_pretty(next_char), buffer)
         #     print(is_valid)
-        #     # print("Nodes", selected_nodes)
-        if is_valid:
+        #     print("Nodes", selected_nodes)
+        #     print("SEcond temp ", second_temp)
+        if is_valid and not second_valid:
             char = next_char
             next_char = get_next_char()
-            next_selected_nodes = temp
+            next_selected_nodes = temp if second_temp == [] else second_temp
         else:
             add_token_to_array(get_token_from_buffer())
 
@@ -306,3 +313,4 @@ if __name__ == "__main__":
             line_number += 1
 
     add_tokens_to_file(line_number, token_dict)
+    add_symbols_to_symbol_table(symbol_list)
