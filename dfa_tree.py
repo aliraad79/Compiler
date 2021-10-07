@@ -4,11 +4,13 @@ import string
 
 def create_symbol_tree():
     tree = []
-    for i in [";", ":", ",", "[", "]", "(", ")", "{", "}", "+", "-", "*", "=", "<"]:
+    for i in [";", ":", ",", "[", "]", "(", ")", "{", "}", "+", "-", "*", "<"]:
         tree.append(Node(i, [], is_start=True, is_end=True))
 
     # Add == to symbol tree
-    tree.append(Node("=", [Node("=", [], is_end=True)], is_start=True))
+    node_equal = Node("=", [], is_end=True)
+    tree.append(Node("=", [node_equal], is_start=True, is_end=True))
+
     return tree
 
 
@@ -128,31 +130,23 @@ def create_keyword_tree():
 
 
 def create_comment_tree():
-    tree = []
-    # //
-    node_new_line = Node("\n", [], is_end=True)
-    node_universal = Node("Universal", is_universal=True)
-    node_universal.nexts = [node_universal]
-    node_universal.next_universal_nodes = [node_new_line]
-
-    Node_slash = Node("/", [node_universal])
-    Node_slash_1 = Node("/", [Node_slash], is_start=True)
-
-    tree.append(Node_slash_1)
-
     # /* . */
     Node_slash_2 = Node("/", [], is_end=True)
-    Node_star_2 = Node("*", [Node_slash_2])
-    node_universal = Node("Universal", is_universal=True)
-    node_universal.nexts = [node_universal]
-    node_universal.next_universal_nodes = [Node_star_2]
+    Node_star_2 = Node("*", is_universal=True)
+    Node_star_2.nexts = [Node_star_2]
+    Node_star_2.next_universal_nodes = [Node_slash_2]
 
-    Node_star = Node("*", [node_universal])
-    Node_slash = Node("/", [Node_star], is_start=True)
+    Node_star = Node("*", is_universal=True)
+    Node_star.nexts = [Node_star]
+    Node_star.next_universal_nodes = [Node_star_2]
 
-    tree.append(Node_slash)
+    # //
+    node_new_line = Node("\n", [], is_end=True)
+    Node_slash = Node("/", is_universal=True, next_universal_nodes=[node_new_line])
+    Node_slash.nexts = [Node_slash]
 
-    return tree
+    Node_start_slash = Node("/", [Node_slash, Node_star], is_start=True)
+    return [Node_start_slash]
 
 
 def create_dfa_tree():
