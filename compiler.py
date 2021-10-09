@@ -24,7 +24,6 @@ class TokenType(Enum):
 
 
 class LexicalError(Enum):
-    NO_ERROR = "There is no lexical error."
     INVALID_INPUT = "Invalid input"
     UNCLOSED_COMMENT = "Unclosed comment"  # just print 7 first chars and ...
     UNMATCHED_COMMENT = "Unmatched comment"
@@ -56,12 +55,15 @@ def add_token_to_array(token) -> None:
             _type = regex
 
     if _type == "":
-        error_dict.setdefault(line_number, []).append((LexicalError.INVALID_INPUT.value,))
+        error_dict.setdefault(line_number, []).append(
+            (LexicalError.INVALID_INPUT.value, token)
+        )
 
     if _type not in ["", TokenType.WHITESPACE, TokenType.COMMENT]:
         token_dict.setdefault(line_number, []).append(Token(_type.name, token))
         if _type in [TokenType.ID, TokenType.KEYWORD]:
-            symbol_list.update([token])
+            if token not in symbol_list:
+                symbol_list.append(token)
 
 
 def get_token_from_buffer():
@@ -73,9 +75,17 @@ def get_token_from_buffer():
     return "".join(token)
 
 
+def get_full_buffer():
+    global buffer
+
+    token = buffer
+    buffer = []
+    return "".join(token)
+
+
 # global vars
 token_dict: dict[int : List[Token]] = {}
-symbol_list: set[str] = set()
+symbol_list: list[str] = []
 error_dict: dict[int:Tuple] = {}
 
 buffer: List[str] = []
@@ -105,7 +115,7 @@ if __name__ == "__main__":
         if char == "":
             break
 
-        # dfa nodes that is in start position an can be continued
+        # dfa states that is in start position an can be continued
         if next_selected_state == None:
             selected_state: State = dfa_mother_state_tree.next_dfa_tree_state(char)
         else:
@@ -114,34 +124,42 @@ if __name__ == "__main__":
 
         # Algorithm
 
-        # No way to go in dfa tree --> possible token in buffer
-        if selected_state == None:
-            add_token_to_array(get_token_from_buffer())
-
         # Check if next character possibly can be append to our current state
-        else:
+        if selected_state:
             next_state = selected_state.next_dfa_tree_state(next_char)
 
         can_be_continued = next_state != None
 
-        if buffer == [] and not can_be_continued:
-            error_dict.setdefault(line_number, []).append((LexicalError.INVALID_INPUT.value,))
+        if (
+            selected_state
+            and selected_state.invalid_next_pattern != ""
+            and re.match(selected_state.invalid_next_pattern, next_char)
+        ):
+            buffer = get_full_buffer()
+            if re.match("[0123456789]", buffer[0]):
+                error_dict.setdefault(line_number, []).append(
+                    (LexicalError.INVALID_NUMBER.value, buffer)
+                )
+            else:
+                error_dict.setdefault(line_number, []).append(
+                    (LexicalError.INVALID_INPUT.value, buffer)
+                )
 
-        if line_number == 6 and False:
+        if line_number == 8 and False:
             print_log(
                 buffer,
                 char,
                 next_char,
                 selected_state,
                 can_be_continued,
-                line_number=7,
+                line_number=9,
             )
 
         if can_be_continued:
             char = next_char
             next_char = get_next_char()
             next_selected_state = next_state
-        else:
+        elif buffer != []:
             add_token_to_array(get_token_from_buffer())
             next_selected_state = None
 
