@@ -68,20 +68,26 @@ def create_comment_tree(mother_state):
     comment_end_state = State(next_edges=[], is_end=True)
 
     # /* . */
-    # Not completed
-    edge_star = Edge(char="*", next_state=comment_end_state)
+    edge_slash = Edge(char="/", next_state=comment_end_state)
 
-    slash_star_loop_state = State()
+    edge_every_letter_except_star_and_slash = Edge(pattern="[^*\/]+")
 
-    edge_everything_but_newline = Edge(
-        pattern="[^*]+", next_state=slash_star_loop_state
+    edge_star = Edge(char="*")
+    state_second_star = State(
+        next_edges=[edge_star, edge_slash, edge_every_letter_except_star_and_slash],
     )
+    edge_star.next_state = state_second_star
 
-    slash_star_loop_state.next_state = edge_everything_but_newline
+    edge_star = Edge(char="*", next_state=state_second_star)
 
-    state_everything_but_star = State(
-        next_edges=[edge_everything_but_newline, edge_star]
-    )
+    edge_everything_but_star = Edge(pattern="[^*]+")
+
+    state_everything_but_star = State(next_edges=[edge_everything_but_star, edge_star])
+
+    edge_everything_but_star.next_state = state_everything_but_star
+
+    edge_every_letter_except_star_and_slash.next_state = state_everything_but_star
+
     edge_slash_start = Edge(char="*", next_state=state_everything_but_star)
 
     # //
