@@ -1,25 +1,42 @@
-def print_pretty(char):
-    phrase = char
-    if char == "\n":
-        phrase = "\\n"
-    elif char == "\t":
-        phrase = "\\t"
-    elif char == " ":
-        phrase = "space"
-    elif char == "":
-        phrase = "EOF"
-    return phrase
+def add_errors_to_file(line_number, error_dict):
+    with open("lexical_errors.txt", "w") as file:
+        for i in range(0, line_number + 1):
+            _string = ""
+            try:
+                for error in error_dict[i]:
+                    _string += f"{error[0]}"
+
+                file.write(f"{str(i + 1)}.\t{_string}\n")
+            except KeyError:
+                # if one line hasn't any token
+                pass
 
 
-def print_log(buffer, char, next_char, selected_nodes, can_be_continued, is_reach_end_of_universal, not_universal_next_nodes,line_number=1):
+def add_symbols_to_file(symbols):
+    with open("symbol_table.txt", "w") as file:
+        for counter, symbol in enumerate(symbols):
+            file.write(f"{counter}.\t{symbol}\n")
+
+
+def add_tokens_to_file(line_number: int, token_dict):
+    with open("tokens.txt", "w") as file:
+        for i in range(0, line_number + 1):
+            _string = ""
+            try:
+                for token in token_dict[i]:
+                    _string += f"({token.type}, {token.lexeme}) "
+                file.write(f"{i + 1}.\t{_string}\n")
+            except KeyError:
+                # if one line hasn't any token
+                pass
+
+
+def print_log(buffer, char, next_char, selected_state, can_be_continued, line_number=1):
+
     print(f"------- {line_number} -------")
-    print(
-                f"Current char : {print_pretty(char)} Next char : {print_pretty(next_char)}"
-            )
+    print(f"Current char : {repr(char)} Next char : {repr(next_char)}")
     print(f"Buffer = {buffer}")
     print(f"Can be continued {can_be_continued}")
-    print(f"Is reach end of universal {is_reach_end_of_universal}")
     print(
-                f"Selected Nodes = {selected_nodes}\n\t\tWith nexts = {selected_nodes[0].nexts if len(selected_nodes) >= 1 else None}"
-            )
-    print(f"End of universal condition = {not_universal_next_nodes}")
+        f"Selected Nodes = {selected_state}\n\t\tWith next Edges = {selected_state.next_edges}"
+    )
