@@ -47,6 +47,7 @@ def get_next_char():
 
 
 def add_token_to_array(token) -> None:
+    print(repr(token))
     if token == "":
         return None
     _type = ""
@@ -136,7 +137,7 @@ if __name__ == "__main__":
             and re.match(selected_state.invalid_next_pattern, next_char)
         ):
             buffer = get_full_buffer()
-            if re.match("[0123456789]", buffer[0]):
+            if re.match("[0-9]", buffer[0]):
                 error_dict.setdefault(line_number, []).append(
                     (LexicalError.INVALID_NUMBER.value, buffer)
                 )
@@ -145,14 +146,14 @@ if __name__ == "__main__":
                     (LexicalError.INVALID_INPUT.value, buffer)
                 )
 
-        if line_number == 8 and False:
+        if line_number == 0:
             print_log(
                 buffer,
                 char,
                 next_char,
                 selected_state,
                 can_be_continued,
-                line_number=9,
+                line_number=1,
             )
 
         if can_be_continued:
