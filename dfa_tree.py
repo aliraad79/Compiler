@@ -48,13 +48,19 @@ class State:
 
 def create_symbol_tree(mother_state: State):
     symbol_end_state = State(next_edges=[], is_end=True)
-    for i in [";", ":", ",", "[", "]", "(", ")", "{", "}", "+", "-", "*", "<"]:
+    for i in [";", ":", ",", "[", "]", "(", ")", "{", "}", "+", "-", "<"]:
         mother_state.next_edges.append(Edge(char=i, next_state=symbol_end_state))
 
     second_state_equal = State(next_edges=[], is_end=True)
     edge_equal = Edge(char="=", next_state=second_state_equal)
     first_state_equal = State(next_edges=[edge_equal])
     mother_state.next_edges.append(Edge(char="=", next_state=first_state_equal))
+
+    state_unmatch_comment = State(next_edges=[], is_end=True)
+    state_star = State(
+        next_edges=[Edge(char="/", next_state=state_unmatch_comment)], is_end=True
+    )
+    mother_state.next_edges.append(Edge(char="*", next_state=state_star))
 
 
 def create_whitespace_tree(mother_state):
@@ -109,11 +115,20 @@ def create_comment_tree(mother_state):
 
 
 def create_digits_tree(mother_state):
+    number_error_state = State(
+        is_end=True, invalid_next_pattern=f"[{string.ascii_letters}]+"
+    )
+    edge_error = Edge(
+        pattern="[abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ]+",
+        next_state=number_error_state,
+    )
+    number_error_state.next_edges = [edge_error]
+
     number_end_state = State(
         is_end=True, invalid_next_pattern=f"[{string.ascii_letters}]+"
     )
     edge_number = Edge(pattern="[0-9]+", next_state=number_end_state)
-    number_end_state.next_edges = [edge_number]
+    number_end_state.next_edges = [edge_number, edge_error]
     mother_state.next_edges.append(edge_number)
 
 

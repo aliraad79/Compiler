@@ -5,13 +5,13 @@
 from __future__ import annotations
 from enum import Enum
 from typing import List, Tuple
+import re
 from utils import (
     print_log,
     add_tokens_to_file,
     add_symbols_to_file,
     add_errors_to_file,
 )
-import re
 
 
 class TokenType(Enum):
@@ -24,10 +24,10 @@ class TokenType(Enum):
 
 
 class LexicalError(Enum):
-    INVALID_INPUT = "Invalid input"
-    UNCLOSED_COMMENT = "Unclosed comment"  # just print 7 first chars and ...
-    UNMATCHED_COMMENT = "Unmatched comment"
-    INVALID_NUMBER = "Invalid number"
+    # UNCLOSED_COMMENT = "Unclosed comment"
+    # INVALID_INPUT = "Invalid input"
+    UNMATCHED_COMMENT = ("\*/", "Unmatched comment")
+    INVALID_NUMBER = ("^[0-9]+[A-Za-z]+", "Invalid number")
 
 
 class Token:
@@ -47,18 +47,21 @@ def get_next_char():
 
 
 def add_token_to_array(token) -> None:
-    print(repr(token))
     if token == "":
         return None
+
+    for error_regex in LexicalError:
+        if re.match(error_regex.value[0], token):
+            error_dict.setdefault(line_number, []).append((error_regex.value[1], token))
+            break
+
     _type = ""
     for regex in TokenType:
         if re.search(regex.value, token):
             _type = regex
 
     if _type == "":
-        error_dict.setdefault(line_number, []).append(
-            (LexicalError.INVALID_INPUT.value, token)
-        )
+        error_dict.setdefault(line_number, []).append(("Invalid input", token))
 
     if _type not in ["", TokenType.WHITESPACE, TokenType.COMMENT]:
         token_dict.setdefault(line_number, []).append(Token(_type.name, token))
@@ -114,6 +117,15 @@ if __name__ == "__main__":
 
         # end of file
         if char == "":
+            if buffer[0:2] == ["/", "*"]:
+                comment = "".join(buffer)
+
+                error_dict.setdefault(line_number, []).append(
+                    (
+                        "Unclosed comment",
+                        "".join(comment if len(comment) <= 7 else comment[:7] + "..."),
+                    )
+                )
             break
 
         # dfa states that is in start position an can be continued
@@ -131,29 +143,14 @@ if __name__ == "__main__":
 
         can_be_continued = next_state != None
 
-        if (
-            selected_state
-            and selected_state.invalid_next_pattern != ""
-            and re.match(selected_state.invalid_next_pattern, next_char)
-        ):
-            buffer = get_full_buffer()
-            if re.match("[0-9]", buffer[0]):
-                error_dict.setdefault(line_number, []).append(
-                    (LexicalError.INVALID_NUMBER.value, buffer)
-                )
-            else:
-                error_dict.setdefault(line_number, []).append(
-                    (LexicalError.INVALID_INPUT.value, buffer)
-                )
-
-        if line_number == 0:
+        if line_number == 16 and True:
             print_log(
                 buffer,
                 char,
                 next_char,
                 selected_state,
                 can_be_continued,
-                line_number=1,
+                line_number=18,
             )
 
         if can_be_continued:
