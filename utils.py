@@ -19,7 +19,7 @@ def add_errors_to_file(line_number, error_dict):
 def add_symbols_to_file(symbols):
     with open("symbol_table.txt", "w") as file:
         for counter, symbol in enumerate(symbols):
-            file.write(f"{counter}.\t{symbol}\n")
+            file.write(f"{counter + 1}.\t{symbol}\n")
 
 
 def add_tokens_to_file(line_number: int, token_dict):
