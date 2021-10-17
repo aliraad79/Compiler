@@ -14,7 +14,7 @@ class TokenType(Enum):
     ID = "^[A-Za-z][A-Za-z0-9]*$"
     KEYWORD = "^(if|else|void|int|repeat|break|until|return)$"
     NUM = "^[0-9]+"
-    SYMBOL = ";|:|,|\[|\]|\(|\)|{|}|\+|-|\*|=|<|=="
+    SYMBOL = "^(;|:|,|\[|\]|\(|\)|{|}|\+|-|\*|=|<|==)$"
     WHITESPACE = "\x09|\x0A|\x0B|\x0C|\x20"
 
 
@@ -90,6 +90,7 @@ error_dict: dict[int:Tuple] = {}
 buffer: List[str] = []
 line_number: int = 0
 char_pointer = 0
+last_comment_line_number: int = 0
 
 if __name__ == "__main__":
     from dfa_tree import create_dfa_tree, State
@@ -110,18 +111,9 @@ if __name__ == "__main__":
                 char = buffer[-1]
                 next_char = get_next_char()
 
-        # end of file
-        if char == "":
-            if buffer[0:2] == ["/", "*"]:
-                comment = "".join(buffer)
-
-                error_dict.setdefault(line_number, []).append(
-                    (
-                        "Unclosed comment",
-                        "".join(comment if len(comment) <= 7 else comment[:7] + "..."),
-                    )
-                )
-            break
+        # update last_comment_line_number
+        if char == "/" and (next_char in ["/", "*"]):
+            last_comment_line_number = line_number
 
         # dfa states that is in start position an can be continued
         if next_selected_state == None:
@@ -138,14 +130,15 @@ if __name__ == "__main__":
 
         can_be_continued = next_state != None
 
-        if line_number == 8 and False:
+        if line_number == 33 and False:
             print_log(
                 buffer,
                 char,
                 next_char,
                 selected_state,
+                next_state,
                 can_be_continued,
-                line_number=9,
+                line_number=34,
             )
 
         if can_be_continued:
@@ -155,6 +148,19 @@ if __name__ == "__main__":
         elif buffer != []:
             add_token_to_array(get_token_from_buffer())
             next_selected_state = None
+
+        # end of file
+        if char == "":
+            if buffer[0:2] == ["/", "*"]:
+                comment = "".join(buffer)
+
+                error_dict.setdefault(last_comment_line_number, []).append(
+                    (
+                        "Unclosed comment",
+                        "".join(comment if len(comment) <= 7 else comment[:7] + "..."),
+                    )
+                )
+            break
 
         # next line
         if char == "\n":

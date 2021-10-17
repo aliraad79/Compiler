@@ -8,7 +8,7 @@ def add_errors_to_file(line_number, error_dict):
             _string = ""
             try:
                 for error in error_dict[i]:
-                    _string += f"({error[1]}, {error[0]})"
+                    _string += f"({error[1]}, {error[0]}) "
 
                 file.write(f"{str(i + 1)}.\t{_string}\n")
             except KeyError:
@@ -17,6 +17,10 @@ def add_errors_to_file(line_number, error_dict):
 
 
 def add_symbols_to_file(symbols):
+    # Add all symbols to list
+    for i in ["if", "else", "void", "int", "repeat", "break", "until", "return"]:
+        if i not in symbols:
+            symbols.append(i)
     with open("symbol_table.txt", "w") as file:
         for counter, symbol in enumerate(symbols):
             file.write(f"{counter + 1}.\t{symbol}\n")
@@ -35,9 +39,13 @@ def add_tokens_to_file(line_number: int, token_dict):
                 pass
 
 
-def print_log(buffer, char, next_char, selected_state, can_be_continued, line_number=1):
+def print_log(
+    buffer, char, next_char, selected_state, next_state, can_be_continued, line_number=1
+):
 
     print(f"------- {line_number} -------")
     print(f"Current char : {repr(char)} Next char : {repr(next_char)}")
     print(f"Buffer = {buffer}")
     print(f"Can be continued {can_be_continued}")
+    print(f"Present =>\t {selected_state.next_edges if selected_state else ''}")
+    print(f"NExt =>\t\t {next_state.next_edges if next_state else ''}")
