@@ -29,11 +29,9 @@ class State:
         self,
         next_edges: List[Edge] = [],
         is_end: bool = False,
-        invalid_next_pattern: str = "",
     ):
         self.next_edges = next_edges
         self.is_end = is_end
-        self.invalid_next_pattern = invalid_next_pattern
 
     def next_dfa_tree_state(self, other: str):
         for i in self.next_edges:
@@ -115,38 +113,27 @@ def create_comment_tree(mother_state):
 
 
 def create_digits_tree(mother_state):
-    number_error_state = State(
-        is_end=True, invalid_next_pattern=f"[{string.ascii_letters}]+"
-    )
-    edge_error = Edge(
-        pattern="[abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ]+",
-        next_state=number_error_state,
-    )
+    number_error_state = State(is_end=True)
+    edge_error = Edge(pattern="[a-zA-Z]+", next_state=number_error_state)
     number_error_state.next_edges = [edge_error]
 
-    number_end_state = State(
-        is_end=True, invalid_next_pattern=f"[{string.ascii_letters}]+"
-    )
+    number_end_state = State(is_end=True)
     edge_number = Edge(pattern="[0-9]+", next_state=number_end_state)
     number_end_state.next_edges = [edge_number, edge_error]
     mother_state.next_edges.append(edge_number)
 
 
 def create_keyword_identifier_tree(mother_state):
-    edge_letters_and_digits = Edge(
-        pattern="[abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789]"
-    )
+    error_edge = Edge(pattern="[^a-zA-Z0-9\x09\x0A\x0B\x0C\x20;:,\[\]\(\)\{\}\+\-\<]")
+    error_state = State(is_end=True, next_edges=[error_edge])
+    error_edge.next_state = error_state
 
-    main_state = State(next_edges=[edge_letters_and_digits])
+    edge_letters_and_digits = Edge(pattern="[a-zA-Z0-9]")
+    main_state = State(next_edges=[edge_letters_and_digits, error_edge])
 
     edge_letters_and_digits.next_state = main_state
 
-    mother_state.next_edges.append(
-        Edge(
-            pattern="[abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ]",
-            next_state=main_state,
-        )
-    )
+    mother_state.next_edges.append(Edge(pattern="[a-zA-Z]", next_state=main_state))
 
 
 def create_dfa_tree():

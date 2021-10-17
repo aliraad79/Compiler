@@ -6,17 +6,12 @@ from __future__ import annotations
 from enum import Enum
 from typing import List, Tuple
 import re
-from utils import (
-    print_log,
-    add_tokens_to_file,
-    add_symbols_to_file,
-    add_errors_to_file,
-)
+from utils import *
 
 
 class TokenType(Enum):
     COMMENT = "(\/\*(\*(?!\/)|[^*])*\*\/)|(\/\/.*/n)"  # or EOF
-    ID = "^[A-Za-z][A-Za-z0-9]*"
+    ID = "^[A-Za-z][A-Za-z0-9]*$"
     KEYWORD = "^(if|else|void|int|repeat|break|until|return)$"
     NUM = "^[0-9]+"
     SYMBOL = ";|:|,|\[|\]|\(|\)|{|}|\+|-|\*|=|<|=="
@@ -53,7 +48,7 @@ def add_token_to_array(token) -> None:
     for error_regex in LexicalError:
         if re.match(error_regex.value[0], token):
             error_dict.setdefault(line_number, []).append((error_regex.value[1], token))
-            break
+            return
 
     _type = ""
     for regex in TokenType:
@@ -143,14 +138,14 @@ if __name__ == "__main__":
 
         can_be_continued = next_state != None
 
-        if line_number == 16 and True:
+        if line_number == 8 and False:
             print_log(
                 buffer,
                 char,
                 next_char,
                 selected_state,
                 can_be_continued,
-                line_number=18,
+                line_number=9,
             )
 
         if can_be_continued:
