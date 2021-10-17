@@ -37,7 +37,7 @@ class State:
         for i in self.next_edges:
             if i.is_pattern_state and re.match(i.pattern, other):
                 return i.next_state
-            elif i.char == other:
+            elif i.char != "" and i.char == other:
                 return i.next_state
 
     def __repr__(self):
@@ -53,12 +53,13 @@ def create_symbol_tree(mother_state: State):
 
     second_state_equal = State(next_edges=[], is_end=True)
     edge_equal = Edge(char="=", next_state=second_state_equal)
-    first_state_equal = State(next_edges=[edge_equal,error_edge])
+    first_state_equal = State(next_edges=[edge_equal, error_edge])
     mother_state.next_edges.append(Edge(char="=", next_state=first_state_equal))
 
     state_unmatch_comment = State(next_edges=[], is_end=True)
     state_star = State(
-        next_edges=[Edge(char="/", next_state=state_unmatch_comment),error_edge], is_end=True
+        next_edges=[Edge(char="/", next_state=state_unmatch_comment), error_edge],
+        is_end=True,
     )
     mother_state.next_edges.append(Edge(char="*", next_state=state_star))
 
@@ -98,15 +99,12 @@ def create_comment_tree(mother_state):
 
     # //
     edge_new_line = Edge(char="\n", next_state=comment_end_state)
-    double_slash_loop_state = State()
 
-    edge_everything_but_newline = Edge(
-        pattern="[^\n]+", next_state=double_slash_loop_state
-    )
-
-    double_slash_loop_state.next_edges = [edge_everything_but_newline]
+    edge_everything_but_newline = Edge(pattern="[^\n]+")
 
     state_in_comment = State(next_edges=[edge_everything_but_newline, edge_new_line])
+
+    edge_everything_but_newline.next_state = state_in_comment
 
     edge_double_slash = Edge(char="/", next_state=state_in_comment)
 

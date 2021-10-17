@@ -10,17 +10,15 @@ from utils import *
 
 
 class TokenType(Enum):
-    COMMENT = "(\/\*(\*(?!\/)|[^*])*\*\/)|(\/\/.*/n)"  # or EOF
+    COMMENT = "(\/\*(\*(?!\/)|[^*])*\*\/)|(\/\/.*\n)"  # or EOF
     ID = "^[A-Za-z][A-Za-z0-9]*$"
     KEYWORD = "^(if|else|void|int|repeat|break|until|return)$"
     NUM = "^[0-9]+"
     SYMBOL = "^(;|:|,|\[|\]|\(|\)|{|}|\+|-|\*|=|<|==)$"
-    WHITESPACE = "\x09|\x0A|\x0B|\x0C|\x20"
+    WHITESPACE = "^(\x09|\x0A|\x0B|\x0C|\x20)$"
 
 
 class LexicalError(Enum):
-    # UNCLOSED_COMMENT = "Unclosed comment"
-    # INVALID_INPUT = "Invalid input"
     UNMATCHED_COMMENT = ("\*/", "Unmatched comment")
     INVALID_NUMBER = ("^[0-9]+[A-Za-z]+", "Invalid number")
 
@@ -42,8 +40,16 @@ def get_next_char():
 
 
 def add_token_to_array(token) -> None:
+    global last_comment_line_number
+
     if token == "":
         return None
+
+    if "/*" in token and token[-2:] != "*/":
+        error_dict.setdefault(last_comment_line_number, []).append(
+            ("Unclosed comment", token[:7] + "..." if len(token) > 7 else "")
+        )
+        return
 
     for error_regex in LexicalError:
         if re.match(error_regex.value[0], token):
@@ -111,6 +117,10 @@ if __name__ == "__main__":
                 char = buffer[-1]
                 next_char = get_next_char()
 
+        # next line
+        if char == "\n":
+            line_number += 1
+
         # update last_comment_line_number
         if char == "/" and (next_char in ["/", "*"]):
             last_comment_line_number = line_number
@@ -130,7 +140,7 @@ if __name__ == "__main__":
 
         can_be_continued = next_state != None
 
-        if line_number == 33 and False:
+        if line_number == 2 and False:
             print_log(
                 buffer,
                 char,
@@ -138,8 +148,12 @@ if __name__ == "__main__":
                 selected_state,
                 next_state,
                 can_be_continued,
-                line_number=34,
+                line_number=3,
             )
+
+        # end of file
+        if char == "":
+            break
 
         if can_be_continued:
             char = next_char
@@ -148,23 +162,6 @@ if __name__ == "__main__":
         elif buffer != []:
             add_token_to_array(get_token_from_buffer())
             next_selected_state = None
-
-        # end of file
-        if char == "":
-            if buffer[0:2] == ["/", "*"]:
-                comment = "".join(buffer)
-
-                error_dict.setdefault(last_comment_line_number, []).append(
-                    (
-                        "Unclosed comment",
-                        "".join(comment if len(comment) <= 7 else comment[:7] + "..."),
-                    )
-                )
-            break
-
-        # next line
-        if char == "\n":
-            line_number += 1
 
     add_tokens_to_file(line_number, token_dict)
     add_symbols_to_file(symbol_list)

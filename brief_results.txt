@@ -34,10 +34,8 @@ Files ./symbol_table.txt and tests/T08/symbol_table.txt differ
 
 
 =====================================>>>>> Running Test tests/T09...
-Files ./tokens.txt and tests/T09/tokens.txt differ
 Files ./symbol_table.txt and tests/T09/symbol_table.txt differ
 
 
 =====================================>>>>> Running Test tests/T10...
-Files ./lexical_errors.txt and tests/T10/lexical_errors.txt differ
 Files ./symbol_table.txt and tests/T10/symbol_table.txt differ

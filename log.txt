@@ -464,7 +464,8 @@ Files ./lexical_errors.txt and tests/T08/lexical_errors.txt are identical
 31.	(ID, output) (SYMBOL, () (ID, f) (SYMBOL, () (NUM, 40) (SYMBOL, ,) (ID, result) (SYMBOL, )) (SYMBOL, )) (SYMBOL, ;	31.	(ID, output) (SYMBOL, () (ID, f) (SYMBOL, () (NUM, 40) (SYMBOL, ,) (ID, result) (SYMBOL, )) (SYMBOL, )) (SYMBOL, ;																
 32.	(ID, output) (SYMBOL, () (ID, count) (SYMBOL, )) (SYMBOL, ;) 								32.	(ID, output) (SYMBOL, () (ID, count) (SYMBOL, )) (SYMBOL, ;) 																
 33.	(SYMBOL, }) 														33.	(SYMBOL, }) 																
-															    >	34.	(NUM, 1941) 																
+34.	(NUM, 1941) 														34.	(NUM, 1941) 																
+Files ./tokens.txt and tests/T09/tokens.txt are identical
 
 
               *** lexical_errors.txt diffrences ***
@@ -540,7 +541,7 @@ Files ./tokens.txt and tests/T10/tokens.txt are identical
 
 
               *** lexical_errors.txt diffrences ***
-19.	(//comment1, Invalid input) 											    /	There is no lexical error.
+There is no lexical error.													There is no lexical error.Files ./lexical_errors.txt and tests/T10/lexical_errors.txt are identical
 
 
               *** symbol_table.txt diffrences ***
