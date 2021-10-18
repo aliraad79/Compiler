@@ -1,11 +1,13 @@
-# Jafar Sadeghi 97
+# Jafar Sadeghi 97106079
 # Ali Ahmadi Kafeshani 97105703
-# No prints please
 
 from __future__ import annotations
+import re
+
 from enum import Enum
 from typing import List, Tuple
-import re
+
+from dfa_tree import create_dfa_tree, State
 from utils import *
 
 
@@ -37,6 +39,15 @@ def get_next_char():
         char = file.read(char_pointer)
     buffer.append(char[char_pointer - 1 :])
     return char[char_pointer - 1 :]
+
+
+def get_token_from_buffer():
+    global buffer
+
+    length = len(buffer) - 1
+    token = buffer[:length]
+    buffer = [buffer[length]]
+    return "".join(token)
 
 
 def add_token_to_array(token) -> None:
@@ -71,15 +82,6 @@ def add_token_to_array(token) -> None:
                 symbol_list.append(token)
 
 
-def get_token_from_buffer():
-    global buffer
-
-    length = len(buffer) - 1
-    token = buffer[:length]
-    buffer = [buffer[length]]
-    return "".join(token)
-
-
 # global vars
 token_dict: dict[int : List[Token]] = {}
 symbol_list: list[str] = []
@@ -91,7 +93,6 @@ char_pointer = 0
 last_comment_line_number: int = 0
 
 if __name__ == "__main__":
-    from dfa_tree import create_dfa_tree, State
 
     dfa_mother_state_tree = create_dfa_tree()
     next_selected_state = None
@@ -140,7 +141,7 @@ if __name__ == "__main__":
                 selected_state,
                 next_state,
                 can_be_continued,
-                line_number=3,
+                line_number=line_number + 1,
             )
 
         # end of file
