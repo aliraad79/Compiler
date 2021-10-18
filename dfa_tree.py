@@ -1,6 +1,5 @@
 from typing import List
 import re
-import string
 
 
 class Edge:
@@ -25,13 +24,8 @@ class Edge:
 
 
 class State:
-    def __init__(
-        self,
-        next_edges: List[Edge] = [],
-        is_end: bool = False,
-    ):
+    def __init__(self, next_edges: List[Edge] = []):
         self.next_edges = next_edges
-        self.is_end = is_end
 
     def next_dfa_tree_state(self, other: str):
         for i in self.next_edges:
@@ -45,34 +39,33 @@ class State:
 
 
 def create_symbol_tree(mother_state: State):
-    error_state = State(is_end=True, next_edges=[])
+    error_state = State(next_edges=[])
     error_edge = Edge(char="#", next_state=error_state)
-    symbol_end_state = State(next_edges=[], is_end=True)
+    symbol_end_state = State(next_edges=[])
     for i in [";", ":", ",", "[", "]", "(", ")", "{", "}", "+", "-", "<"]:
         mother_state.next_edges.append(Edge(char=i, next_state=symbol_end_state))
 
-    second_state_equal = State(next_edges=[], is_end=True)
+    second_state_equal = State(next_edges=[])
     edge_equal = Edge(char="=", next_state=second_state_equal)
     first_state_equal = State(next_edges=[edge_equal, error_edge])
     mother_state.next_edges.append(Edge(char="=", next_state=first_state_equal))
 
-    state_unmatch_comment = State(next_edges=[], is_end=True)
+    state_unmatch_comment = State(next_edges=[])
     state_star = State(
-        next_edges=[Edge(char="/", next_state=state_unmatch_comment), error_edge],
-        is_end=True,
+        next_edges=[Edge(char="/", next_state=state_unmatch_comment), error_edge]
     )
     mother_state.next_edges.append(Edge(char="*", next_state=state_star))
 
 
 def create_whitespace_tree(mother_state):
-    whitespace_end_state = State(next_edges=[], is_end=True)
+    whitespace_end_state = State(next_edges=[])
     white_spaces = ["\x09", "\x0A", "\x0B", "\x0C", "\x20"]
     for i in white_spaces:
         mother_state.next_edges.append(Edge(char=i, next_state=whitespace_end_state))
 
 
 def create_comment_tree(mother_state):
-    comment_end_state = State(next_edges=[], is_end=True)
+    comment_end_state = State(next_edges=[])
 
     # /* . */
     edge_slash = Edge(char="/", next_state=comment_end_state)
@@ -113,17 +106,17 @@ def create_comment_tree(mother_state):
 
 
 def create_digits_tree(mother_state):
-    number_error_state = State(is_end=True, next_edges=[])
+    number_error_state = State(next_edges=[])
     edge_error = Edge(pattern="[a-zA-Z]+", next_state=number_error_state)
 
-    number_end_state = State(is_end=True)
+    number_end_state = State()
     edge_number = Edge(pattern="[0-9]+", next_state=number_end_state)
     number_end_state.next_edges = [edge_number, edge_error]
     mother_state.next_edges.append(edge_number)
 
 
 def create_keyword_identifier_tree(mother_state):
-    error_state = State(is_end=True, next_edges=[])
+    error_state = State(next_edges=[])
     error_edge = Edge(
         pattern="[^a-zA-Z0-9\x09\x0A\x0B\x0C\x20;:,\[\]\(\)\{\}\+\-\<]",
         next_state=error_state,

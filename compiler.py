@@ -45,7 +45,7 @@ def add_token_to_array(token) -> None:
     if token == "":
         return None
 
-    if "/*" in token and token[-2:] != "*/":
+    if token[:2] == "/*" and token[-2:] != "*/":
         error_dict.setdefault(last_comment_line_number, []).append(
             ("Unclosed comment", token[:7] + "..." if len(token) > 7 else "")
         )
@@ -80,14 +80,6 @@ def get_token_from_buffer():
     return "".join(token)
 
 
-def get_full_buffer():
-    global buffer
-
-    token = buffer
-    buffer = []
-    return "".join(token)
-
-
 # global vars
 token_dict: dict[int : List[Token]] = {}
 symbol_list: list[str] = []
@@ -110,7 +102,7 @@ if __name__ == "__main__":
             char = get_next_char()
             next_char = get_next_char()
         else:
-            if len(buffer) > 1:
+            if len(buffer) >= 2:
                 char = buffer[-2]
                 next_char = buffer[-1]
             else:
