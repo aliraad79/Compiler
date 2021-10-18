@@ -87,10 +87,10 @@ token_dict: dict[int : List[Token]] = {}
 symbol_list: list[str] = []
 error_dict: dict[int:Tuple] = {}
 
-buffer: List[str] = []
+buffer = []
 line_number: int = 0
 char_pointer = 0
-last_comment_line_number: int = 0
+last_comment_line_number= 0
 
 if __name__ == "__main__":
 
