@@ -970,11 +970,9 @@
 
 
               *** tokens.txt diffrences ***
-10.	(KEYWORD, if) (SYMBOL, () (SYMBOL, *) (SYMBOL, () (SYMBOL, () (SYMBOL, )) (ID, p) (SYMBOL, )) (SYMBOL, =) (NUM, 2)  |	10.	(KEYWORD, if) (SYMBOL, () (SYMBOL, *) (SYMBOL, () (SYMBOL, () (KEYWORD, int) (SYMBOL, *) (SYMBOL, )) (ID, p) (SYMB
 
 
               *** lexical_errors.txt diffrences ***
-10.	(int*, Invalid input) (!, Invalid input) 									    |	10.	(!, Invalid input) 
 
 
               *** symbol_table.txt diffrences ***
@@ -996,11 +994,9 @@
 
 
               *** tokens.txt diffrences ***
-12.	(ID, for) (SYMBOL, () (NUM, 0) (SYMBOL, ;) (ID, i) (SYMBOL, <) (NUM, 8) (SYMBOL, ;) (ID, i) (SYMBOL, +) (SYMBOL, +  |	12.	(ID, for) (SYMBOL, () (ID, r) (SYMBOL, =) (ID, i) (SYMBOL, =) (NUM, 0) (SYMBOL, ;) (ID, i) (SYMBOL, <) (NUM, 8) (S
 
 
               *** lexical_errors.txt diffrences ***
-12.	(r=, Invalid input) (i=, Invalid input) 									    <
 
 
               *** symbol_table.txt diffrences ***
@@ -1034,11 +1030,9 @@
 
 
               *** tokens.txt diffrences ***
-13.	(ID, while) (SYMBOL, () (ID, t) (SYMBOL, <) (SYMBOL, =) (ID, n) (SYMBOL, )) (SYMBOL, {) 			    |	13.	(ID, while) (SYMBOL, () (ID, t) (SYMBOL, *) (ID, t) (SYMBOL, <) (SYMBOL, =) (ID, n) (SYMBOL, )) (SYMBOL, {) 
 
 
               *** lexical_errors.txt diffrences ***
-13.	(t*, Invalid input) 												    <
 
 
               *** symbol_table.txt diffrences ***
@@ -2024,11 +2018,9 @@
 
 
               *** tokens.txt diffrences ***
-28.	(KEYWORD, if) (SYMBOL, () (ID, sizeof) (SYMBOL, () (ID, x) (SYMBOL, )) (SYMBOL, =) (ID, sizeof) (SYMBOL, () (SYMBO  |	28.	(KEYWORD, if) (SYMBOL, () (ID, sizeof) (SYMBOL, () (ID, x) (SYMBOL, )) (SYMBOL, =) (ID, sizeof) (SYMBOL, () (KEYWO
 
 
               *** lexical_errors.txt diffrences ***
-28.	(!, Invalid input) (void*, Invalid input) 									    |	28.	(!, Invalid input) 
 
 
               *** symbol_table.txt diffrences ***
@@ -2040,9 +2032,9 @@
 6.	if														    |	6.	break
 7.	return														    |	7.	until
 8.	sizeof														    |	8.	return
-9.	main														    |	9.	foo
-10.	else														    |	10.	x
-11.	void														    |	11.	y
+9.	void														    |	9.	foo
+10.	main														    |	10.	x
+11.	else														    |	11.	y
 12.	repeat														    |	12.	p
 13.	break														    |	13.	sizeof
 14.	until														    |	14.	main
@@ -2243,15 +2235,9 @@
 
 
               *** tokens.txt diffrences ***
-5.	(ID, define) (NUM, 1) (ID, VAR) (SYMBOL, () (ID, A) (SYMBOL, ,) (SYMBOL, )) (NUM, 0) 				    |	5.	(ID, define) (ID, VAR) (SYMBOL, () (ID, A) (SYMBOL, ,) (SYMBOL, )) (NUM, 0) 
-20.	(KEYWORD, if) (SYMBOL, () (NUM, 1) (ID, VAR) (SYMBOL, () (NUM, 1) (SYMBOL, ,) (NUM, 2) (SYMBOL, )) (SYMBOL, )) 	    |	20.	(KEYWORD, if) (SYMBOL, () (ID, VAR) (SYMBOL, () (NUM, 1) (SYMBOL, ,) (NUM, 2) (SYMBOL, )) (SYMBOL, )) 
-22.	(KEYWORD, if) (SYMBOL, () (NUM, 1) (ID, VAR) (SYMBOL, () (NUM, 1) (SYMBOL, ,) (NUM, 2) (SYMBOL, ,) (NUM, 3) (SYMBO  |	22.	(KEYWORD, if) (SYMBOL, () (ID, VAR) (SYMBOL, () (NUM, 1) (SYMBOL, ,) (NUM, 2) (SYMBOL, ,) (NUM, 3) (SYMBOL, )) (SY
 
 
               *** lexical_errors.txt diffrences ***
-5.	(#, Invalid input) (ZERO_, Invalid input) (_, Invalid input) (., Invalid input) (., Invalid input) (., Invalid inp  |	5.	(#, Invalid input) (ZERO_, Invalid input) (1_, Invalid number) (., Invalid input) (., Invalid input) (., Invalid i
-20.	(ZERO_, Invalid input) (_, Invalid input) 									    |	20.	(ZERO_, Invalid input) (1_, Invalid number) 
-22.	(ZERO_, Invalid input) (_, Invalid input) 									    |	22.	(ZERO_, Invalid input) (1_, Invalid number) 
 
 
               *** symbol_table.txt diffrences ***
@@ -2561,29 +2547,24 @@
 
 
               *** tokens.txt diffrences ***
-1.	(ID, define) (ID, NULL) (SYMBOL, () (SYMBOL, () (SYMBOL, )) (NUM, 0) (SYMBOL, )) 				    |	1.	(ID, define) (ID, NULL) (SYMBOL, () (SYMBOL, () (KEYWORD, void) (SYMBOL, *) (SYMBOL, )) (NUM, 0) (SYMBOL, )) 
-2.	(ID, define) (ID, NULL) (SYMBOL, () (SYMBOL, () (SYMBOL, )) (NUM, 0) (SYMBOL, )) 				    |	2.	(ID, define) (ID, NULL) (SYMBOL, () (SYMBOL, () (KEYWORD, void) (SYMBOL, *) (SYMBOL, )) (NUM, 0) (SYMBOL, )) 
 
 
               *** lexical_errors.txt diffrences ***
-1.	(#, Invalid input) (void*, Invalid input) 									    |	1.	(#, Invalid input) 
-2.	(#, Invalid input) (void*, Invalid input) 									    |	2.	(#, Invalid input) 
 
 
               *** symbol_table.txt diffrences ***
 1.	define														    |	1.	if
 2.	NULL														    |	2.	else
-3.	FOO														    |	3.	void
-4.	X														    |	4.	int
-5.	Y														    |	5.	repeat
-6.	Z														    |	6.	break
-7.	BAR														    |	7.	until
-8.	int														    |	8.	return
-9.	main														    |	9.	define
-10.	return														    |	10.	NULL
-11.	if														    |	11.	FOO
-12.	else														    |	12.	X
-13.	void														    |	13.	Y
+4.	FOO														    |	4.	int
+5.	X														    |	5.	repeat
+6.	Y														    |	6.	break
+7.	Z														    |	7.	until
+8.	BAR														    |	8.	return
+9.	int														    |	9.	define
+10.	main														    |	10.	NULL
+11.	return														    |	11.	FOO
+12.	if														    |	12.	X
+13.	else														    |	13.	Y
 14.	repeat														    |	14.	Z
 15.	break														    |	15.	BAR
 16.	until														    |	16.	main
@@ -2595,11 +2576,9 @@
 
 
               *** tokens.txt diffrences ***
-4.	(KEYWORD, return) (NUM, 0) (SYMBOL, ;) 										    |	4.	(KEYWORD, return) (SYMBOL, ;) 
 
 
               *** lexical_errors.txt diffrences ***
-4.	(L', Invalid input) (\, Invalid input) (', Invalid input) 							    |	4.	(L', Invalid input) (\, Invalid input) (0', Invalid number) 
 
 
               *** symbol_table.txt diffrences ***
@@ -2724,13 +2703,9 @@
 
 
               *** tokens.txt diffrences ***
-10.	(ID, foo) (SYMBOL, =) (SYMBOL, () (SYMBOL, )) (ID, x) (SYMBOL, ;) 						    |	10.	(ID, foo) (SYMBOL, =) (SYMBOL, () (KEYWORD, void) (SYMBOL, *) (SYMBOL, )) (ID, x) (SYMBOL, ;) 
-13.	(KEYWORD, return) (SYMBOL, *) (SYMBOL, *) (SYMBOL, () (SYMBOL, *) (SYMBOL, )) (ID, bar) (SYMBOL, ;) 		    |	13.	(KEYWORD, return) (SYMBOL, *) (SYMBOL, *) (SYMBOL, () (KEYWORD, int) (SYMBOL, *) (SYMBOL, *) (SYMBOL, )) (ID, bar)
 
 
               *** lexical_errors.txt diffrences ***
-10.	(void*, Invalid input) (&, Invalid input) 									    |	10.	(&, Invalid input) 
-13.	(int*, Invalid input) 												    <
 
 
               *** symbol_table.txt diffrences ***
@@ -3037,11 +3012,9 @@
 
 
               *** tokens.txt diffrences ***
-14.	(KEYWORD, if) (SYMBOL, () (ID, s) (SYMBOL, [) (NUM, 3) (SYMBOL, ]) (SYMBOL, =) (NUM, 0) (SYMBOL, )) 		    |	14.	(KEYWORD, if) (SYMBOL, () (ID, s) (SYMBOL, [) (NUM, 3) (SYMBOL, ]) (SYMBOL, =) (SYMBOL, )) 
 
 
               *** lexical_errors.txt diffrences ***
-14.	(!, Invalid input) (', Invalid input) (\, Invalid input) (', Invalid input) 					    |	14.	(!, Invalid input) (', Invalid input) (\, Invalid input) (0', Invalid number) 
 
 
               *** symbol_table.txt diffrences ***
@@ -3244,11 +3217,9 @@
 
 
               *** tokens.txt diffrences ***
-1.	(ID, double) (ID, x) (SYMBOL, =) (NUM, 100) (NUM, 0) (SYMBOL, ;) 						    |	1.	(ID, double) (ID, x) (SYMBOL, =) (NUM, 0) (SYMBOL, ;) 
 
 
               *** lexical_errors.txt diffrences ***
-1.	(., Invalid input) 												    |	1.	(100., Invalid number) 
 
 
               *** symbol_table.txt diffrences ***
@@ -3715,11 +3686,9 @@
 
 
               *** tokens.txt diffrences ***
-6.	(ID, define) (ID, f) (SYMBOL, () (ID, a) (SYMBOL, )) (ID, g) 							    |	6.	(ID, define) (ID, f) (SYMBOL, () (ID, a) (SYMBOL, )) (ID, a) (SYMBOL, *) (ID, g) 
 
 
               *** lexical_errors.txt diffrences ***
-6.	(#, Invalid input) (a*, Invalid input) 										    |	6.	(#, Invalid input) 
 
 
               *** symbol_table.txt diffrences ***
@@ -4289,11 +4258,9 @@
 
 
               *** tokens.txt diffrences ***
-10.	(ID, printf) (SYMBOL, () (SYMBOL, ,) (ID, a) (SYMBOL, )) (SYMBOL, ;) 						    |	10.	(ID, printf) (SYMBOL, () (ID, a) (SYMBOL, ,) (ID, a) (SYMBOL, )) (SYMBOL, ;) 
 
 
               *** lexical_errors.txt diffrences ***
-10.	(", Invalid input) (a=, Invalid input) (%, Invalid input) (d\, Invalid input) (n", Invalid input) 		    |	10.	(", Invalid input) (=%, Invalid input) (d\, Invalid input) (n", Invalid input) 
 
 
               *** symbol_table.txt diffrences ***
@@ -4788,45 +4755,9 @@
 
 
               *** tokens.txt diffrences ***
-7.	(ID, float) (ID, a) (SYMBOL, =) (NUM, 12) (NUM, 34) (SYMBOL, +) (NUM, 56) (NUM, 78) (SYMBOL, ;) 		    |	7.	(ID, float) (ID, a) (SYMBOL, =) (NUM, 34) (SYMBOL, +) (NUM, 78) (SYMBOL, ;) 
-11.	(ID, printf) (SYMBOL, () (SYMBOL, ,) (NUM, 12) (NUM, 34) (SYMBOL, +) (NUM, 56) (NUM, 78) (SYMBOL, )) (SYMBOL, ;)    |	11.	(ID, printf) (SYMBOL, () (SYMBOL, ,) (NUM, 34) (SYMBOL, +) (NUM, 78) (SYMBOL, )) (SYMBOL, ;) 
-12.	(ID, printf) (SYMBOL, () (SYMBOL, ,) (NUM, 12) (NUM, 34) (SYMBOL, -) (NUM, 56) (NUM, 78) (SYMBOL, )) (SYMBOL, ;)    |	12.	(ID, printf) (SYMBOL, () (SYMBOL, ,) (NUM, 34) (SYMBOL, -) (NUM, 78) (SYMBOL, )) (SYMBOL, ;) 
-13.	(ID, printf) (SYMBOL, () (SYMBOL, ,) (NUM, 12) (NUM, 34) (SYMBOL, *) (NUM, 56) (NUM, 78) (SYMBOL, )) (SYMBOL, ;)    |	13.	(ID, printf) (SYMBOL, () (SYMBOL, ,) (NUM, 34) (SYMBOL, *) (NUM, 78) (SYMBOL, )) (SYMBOL, ;) 
-14.	(ID, printf) (SYMBOL, () (SYMBOL, ,) (NUM, 12) (NUM, 34) (NUM, 56) (NUM, 78) (SYMBOL, )) (SYMBOL, ;) 		    |	14.	(ID, printf) (SYMBOL, () (SYMBOL, ,) (NUM, 34) (NUM, 78) (SYMBOL, )) (SYMBOL, ;) 
-17.	(ID, printf) (SYMBOL, () (ID, d) (ID, d) (ID, d) (ID, d) (ID, d) (SYMBOL, ,) (NUM, 12) (NUM, 34) (SYMBOL, <) (NUM,  |	17.	(ID, printf) (SYMBOL, () (ID, d) (ID, d) (ID, d) (ID, d) (ID, d) (SYMBOL, ,) (NUM, 34) (SYMBOL, <) (NUM, 78) (SYMB
-18.	(ID, printf) (SYMBOL, () (ID, d) (ID, d) (ID, d) (ID, d) (ID, d) (SYMBOL, ,) (NUM, 12) (NUM, 34) (SYMBOL, <) (NUM,  |	18.	(ID, printf) (SYMBOL, () (ID, d) (ID, d) (ID, d) (ID, d) (ID, d) (SYMBOL, ,) (NUM, 34) (SYMBOL, <) (NUM, 34) (SYMB
-19.	(ID, printf) (SYMBOL, () (ID, d) (ID, d) (ID, d) (ID, d) (ID, d) (SYMBOL, ,) (NUM, 56) (NUM, 78) (SYMBOL, <) (NUM,  |	19.	(ID, printf) (SYMBOL, () (ID, d) (ID, d) (ID, d) (ID, d) (ID, d) (SYMBOL, ,) (NUM, 78) (SYMBOL, <) (NUM, 34) (SYMB
-22.	(ID, a) (SYMBOL, =) (NUM, 12) (NUM, 34) (SYMBOL, ;) 								    |	22.	(ID, a) (SYMBOL, =) (NUM, 34) (SYMBOL, ;) 
-23.	(ID, a) (SYMBOL, +) (SYMBOL, =) (NUM, 56) (NUM, 78) (SYMBOL, ;) 						    |	23.	(ID, a) (SYMBOL, +) (SYMBOL, =) (NUM, 78) (SYMBOL, ;) 
-26.	(ID, a) (SYMBOL, =) (NUM, 12) (NUM, 34) (SYMBOL, ;) 								    |	26.	(ID, a) (SYMBOL, =) (NUM, 34) (SYMBOL, ;) 
-27.	(ID, a) (SYMBOL, -) (SYMBOL, =) (NUM, 56) (NUM, 78) (SYMBOL, ;) 						    |	27.	(ID, a) (SYMBOL, -) (SYMBOL, =) (NUM, 78) (SYMBOL, ;) 
-30.	(ID, a) (SYMBOL, =) (NUM, 12) (NUM, 34) (SYMBOL, ;) 								    |	30.	(ID, a) (SYMBOL, =) (NUM, 34) (SYMBOL, ;) 
-31.	(ID, a) (SYMBOL, *) (SYMBOL, =) (NUM, 56) (NUM, 78) (SYMBOL, ;) 						    |	31.	(ID, a) (SYMBOL, *) (SYMBOL, =) (NUM, 78) (SYMBOL, ;) 
-34.	(ID, a) (SYMBOL, =) (NUM, 12) (NUM, 34) (SYMBOL, ;) 								    |	34.	(ID, a) (SYMBOL, =) (NUM, 34) (SYMBOL, ;) 
-35.	(ID, a) (SYMBOL, =) (NUM, 56) (NUM, 78) (SYMBOL, ;) 								    |	35.	(ID, a) (SYMBOL, =) (NUM, 78) (SYMBOL, ;) 
-39.	(ID, printf) (SYMBOL, () (SYMBOL, ,) (SYMBOL, +) (NUM, 12) (NUM, 34) (SYMBOL, )) (SYMBOL, ;) 			    |	39.	(ID, printf) (SYMBOL, () (SYMBOL, ,) (SYMBOL, +) (NUM, 34) (SYMBOL, )) (SYMBOL, ;) 
-40.	(ID, printf) (SYMBOL, () (SYMBOL, ,) (SYMBOL, -) (NUM, 12) (NUM, 34) (SYMBOL, )) (SYMBOL, ;) 			    |	40.	(ID, printf) (SYMBOL, () (SYMBOL, ,) (SYMBOL, -) (NUM, 34) (SYMBOL, )) (SYMBOL, ;) 
 
 
               *** lexical_errors.txt diffrences ***
-7.	(., Invalid input) (., Invalid input) 										    |	7.	(12., Invalid number) (56., Invalid number) 
-11.	(", Invalid input) (%, Invalid input) (f\, Invalid input) (n", Invalid input) (., Invalid input) (., Invalid input  |	11.	(", Invalid input) (%, Invalid input) (f\, Invalid input) (n", Invalid input) (12., Invalid number) (56., Invalid 
-12.	(", Invalid input) (%, Invalid input) (f\, Invalid input) (n", Invalid input) (., Invalid input) (., Invalid input  |	12.	(", Invalid input) (%, Invalid input) (f\, Invalid input) (n", Invalid input) (12., Invalid number) (56., Invalid 
-13.	(", Invalid input) (%, Invalid input) (f\, Invalid input) (n", Invalid input) (., Invalid input) (., Invalid input  |	13.	(", Invalid input) (%, Invalid input) (f\, Invalid input) (n", Invalid input) (12., Invalid number) (56., Invalid 
-14.	(", Invalid input) (%, Invalid input) (f\, Invalid input) (n", Invalid input) (., Invalid input) (/, Invalid input  |	14.	(", Invalid input) (%, Invalid input) (f\, Invalid input) (n", Invalid input) (12., Invalid number) (/, Invalid in
-17.	(", Invalid input) (%, Invalid input) (%, Invalid input) (%, Invalid input) (%, Invalid input) (%, Invalid input)   |	17.	(", Invalid input) (%, Invalid input) (%, Invalid input) (%, Invalid input) (%, Invalid input) (%, Invalid input) 
-18.	(", Invalid input) (%, Invalid input) (%, Invalid input) (%, Invalid input) (%, Invalid input) (%, Invalid input)   |	18.	(", Invalid input) (%, Invalid input) (%, Invalid input) (%, Invalid input) (%, Invalid input) (%, Invalid input) 
-19.	(", Invalid input) (%, Invalid input) (%, Invalid input) (%, Invalid input) (%, Invalid input) (%, Invalid input)   |	19.	(", Invalid input) (%, Invalid input) (%, Invalid input) (%, Invalid input) (%, Invalid input) (%, Invalid input) 
-22.	(., Invalid input) 												    |	22.	(12., Invalid number) 
-23.	(., Invalid input) 												    |	23.	(56., Invalid number) 
-26.	(., Invalid input) 												    |	26.	(12., Invalid number) 
-27.	(., Invalid input) 												    |	27.	(56., Invalid number) 
-30.	(., Invalid input) 												    |	30.	(12., Invalid number) 
-31.	(., Invalid input) 												    |	31.	(56., Invalid number) 
-34.	(., Invalid input) 												    |	34.	(12., Invalid number) 
-35.	(/, Invalid input) (., Invalid input) 										    |	35.	(/, Invalid input) (56., Invalid number) 
-39.	(", Invalid input) (%, Invalid input) (f\, Invalid input) (n", Invalid input) (., Invalid input) 		    |	39.	(", Invalid input) (%, Invalid input) (f\, Invalid input) (n", Invalid input) (12., Invalid number) 
-40.	(", Invalid input) (%, Invalid input) (f\, Invalid input) (n", Invalid input) (., Invalid input) 		    |	40.	(", Invalid input) (%, Invalid input) (f\, Invalid input) (n", Invalid input) (12., Invalid number) 
 
 
               *** symbol_table.txt diffrences ***
@@ -4853,19 +4784,9 @@
 
 
               *** tokens.txt diffrences ***
-22.	(ID, charfunc) (SYMBOL, () (NUM, 99) (NUM, 0) (SYMBOL, )) (SYMBOL, ;) 						    |	22.	(ID, charfunc) (SYMBOL, () (NUM, 0) (SYMBOL, )) (SYMBOL, ;) 
-26.	(ID, intfunc) (SYMBOL, () (NUM, 99) (NUM, 0) (SYMBOL, )) (SYMBOL, ;) 						    |	26.	(ID, intfunc) (SYMBOL, () (NUM, 0) (SYMBOL, )) (SYMBOL, ;) 
-30.	(ID, floatfunc) (SYMBOL, () (NUM, 99) (NUM, 0) (SYMBOL, )) (SYMBOL, ;) 						    |	30.	(ID, floatfunc) (SYMBOL, () (NUM, 0) (SYMBOL, )) (SYMBOL, ;) 
-37.	(ID, char) (ID, c) (SYMBOL, =) (NUM, 97) (NUM, 0) (SYMBOL, ;) 							    |	37.	(ID, char) (ID, c) (SYMBOL, =) (NUM, 0) (SYMBOL, ;) 
-42.	(KEYWORD, int) (ID, e) (SYMBOL, =) (NUM, 97) (NUM, 0) (SYMBOL, ;) 						    |	42.	(KEYWORD, int) (ID, e) (SYMBOL, =) (NUM, 0) (SYMBOL, ;) 
 
 
               *** lexical_errors.txt diffrences ***
-22.	(., Invalid input) 												    |	22.	(99., Invalid number) 
-26.	(., Invalid input) 												    |	26.	(99., Invalid number) 
-30.	(., Invalid input) 												    |	30.	(99., Invalid number) 
-37.	(., Invalid input) 												    |	37.	(97., Invalid number) 
-42.	(., Invalid input) 												    |	42.	(97., Invalid number) 
 
 
               *** symbol_table.txt diffrences ***
@@ -4940,15 +4861,9 @@
 
 
               *** tokens.txt diffrences ***
-5.	(ID, printf) (SYMBOL, () (SYMBOL, ,) (NUM, 1) (SYMBOL, )) (SYMBOL, ;) 						    |	5.	(ID, printf) (SYMBOL, () (SYMBOL, ,) (SYMBOL, )) (SYMBOL, ;) 
-6.	(ID, printf) (SYMBOL, () (SYMBOL, ,) (NUM, 10) (SYMBOL, )) (SYMBOL, ;) 						    |	6.	(ID, printf) (SYMBOL, () (SYMBOL, ,) (SYMBOL, )) (SYMBOL, ;) 
-7.	(ID, printf) (SYMBOL, () (SYMBOL, ,) (NUM, 100) (SYMBOL, )) (SYMBOL, ;) 					    |	7.	(ID, printf) (SYMBOL, () (SYMBOL, ,) (SYMBOL, )) (SYMBOL, ;) 
 
 
               *** lexical_errors.txt diffrences ***
-5.	(", Invalid input) (%, Invalid input) (d\, Invalid input) (n", Invalid input) (', Invalid input) (\, Invalid input  |	5.	(", Invalid input) (%, Invalid input) (d\, Invalid input) (n", Invalid input) (', Invalid input) (\, Invalid input
-6.	(", Invalid input) (%, Invalid input) (d\, Invalid input) (n", Invalid input) (', Invalid input) (\, Invalid input  |	6.	(", Invalid input) (%, Invalid input) (d\, Invalid input) (n", Invalid input) (', Invalid input) (\, Invalid input
-7.	(", Invalid input) (%, Invalid input) (d\, Invalid input) (n", Invalid input) (', Invalid input) (\, Invalid input  |	7.	(", Invalid input) (%, Invalid input) (d\, Invalid input) (n", Invalid input) (', Invalid input) (\, Invalid input
 
 
               *** symbol_table.txt diffrences ***
@@ -5069,25 +4984,9 @@
 
 
               *** tokens.txt diffrences ***
-45.	(KEYWORD, void) (ID, Hanoi) (SYMBOL, () (KEYWORD, int) (SYMBOL, ,) (SYMBOL, ,) (SYMBOL, ,) (SYMBOL, )) (SYMBOL, ;)  |	45.	(KEYWORD, void) (ID, Hanoi) (SYMBOL, () (KEYWORD, int) (SYMBOL, ,) (KEYWORD, int) (SYMBOL, *) (SYMBOL, ,) (KEYWORD
-53.	(ID, for) (SYMBOL, () (NUM, 0) (SYMBOL, ;) (ID, i) (SYMBOL, <) (ID, N) (SYMBOL, ;) (ID, i) (SYMBOL, +) (SYMBOL, +)  |	53.	(ID, for) (SYMBOL, () (ID, i) (SYMBOL, =) (NUM, 0) (SYMBOL, ;) (ID, i) (SYMBOL, <) (ID, N) (SYMBOL, ;) (ID, i) (SY
-57.	(ID, for) (SYMBOL, () (NUM, 0) (SYMBOL, ;) (ID, i) (SYMBOL, <) (ID, N) (SYMBOL, ;) (ID, i) (SYMBOL, +) (SYMBOL, +)  |	57.	(ID, for) (SYMBOL, () (ID, i) (SYMBOL, =) (NUM, 0) (SYMBOL, ;) (ID, i) (SYMBOL, <) (ID, N) (SYMBOL, ;) (ID, i) (SY
-61.	(ID, for) (SYMBOL, () (NUM, 0) (SYMBOL, ;) (ID, i) (SYMBOL, <) (ID, N) (SYMBOL, ;) (ID, i) (SYMBOL, +) (SYMBOL, +)  |	61.	(ID, for) (SYMBOL, () (ID, i) (SYMBOL, =) (NUM, 0) (SYMBOL, ;) (ID, i) (SYMBOL, <) (ID, N) (SYMBOL, ;) (ID, i) (SY
-89.	(KEYWORD, if) (SYMBOL, () (SYMBOL, =) (NUM, 1) (SYMBOL, )) (SYMBOL, {) 						    |	89.	(KEYWORD, if) (SYMBOL, () (ID, n) (SYMBOL, ==) (NUM, 1) (SYMBOL, )) (SYMBOL, {) 
-105.	(ID, for) (SYMBOL, () (NUM, 0) (SYMBOL, ;) (ID, i) (SYMBOL, <) (ID, N) (SYMBOL, ;) (ID, i) (SYMBOL, +) (SYMBOL, +)  |	105.	(ID, for) (SYMBOL, () (ID, i) (SYMBOL, =) (NUM, 0) (SYMBOL, ;) (ID, i) (SYMBOL, <) (ID, N) (SYMBOL, ;) (ID, i) (SY
-106.	(ID, for) (SYMBOL, () (NUM, 0) (SYMBOL, ;) (ID, i) (SYMBOL, <) (ID, N) (SYMBOL, ;) (ID, i) (SYMBOL, +) (SYMBOL, +)  |	106.	(ID, for) (SYMBOL, () (ID, i) (SYMBOL, =) (NUM, 0) (SYMBOL, ;) (ID, i) (SYMBOL, <) (ID, N) (SYMBOL, ;) (ID, i) (SY
-107.	(ID, for) (SYMBOL, () (NUM, 0) (SYMBOL, ;) (ID, i) (SYMBOL, <) (ID, N) (SYMBOL, ;) (ID, i) (SYMBOL, +) (SYMBOL, +)  |	107.	(ID, for) (SYMBOL, () (ID, i) (SYMBOL, =) (NUM, 0) (SYMBOL, ;) (ID, i) (SYMBOL, <) (ID, N) (SYMBOL, ;) (ID, i) (SY
 
 
               *** lexical_errors.txt diffrences ***
-45.	(int*, Invalid input) (int*, Invalid input) (int*, Invalid input) 						    <
-53.	(i=, Invalid input) (", Invalid input) (%, Invalid input) (", Invalid input) 					    |	53.	(", Invalid input) (%, Invalid input) (", Invalid input) 
-57.	(i=, Invalid input) (", Invalid input) (%, Invalid input) (", Invalid input) 					    |	57.	(", Invalid input) (%, Invalid input) (", Invalid input) 
-61.	(i=, Invalid input) (", Invalid input) (%, Invalid input) (", Invalid input) 					    |	61.	(", Invalid input) (%, Invalid input) (", Invalid input) 
-89.	(n=, Invalid input) 												    <
-105.	(i=, Invalid input) 												    <
-106.	(i=, Invalid input) 												    <
-107.	(i=, Invalid input) 												    <
 
 
               *** symbol_table.txt diffrences ***
@@ -5138,63 +5037,9 @@
 
 
               *** tokens.txt diffrences ***
-58.	(SYMBOL, *) (ID, p) (SYMBOL, +) (SYMBOL, +) (SYMBOL, =) (SYMBOL, ;) 						    |	58.	(SYMBOL, *) (ID, p) (SYMBOL, +) (SYMBOL, +) (SYMBOL, ;) 
-61.	(SYMBOL, *) (ID, p) (SYMBOL, +) (SYMBOL, +) (SYMBOL, =) (SYMBOL, ;) 						    |	61.	(SYMBOL, *) (ID, p) (SYMBOL, +) (SYMBOL, +) (SYMBOL, ;) 
-79.	(SYMBOL, *) (ID, p) (SYMBOL, +) (SYMBOL, +) (SYMBOL, =) (SYMBOL, ;) 						    |	79.	(SYMBOL, *) (ID, p) (SYMBOL, +) (SYMBOL, +) (SYMBOL, ;) 
-82.	(SYMBOL, *) (ID, p) (SYMBOL, +) (SYMBOL, +) (SYMBOL, =) (SYMBOL, ;) 						    |	82.	(SYMBOL, *) (ID, p) (SYMBOL, +) (SYMBOL, +) (SYMBOL, ;) 
-95.	(SYMBOL, *) (ID, p) (SYMBOL, +) (SYMBOL, +) (SYMBOL, =) (SYMBOL, ;) 						    |	95.	(SYMBOL, *) (ID, p) (SYMBOL, +) (SYMBOL, +) (SYMBOL, ;) 
-98.	(SYMBOL, *) (ID, p) (SYMBOL, +) (SYMBOL, +) (SYMBOL, =) (SYMBOL, ;) 						    |	98.	(SYMBOL, *) (ID, p) (SYMBOL, +) (SYMBOL, +) (SYMBOL, ;) 
-113.	(SYMBOL, *) (ID, p) (SYMBOL, +) (SYMBOL, +) (SYMBOL, =) (SYMBOL, ;) 						    |	113.	(SYMBOL, *) (ID, p) (SYMBOL, +) (SYMBOL, +) (SYMBOL, ;) 
-116.	(SYMBOL, *) (ID, p) (SYMBOL, +) (SYMBOL, +) (SYMBOL, =) (SYMBOL, ;) 						    |	116.	(SYMBOL, *) (ID, p) (SYMBOL, +) (SYMBOL, +) (SYMBOL, ;) 
-134.	(SYMBOL, *) (ID, p) (SYMBOL, +) (SYMBOL, +) (SYMBOL, =) (SYMBOL, ;) 						    |	134.	(SYMBOL, *) (ID, p) (SYMBOL, +) (SYMBOL, +) (SYMBOL, ;) 
-137.	(SYMBOL, *) (ID, p) (SYMBOL, +) (SYMBOL, +) (SYMBOL, =) (SYMBOL, ;) 						    |	137.	(SYMBOL, *) (ID, p) (SYMBOL, +) (SYMBOL, +) (SYMBOL, ;) 
-149.	(SYMBOL, *) (ID, p) (SYMBOL, +) (SYMBOL, +) (SYMBOL, =) (SYMBOL, ;) 						    |	149.	(SYMBOL, *) (ID, p) (SYMBOL, +) (SYMBOL, +) (SYMBOL, ;) 
-152.	(SYMBOL, *) (ID, p) (SYMBOL, +) (SYMBOL, +) (SYMBOL, =) (SYMBOL, ;) 						    |	152.	(SYMBOL, *) (ID, p) (SYMBOL, +) (SYMBOL, +) (SYMBOL, ;) 
-168.	(SYMBOL, *) (ID, p) (SYMBOL, +) (SYMBOL, +) (SYMBOL, =) (SYMBOL, ;) 						    |	168.	(SYMBOL, *) (ID, p) (SYMBOL, +) (SYMBOL, +) (SYMBOL, ;) 
-171.	(SYMBOL, *) (ID, p) (SYMBOL, +) (SYMBOL, +) (SYMBOL, =) (SYMBOL, ;) 						    |	171.	(SYMBOL, *) (ID, p) (SYMBOL, +) (SYMBOL, +) (SYMBOL, ;) 
-181.	(KEYWORD, int) (NUM, 0) (SYMBOL, ,) (ID, n) (SYMBOL, ;) 							    |	181.	(KEYWORD, int) (ID, i) (SYMBOL, =) (NUM, 0) (SYMBOL, ,) (ID, n) (SYMBOL, ;) 
-192.	(ID, x) (SYMBOL, =) (SYMBOL, ;) 										    |	192.	(ID, x) (SYMBOL, =) (ID, x) (SYMBOL, ;) 
-197.	(ID, for) (SYMBOL, () (ID, n) (SYMBOL, -) (NUM, 1) (SYMBOL, ;) (SYMBOL, =) (NUM, 0) (SYMBOL, ;) (ID, i) (SYMBOL, -  |	197.	(ID, for) (SYMBOL, () (ID, i) (SYMBOL, =) (ID, n) (SYMBOL, -) (NUM, 1) (SYMBOL, ;) (SYMBOL, =) (NUM, 0) (SYMBOL, ;
-200.	(SYMBOL, *) (ID, buf) (SYMBOL, +) (SYMBOL, +) (SYMBOL, =) (SYMBOL, ;) 						    |	200.	(SYMBOL, *) (ID, buf) (SYMBOL, +) (SYMBOL, +) (SYMBOL, ;) 
-202.	(SYMBOL, *) (ID, buf) (SYMBOL, +) (SYMBOL, +) (SYMBOL, =) (SYMBOL, ;) 						    |	202.	(SYMBOL, *) (ID, buf) (SYMBOL, +) (SYMBOL, +) (SYMBOL, ;) 
-206.	(ID, for) (SYMBOL, () (ID, n) (SYMBOL, -) (NUM, 1) (SYMBOL, ;) (SYMBOL, =) (NUM, 0) (SYMBOL, ;) (ID, i) (SYMBOL, -  |	206.	(ID, for) (SYMBOL, () (ID, i) (SYMBOL, =) (ID, n) (SYMBOL, -) (NUM, 1) (SYMBOL, ;) (SYMBOL, =) (NUM, 0) (SYMBOL, ;
-209.	(SYMBOL, *) (ID, buf) (SYMBOL, +) (SYMBOL, +) (SYMBOL, =) (SYMBOL, ;) 						    |	209.	(SYMBOL, *) (ID, buf) (SYMBOL, +) (SYMBOL, +) (SYMBOL, ;) 
-211.	(SYMBOL, *) (ID, buf) (SYMBOL, +) (SYMBOL, +) (SYMBOL, =) (SYMBOL, ;) 						    |	211.	(SYMBOL, *) (ID, buf) (SYMBOL, +) (SYMBOL, +) (SYMBOL, ;) 
-215.	(ID, for) (SYMBOL, () (ID, n) (SYMBOL, -) (NUM, 1) (SYMBOL, ;) (SYMBOL, =) (NUM, 0) (SYMBOL, ;) (ID, i) (SYMBOL, -  |	215.	(ID, for) (SYMBOL, () (ID, i) (SYMBOL, =) (ID, n) (SYMBOL, -) (NUM, 1) (SYMBOL, ;) (SYMBOL, =) (NUM, 0) (SYMBOL, ;
-218.	(SYMBOL, *) (ID, buf) (SYMBOL, +) (SYMBOL, +) (SYMBOL, =) (SYMBOL, ;) 						    |	218.	(SYMBOL, *) (ID, buf) (SYMBOL, +) (SYMBOL, +) (SYMBOL, ;) 
-220.	(SYMBOL, *) (ID, buf) (SYMBOL, +) (SYMBOL, +) (SYMBOL, =) (SYMBOL, ;) 						    |	220.	(SYMBOL, *) (ID, buf) (SYMBOL, +) (SYMBOL, +) (SYMBOL, ;) 
-221.	(SYMBOL, *) (NUM, 0) (SYMBOL, ;) 										    |	221.	(SYMBOL, *) (ID, buf) (SYMBOL, ;) 
-237.	(KEYWORD, int) (NUM, 0) (SYMBOL, ,) (ID, n) (SYMBOL, ;) 							    |	237.	(KEYWORD, int) (ID, i) (SYMBOL, =) (NUM, 0) (SYMBOL, ,) (ID, n) (SYMBOL, ;) 
 
 
               *** lexical_errors.txt diffrences ***
-58.	(', Invalid input) (', Invalid input) 										    |	58.	(=', Invalid input) (', Invalid input) 
-61.	(', Invalid input) (', Invalid input) 										    |	61.	(=', Invalid input) (', Invalid input) 
-79.	(', Invalid input) (|, Invalid input) (', Invalid input) 							    |	79.	(=', Invalid input) (|, Invalid input) (', Invalid input) 
-82.	(', Invalid input) (', Invalid input) 										    |	82.	(=', Invalid input) (', Invalid input) 
-95.	(', Invalid input) (_, Invalid input) (', Invalid input) 							    |	95.	(=', Invalid input) (_, Invalid input) (', Invalid input) 
-98.	(', Invalid input) (', Invalid input) 										    |	98.	(=', Invalid input) (', Invalid input) 
-113.	(', Invalid input) (|, Invalid input) (', Invalid input) 							    |	113.	(=', Invalid input) (|, Invalid input) (', Invalid input) 
-116.	(', Invalid input) (', Invalid input) 										    |	116.	(=', Invalid input) (', Invalid input) 
-134.	(', Invalid input) (|, Invalid input) (', Invalid input) 							    |	134.	(=', Invalid input) (|, Invalid input) (', Invalid input) 
-137.	(', Invalid input) (', Invalid input) 										    |	137.	(=', Invalid input) (', Invalid input) 
-149.	(', Invalid input) (_, Invalid input) (', Invalid input) 							    |	149.	(=', Invalid input) (_, Invalid input) (', Invalid input) 
-152.	(', Invalid input) (', Invalid input) 										    |	152.	(=', Invalid input) (', Invalid input) 
-168.	(', Invalid input) (|, Invalid input) (', Invalid input) 							    |	168.	(=', Invalid input) (|, Invalid input) (', Invalid input) 
-171.	(', Invalid input) (', Invalid input) 										    |	171.	(=', Invalid input) (', Invalid input) 
-181.	(i=, Invalid input) 												    <
-192.	(x/, Invalid input) (10L, Invalid number) 									    |	192.	(/, Invalid input) (10L, Invalid number) 
-197.	(i=, Invalid input) (i>, Invalid input) 									    |	197.	(i>, Invalid input) 
-200.	(', Invalid input) (', Invalid input) 										    |	200.	(=', Invalid input) (', Invalid input) 
-202.	(', Invalid input) (\, Invalid input) (n', Invalid input) 							    |	202.	(=', Invalid input) (\, Invalid input) (n', Invalid input) 
-206.	(i=, Invalid input) (i>, Invalid input) 									    |	206.	(i>, Invalid input) 
-209.	(', Invalid input) (', Invalid input) 										    |	209.	(=', Invalid input) (', Invalid input) 
-211.	(', Invalid input) (\, Invalid input) (n', Invalid input) 							    |	211.	(=', Invalid input) (\, Invalid input) (n', Invalid input) 
-215.	(i=, Invalid input) (i>, Invalid input) 									    |	215.	(i>, Invalid input) 
-218.	(', Invalid input) (', Invalid input) 										    |	218.	(=', Invalid input) (', Invalid input) 
-220.	(', Invalid input) (\, Invalid input) (n', Invalid input) 							    |	220.	(=', Invalid input) (\, Invalid input) (n', Invalid input) 
-221.	(buf=, Invalid input) (', Invalid input) (\, Invalid input) (', Invalid input) 					    |	221.	(=', Invalid input) (\, Invalid input) (0', Invalid number) 
-237.	(i=, Invalid input) 												    <
 
 
               *** symbol_table.txt diffrences ***
@@ -5219,11 +5064,12 @@
 19.	long														    |	19.	default
 20.	x														    |	20.	midline
 21.	buf														    |	21.	botline
-22.	n														    |	22.	led
-23.	static														    |	23.	unsigned
-24.	while														    |	24.	long
-25.	if														    |	25.	x
-26.	for														    |	26.	buf
+22.	i														    |	22.	led
+23.	n														    |	23.	unsigned
+24.	static														    |	24.	long
+25.	while														    |	25.	x
+26.	if														    |	26.	buf
+27.	for														    |	27.	i
 28.	main														    |	28.	n
 29.	printf														    |	29.	static
 30.	return														    |	30.	while
@@ -5249,11 +5095,9 @@
 
 
               *** tokens.txt diffrences ***
-9.	(ID, printf) (SYMBOL, () (SYMBOL, ,) (SYMBOL, () (ID, Count) (SYMBOL, <) (NUM, 5) (SYMBOL, )) (SYMBOL, () (ID, Cou  |	9.	(ID, printf) (SYMBOL, () (SYMBOL, ,) (SYMBOL, () (ID, Count) (SYMBOL, <) (NUM, 5) (SYMBOL, )) (SYMBOL, () (ID, Cou
 
 
               *** lexical_errors.txt diffrences ***
-9.	(", Invalid input) (%, Invalid input) (d\, Invalid input) (n", Invalid input) (?, Invalid input) (Count*, Invalid   |	9.	(", Invalid input) (%, Invalid input) (d\, Invalid input) (n", Invalid input) (?, Invalid input) 
 
 
               *** symbol_table.txt diffrences ***
@@ -5369,11 +5213,9 @@
 
 
               *** tokens.txt diffrences ***
-14.	(ID, freddy) (SYMBOL, [) (NUM, 6) (SYMBOL, ]) (SYMBOL, =) (NUM, 0) (SYMBOL, ;) 					    |	14.	(ID, freddy) (SYMBOL, [) (NUM, 6) (SYMBOL, ]) (SYMBOL, =) (SYMBOL, ;) 
 
 
               *** lexical_errors.txt diffrences ***
-14.	(', Invalid input) (\, Invalid input) (', Invalid input) 							    |	14.	(', Invalid input) (\, Invalid input) (0', Invalid number) 
 
 
               *** symbol_table.txt diffrences ***
@@ -5568,15 +5410,9 @@
 
 
               *** tokens.txt diffrences ***
-7.	(ID, case) (NUM, 1) (SYMBOL, :) (ID, printf) (SYMBOL, () (NUM, 1) (SYMBOL, )) (SYMBOL, ;) (KEYWORD, return) (SYMBO  |	7.	(ID, case) (NUM, 1) (SYMBOL, :) (ID, printf) (SYMBOL, () (SYMBOL, )) (SYMBOL, ;) (KEYWORD, return) (SYMBOL, ;) 
-8.	(ID, case) (NUM, 2) (SYMBOL, :) (ID, printf) (SYMBOL, () (NUM, 2) (SYMBOL, )) (SYMBOL, ;) (KEYWORD, break) (SYMBOL  |	8.	(ID, case) (NUM, 2) (SYMBOL, :) (ID, printf) (SYMBOL, () (SYMBOL, )) (SYMBOL, ;) (KEYWORD, break) (SYMBOL, ;) 
-9.	(ID, case) (NUM, 3) (SYMBOL, :) (ID, printf) (SYMBOL, () (NUM, 3) (SYMBOL, )) (SYMBOL, ;) (KEYWORD, return) (SYMBO  |	9.	(ID, case) (NUM, 3) (SYMBOL, :) (ID, printf) (SYMBOL, () (SYMBOL, )) (SYMBOL, ;) (KEYWORD, return) (SYMBOL, ;) 
 
 
               *** lexical_errors.txt diffrences ***
-7.	(", Invalid input) (\, Invalid input) (n", Invalid input) 							    |	7.	(", Invalid input) (1\, Invalid number) (n", Invalid input) 
-8.	(", Invalid input) (\, Invalid input) (n", Invalid input) 							    |	8.	(", Invalid input) (2\, Invalid number) (n", Invalid input) 
-9.	(", Invalid input) (\, Invalid input) (n", Invalid input) 							    |	9.	(", Invalid input) (3\, Invalid number) (n", Invalid input) 
 
 
               *** symbol_table.txt diffrences ***
@@ -5631,13 +5467,9 @@
 
 
               *** tokens.txt diffrences ***
-15.	(ID, array) (SYMBOL, [) (ID, point) (SYMBOL, ]) (ID, x) (SYMBOL, =) (NUM, 12) (NUM, 34) (SYMBOL, ;) 		    |	15.	(ID, array) (SYMBOL, [) (ID, point) (SYMBOL, ]) (ID, x) (SYMBOL, =) (NUM, 34) (SYMBOL, ;) 
-16.	(ID, array) (SYMBOL, [) (ID, point) (SYMBOL, ]) (ID, y) (SYMBOL, =) (NUM, 56) (NUM, 78) (SYMBOL, ;) 		    |	16.	(ID, array) (SYMBOL, [) (ID, point) (SYMBOL, ]) (ID, y) (SYMBOL, =) (NUM, 78) (SYMBOL, ;) 
 
 
               *** lexical_errors.txt diffrences ***
-15.	(point_, Invalid input) (my_, Invalid input) (., Invalid input) (., Invalid input) 				    |	15.	(point_, Invalid input) (my_, Invalid input) (., Invalid input) (12., Invalid number) 
-16.	(point_, Invalid input) (my_, Invalid input) (., Invalid input) (., Invalid input) 				    |	16.	(point_, Invalid input) (my_, Invalid input) (., Invalid input) (56., Invalid number) 
 
 
               *** symbol_table.txt diffrences ***
@@ -5723,27 +5555,9 @@
 
 
               *** tokens.txt diffrences ***
-7.	(ID, printf) (SYMBOL, () (SYMBOL, ,) (ID, a) (SYMBOL, )) (SYMBOL, ;) 						    |	7.	(ID, printf) (SYMBOL, () (ID, a) (SYMBOL, ,) (ID, a) (SYMBOL, )) (SYMBOL, ;) 
-8.	(ID, printf) (SYMBOL, () (SYMBOL, ,) (ID, b) (SYMBOL, )) (SYMBOL, ;) 						    |	8.	(ID, printf) (SYMBOL, () (ID, b) (SYMBOL, ,) (ID, b) (SYMBOL, )) (SYMBOL, ;) 
-9.	(ID, printf) (SYMBOL, () (SYMBOL, ,) (ID, c) (SYMBOL, )) (SYMBOL, ;) 						    |	9.	(ID, printf) (SYMBOL, () (ID, c) (SYMBOL, ,) (ID, c) (SYMBOL, )) (SYMBOL, ;) 
-16.	(ID, printf) (SYMBOL, () (SYMBOL, ,) (ID, e) (SYMBOL, )) (SYMBOL, ;) 						    |	16.	(ID, printf) (SYMBOL, () (ID, e) (SYMBOL, ,) (ID, e) (SYMBOL, )) (SYMBOL, ;) 
-17.	(ID, printf) (SYMBOL, () (SYMBOL, ,) (ID, f) (SYMBOL, )) (SYMBOL, ;) 						    |	17.	(ID, printf) (SYMBOL, () (ID, f) (SYMBOL, ,) (ID, f) (SYMBOL, )) (SYMBOL, ;) 
-18.	(ID, printf) (SYMBOL, () (SYMBOL, ,) (ID, g) (SYMBOL, )) (SYMBOL, ;) 						    |	18.	(ID, printf) (SYMBOL, () (ID, g) (SYMBOL, ,) (ID, g) (SYMBOL, )) (SYMBOL, ;) 
-20.	(ID, printf) (SYMBOL, () (SYMBOL, ,) (ID, i) (SYMBOL, )) (SYMBOL, ;) 						    |	20.	(ID, printf) (SYMBOL, () (ID, i) (SYMBOL, ,) (ID, i) (SYMBOL, )) (SYMBOL, ;) 
-21.	(ID, printf) (SYMBOL, () (SYMBOL, ,) (ID, j) (SYMBOL, )) (SYMBOL, ;) 						    |	21.	(ID, printf) (SYMBOL, () (ID, j) (SYMBOL, ,) (ID, j) (SYMBOL, )) (SYMBOL, ;) 
-22.	(ID, printf) (SYMBOL, () (SYMBOL, ,) (ID, k) (SYMBOL, )) (SYMBOL, ;) 						    |	22.	(ID, printf) (SYMBOL, () (ID, k) (SYMBOL, ,) (ID, k) (SYMBOL, )) (SYMBOL, ;) 
 
 
               *** lexical_errors.txt diffrences ***
-7.	(", Invalid input) (a=, Invalid input) (%, Invalid input) (d\, Invalid input) (n", Invalid input) 		    |	7.	(", Invalid input) (=%, Invalid input) (d\, Invalid input) (n", Invalid input) 
-8.	(", Invalid input) (b=, Invalid input) (%, Invalid input) (d\, Invalid input) (n", Invalid input) 		    |	8.	(", Invalid input) (=%, Invalid input) (d\, Invalid input) (n", Invalid input) 
-9.	(", Invalid input) (c=, Invalid input) (%, Invalid input) (d\, Invalid input) (n", Invalid input) 		    |	9.	(", Invalid input) (=%, Invalid input) (d\, Invalid input) (n", Invalid input) 
-16.	(", Invalid input) (e=, Invalid input) (%, Invalid input) (d\, Invalid input) (n", Invalid input) 		    |	16.	(", Invalid input) (=%, Invalid input) (d\, Invalid input) (n", Invalid input) 
-17.	(", Invalid input) (f=, Invalid input) (%, Invalid input) (d\, Invalid input) (n", Invalid input) 		    |	17.	(", Invalid input) (=%, Invalid input) (d\, Invalid input) (n", Invalid input) 
-18.	(", Invalid input) (g=, Invalid input) (%, Invalid input) (d\, Invalid input) (n", Invalid input) 		    |	18.	(", Invalid input) (=%, Invalid input) (d\, Invalid input) (n", Invalid input) 
-20.	(", Invalid input) (i=, Invalid input) (%, Invalid input) (d\, Invalid input) (n", Invalid input) 		    |	20.	(", Invalid input) (=%, Invalid input) (d\, Invalid input) (n", Invalid input) 
-21.	(", Invalid input) (j=, Invalid input) (%, Invalid input) (d\, Invalid input) (n", Invalid input) 		    |	21.	(", Invalid input) (=%, Invalid input) (d\, Invalid input) (n", Invalid input) 
-22.	(", Invalid input) (k=, Invalid input) (%, Invalid input) (d\, Invalid input) (n", Invalid input) 		    |	22.	(", Invalid input) (=%, Invalid input) (d\, Invalid input) (n", Invalid input) 
 
 
               *** symbol_table.txt diffrences ***
@@ -5943,13 +5757,9 @@
 
 
               *** tokens.txt diffrences ***
-8.	(ID, printf) (SYMBOL, () (ID, Error) (SYMBOL, :) (NUM, 0) (SYMBOL, <) (SYMBOL, -) (NUM, 2147483648) (SYMBOL, )) (S  |	8.	(ID, printf) (SYMBOL, () (ID, Error) (SYMBOL, :) (NUM, 0) (SYMBOL, <) (SYMBOL, -) (SYMBOL, )) (SYMBOL, ;) 
-13.	(ID, printf) (SYMBOL, () (ID, Error) (SYMBOL, :) (NUM, 2147483647) (SYMBOL, <) (NUM, 0) (SYMBOL, )) (SYMBOL, ;)     |	13.	(ID, printf) (SYMBOL, () (ID, Error) (SYMBOL, :) (NUM, 2147483647) (SYMBOL, <) (SYMBOL, )) (SYMBOL, ;) 
 
 
               *** lexical_errors.txt diffrences ***
-8.	(", Invalid input) (\, Invalid input) (n", Invalid input) 							    |	8.	(", Invalid input) (2147483648\, Invalid number) (n", Invalid input) 
-13.	(", Invalid input) (\, Invalid input) (n", Invalid input) 							    |	13.	(", Invalid input) (0\, Invalid number) (n", Invalid input) 
 
 
               *** symbol_table.txt diffrences ***
@@ -5978,41 +5788,9 @@
 
 
               *** tokens.txt diffrences ***
-8.	(ID, struct) (ID, s1) (SYMBOL, {) (ID, char) (ID, x) (SYMBOL, [) (NUM, 1) (SYMBOL, ]) (SYMBOL, ;) (SYMBOL, }) (ID,  |	8.	(ID, struct) (ID, s1) (SYMBOL, {) (ID, char) (ID, x) (SYMBOL, [) (NUM, 1) (SYMBOL, ]) (SYMBOL, ;) (SYMBOL, }) (ID,
-9.	(ID, struct) (ID, s2) (SYMBOL, {) (ID, char) (ID, x) (SYMBOL, [) (NUM, 2) (SYMBOL, ]) (SYMBOL, ;) (SYMBOL, }) (ID,  |	9.	(ID, struct) (ID, s2) (SYMBOL, {) (ID, char) (ID, x) (SYMBOL, [) (NUM, 2) (SYMBOL, ]) (SYMBOL, ;) (SYMBOL, }) (ID,
-10.	(ID, struct) (ID, s3) (SYMBOL, {) (ID, char) (ID, x) (SYMBOL, [) (NUM, 3) (SYMBOL, ]) (SYMBOL, ;) (SYMBOL, }) (ID,  |	10.	(ID, struct) (ID, s3) (SYMBOL, {) (ID, char) (ID, x) (SYMBOL, [) (NUM, 3) (SYMBOL, ]) (SYMBOL, ;) (SYMBOL, }) (ID,
-11.	(ID, struct) (ID, s4) (SYMBOL, {) (ID, char) (ID, x) (SYMBOL, [) (NUM, 4) (SYMBOL, ]) (SYMBOL, ;) (SYMBOL, }) (ID,  |	11.	(ID, struct) (ID, s4) (SYMBOL, {) (ID, char) (ID, x) (SYMBOL, [) (NUM, 4) (SYMBOL, ]) (SYMBOL, ;) (SYMBOL, }) (ID,
-26.	(ID, struct) (ID, hfa11) (SYMBOL, {) (ID, float) (ID, a) (SYMBOL, ;) (SYMBOL, }) (ID, hfa11) (SYMBOL, =) (SYMBOL,   |	26.	(ID, struct) (ID, hfa11) (SYMBOL, {) (ID, float) (ID, a) (SYMBOL, ;) (SYMBOL, }) (ID, hfa11) (SYMBOL, =) (SYMBOL, 
-27.	(ID, struct) (ID, hfa12) (SYMBOL, {) (ID, float) (ID, a) (SYMBOL, ,) (ID, b) (SYMBOL, ;) (SYMBOL, }) (ID, hfa12) (  |	27.	(ID, struct) (ID, hfa12) (SYMBOL, {) (ID, float) (ID, a) (SYMBOL, ,) (ID, b) (SYMBOL, ;) (SYMBOL, }) (ID, hfa12) (
-28.	(ID, struct) (ID, hfa13) (SYMBOL, {) (ID, float) (ID, a) (SYMBOL, ,) (ID, b) (SYMBOL, ,) (ID, c) (SYMBOL, ;) (SYMB  |	28.	(ID, struct) (ID, hfa13) (SYMBOL, {) (ID, float) (ID, a) (SYMBOL, ,) (ID, b) (SYMBOL, ,) (ID, c) (SYMBOL, ;) (SYMB
-29.	(ID, struct) (ID, hfa14) (SYMBOL, {) (ID, float) (ID, a) (SYMBOL, ,) (ID, b) (SYMBOL, ,) (ID, c) (SYMBOL, ,) (ID,   |	29.	(ID, struct) (ID, hfa14) (SYMBOL, {) (ID, float) (ID, a) (SYMBOL, ,) (ID, b) (SYMBOL, ,) (ID, c) (SYMBOL, ,) (ID, 
-31.	(ID, struct) (ID, hfa21) (SYMBOL, {) (ID, double) (ID, a) (SYMBOL, ;) (SYMBOL, }) (ID, hfa21) (SYMBOL, =) (SYMBOL,  |	31.	(ID, struct) (ID, hfa21) (SYMBOL, {) (ID, double) (ID, a) (SYMBOL, ;) (SYMBOL, }) (ID, hfa21) (SYMBOL, =) (SYMBOL,
-32.	(ID, struct) (ID, hfa22) (SYMBOL, {) (ID, double) (ID, a) (SYMBOL, ,) (ID, b) (SYMBOL, ;) (SYMBOL, }) (ID, hfa22)   |	32.	(ID, struct) (ID, hfa22) (SYMBOL, {) (ID, double) (ID, a) (SYMBOL, ,) (ID, b) (SYMBOL, ;) (SYMBOL, }) (ID, hfa22) 
-33.	(ID, struct) (ID, hfa23) (SYMBOL, {) (ID, double) (ID, a) (SYMBOL, ,) (ID, b) (SYMBOL, ,) (ID, c) (SYMBOL, ;) (SYM  |	33.	(ID, struct) (ID, hfa23) (SYMBOL, {) (ID, double) (ID, a) (SYMBOL, ,) (ID, b) (SYMBOL, ,) (ID, c) (SYMBOL, ;) (SYM
-34.	(ID, struct) (ID, hfa24) (SYMBOL, {) (ID, double) (ID, a) (SYMBOL, ,) (ID, b) (SYMBOL, ,) (ID, c) (SYMBOL, ,) (ID,  |	34.	(ID, struct) (ID, hfa24) (SYMBOL, {) (ID, double) (ID, a) (SYMBOL, ,) (ID, b) (SYMBOL, ,) (ID, c) (SYMBOL, ,) (ID,
-36.	(ID, struct) (ID, hfa31) (SYMBOL, {) (ID, long) (ID, double) (ID, a) (SYMBOL, ;) (SYMBOL, }) (ID, hfa31) (SYMBOL,   |	36.	(ID, struct) (ID, hfa31) (SYMBOL, {) (ID, long) (ID, double) (ID, a) (SYMBOL, ;) (SYMBOL, }) (ID, hfa31) (SYMBOL, 
-37.	(ID, struct) (ID, hfa32) (SYMBOL, {) (ID, long) (ID, double) (ID, a) (SYMBOL, ,) (ID, b) (SYMBOL, ;) (SYMBOL, }) (  |	37.	(ID, struct) (ID, hfa32) (SYMBOL, {) (ID, long) (ID, double) (ID, a) (SYMBOL, ,) (ID, b) (SYMBOL, ;) (SYMBOL, }) (
-38.	(ID, struct) (ID, hfa33) (SYMBOL, {) (ID, long) (ID, double) (ID, a) (SYMBOL, ,) (ID, b) (SYMBOL, ,) (ID, c) (SYMB  |	38.	(ID, struct) (ID, hfa33) (SYMBOL, {) (ID, long) (ID, double) (ID, a) (SYMBOL, ,) (ID, b) (SYMBOL, ,) (ID, c) (SYMB
-39.	(ID, struct) (ID, hfa34) (SYMBOL, {) (ID, long) (ID, double) (ID, a) (SYMBOL, ,) (ID, b) (SYMBOL, ,) (ID, c) (SYMB  |	39.	(ID, struct) (ID, hfa34) (SYMBOL, {) (ID, long) (ID, double) (ID, a) (SYMBOL, ,) (ID, b) (SYMBOL, ,) (ID, c) (SYMB
 
 
               *** lexical_errors.txt diffrences ***
-8.	(", Invalid input) (", Invalid input) 										    |	8.	(", Invalid input) (0", Invalid number) 
-9.	(", Invalid input) (", Invalid input) 										    |	9.	(", Invalid input) (12", Invalid number) 
-10.	(", Invalid input) (", Invalid input) 										    |	10.	(", Invalid input) (345", Invalid number) 
-11.	(", Invalid input) (", Invalid input) 										    |	11.	(", Invalid input) (6789", Invalid number) 
-26.	(., Invalid input) 												    |	26.	(11., Invalid number) 
-27.	(., Invalid input) (., Invalid input) 										    |	27.	(12., Invalid number) (12., Invalid number) 
-28.	(., Invalid input) (., Invalid input) (., Invalid input) 							    |	28.	(13., Invalid number) (13., Invalid number) (13., Invalid number) 
-29.	(., Invalid input) (., Invalid input) (., Invalid input) (., Invalid input) 					    |	29.	(14., Invalid number) (14., Invalid number) (14., Invalid number) (14., Invalid number) 
-31.	(., Invalid input) 												    |	31.	(21., Invalid number) 
-32.	(., Invalid input) (., Invalid input) 										    |	32.	(22., Invalid number) (22., Invalid number) 
-33.	(., Invalid input) (., Invalid input) (., Invalid input) 							    |	33.	(23., Invalid number) (23., Invalid number) (23., Invalid number) 
-34.	(., Invalid input) (., Invalid input) (., Invalid input) (., Invalid input) 					    |	34.	(24., Invalid number) (24., Invalid number) (24., Invalid number) (24., Invalid number) 
-36.	(., Invalid input) 												    |	36.	(31., Invalid number) 
-37.	(., Invalid input) (., Invalid input) 										    |	37.	(32., Invalid number) (32., Invalid number) 
-38.	(., Invalid input) (., Invalid input) (., Invalid input) 							    |	38.	(33., Invalid number) (33., Invalid number) (33., Invalid number) 
-39.	(., Invalid input) (., Invalid input) (., Invalid input) (., Invalid input) 					    |	39.	(34., Invalid number) (34., Invalid number) (34., Invalid number) (34., Invalid number) 
 
 
               *** symbol_table.txt diffrences ***
@@ -6192,21 +5970,9 @@
 
 
               *** tokens.txt diffrences ***
-23.	(ID, for) (SYMBOL, () (NUM, 0) (SYMBOL, ;) (ID, j) (SYMBOL, <) (ID, sizeof) (SYMBOL, () (ID, cases) (SYMBOL, )) (I  |	23.	(ID, for) (SYMBOL, () (ID, j) (SYMBOL, =) (NUM, 0) (SYMBOL, ;) (ID, j) (SYMBOL, <) (ID, sizeof) (SYMBOL, () (ID, c
-24.	(ID, for) (SYMBOL, () (NUM, 0) (SYMBOL, ;) (ID, i) (SYMBOL, <) (ID, sizeof) (SYMBOL, () (ID, cases) (SYMBOL, -) (I  |	24.	(ID, for) (SYMBOL, () (ID, i) (SYMBOL, =) (NUM, 0) (SYMBOL, ;) (ID, i) (SYMBOL, <) (ID, sizeof) (SYMBOL, () (ID, c
-25.	(ID, printf) (SYMBOL, () (ID, cases) (SYMBOL, [) (ID, d) (SYMBOL, ]) (ID, c) (SYMBOL, [) (ID, d) (SYMBOL, ]) (SYMB  |	25.	(ID, printf) (SYMBOL, () (ID, cases) (SYMBOL, [) (ID, d) (SYMBOL, ]) (ID, c) (SYMBOL, [) (ID, d) (SYMBOL, ]) (SYMB
-27.	(ID, printf) (SYMBOL, () (ID, cases) (SYMBOL, [) (ID, d) (SYMBOL, ]) (SYMBOL, ,) (ID, j) (SYMBOL, ,) (ID, cases) (  |	27.	(ID, printf) (SYMBOL, () (ID, cases) (SYMBOL, [) (ID, d) (SYMBOL, ]) (ID, b) (SYMBOL, ,) (ID, j) (SYMBOL, ,) (ID, 
-28.	(ID, printf) (SYMBOL, () (ID, cases) (SYMBOL, [) (ID, d) (SYMBOL, ]) (SYMBOL, ,) (ID, j) (SYMBOL, ,) (ID, cases) (  |	28.	(ID, printf) (SYMBOL, () (ID, cases) (SYMBOL, [) (ID, d) (SYMBOL, ]) (ID, e) (SYMBOL, ,) (ID, j) (SYMBOL, ,) (ID, 
-29.	(ID, printf) (SYMBOL, () (ID, cases) (SYMBOL, [) (ID, d) (SYMBOL, ]) (SYMBOL, ,) (ID, j) (SYMBOL, ,) (ID, cases) (  |	29.	(ID, printf) (SYMBOL, () (ID, cases) (SYMBOL, [) (ID, d) (SYMBOL, ]) (ID, k) (SYMBOL, ,) (ID, j) (SYMBOL, ,) (ID, 
 
 
               *** lexical_errors.txt diffrences ***
-23.	(j=, Invalid input) (/, Invalid input) 										    |	23.	(/, Invalid input) 
-24.	(i=, Invalid input) (>, Invalid input) (/, Invalid input) (>, Invalid input) 					    |	24.	(>, Invalid input) (/, Invalid input) (>, Invalid input) 
-25.	(", Invalid input) (%, Invalid input) (., Invalid input) (%, Invalid input) (%, Invalid input) (ld\, Invalid input  |	25.	(", Invalid input) (%, Invalid input) (., Invalid input) (%, Invalid input) (=%, Invalid input) (ld\, Invalid inpu
-27.	(", Invalid input) (%, Invalid input) (., Invalid input) (b=, Invalid input) (%, Invalid input) (ld\, Invalid inpu  |	27.	(", Invalid input) (%, Invalid input) (., Invalid input) (=%, Invalid input) (ld\, Invalid input) (n", Invalid inp
-28.	(", Invalid input) (%, Invalid input) (., Invalid input) (e=, Invalid input) (%, Invalid input) (ld\, Invalid inpu  |	28.	(", Invalid input) (%, Invalid input) (., Invalid input) (=%, Invalid input) (ld\, Invalid input) (n", Invalid inp
-29.	(", Invalid input) (%, Invalid input) (., Invalid input) (k=, Invalid input) (%, Invalid input) (ld\, Invalid inpu  |	29.	(", Invalid input) (%, Invalid input) (., Invalid input) (=%, Invalid input) (ld\, Invalid input) (n", Invalid inp
 
 
               *** symbol_table.txt diffrences ***
@@ -6244,15 +6010,9 @@
 
 
               *** tokens.txt diffrences ***
-12.	(ID, define) (ID, abort) (NUM, 111) 										    |	12.	(ID, define) (ID, abort) 
-17.	(ID, define) (ID, abort) (NUM, 222) 										    |	17.	(ID, define) (ID, abort) 
-22.	(ID, define) (ID, abort) (NUM, 333) 										    |	22.	(ID, define) (ID, abort) 
 
 
               *** lexical_errors.txt diffrences ***
-12.	(#, Invalid input) (", Invalid input) (", Invalid input) 							    |	12.	(#, Invalid input) (", Invalid input) (111", Invalid number) 
-17.	(#, Invalid input) (", Invalid input) (", Invalid input) 							    |	17.	(#, Invalid input) (", Invalid input) (222", Invalid number) 
-22.	(#, Invalid input) (", Invalid input) (", Invalid input) 							    |	22.	(#, Invalid input) (", Invalid input) (333", Invalid number) 
 
 
               *** symbol_table.txt diffrences ***
@@ -6318,15 +6078,9 @@
 
 
               *** tokens.txt diffrences ***
-9.	(ID, char) (ID, s) (SYMBOL, [) (NUM, 9) (SYMBOL, ]) (SYMBOL, =) (SYMBOL, ;) 					    |	9.	(ID, char) (ID, s) (SYMBOL, [) (NUM, 9) (SYMBOL, ]) (SYMBOL, ;) 
-14.	(ID, char) (ID, s) (SYMBOL, [) (NUM, 9) (SYMBOL, ]) (SYMBOL, =) (SYMBOL, ;) 					    |	14.	(ID, char) (ID, s) (SYMBOL, [) (NUM, 9) (SYMBOL, ]) (SYMBOL, ;) 
-19.	(ID, char) (ID, s) (SYMBOL, [) (NUM, 9) (SYMBOL, ]) (SYMBOL, =) (SYMBOL, ;) 					    |	19.	(ID, char) (ID, s) (SYMBOL, [) (NUM, 9) (SYMBOL, ]) (SYMBOL, ;) 
 
 
               *** lexical_errors.txt diffrences ***
-9.	(", Invalid input) (nonono", Invalid input) 									    |	9.	(=", Invalid input) (nonono", Invalid input) 
-14.	(", Invalid input) (nonono", Invalid input) 									    |	14.	(=", Invalid input) (nonono", Invalid input) 
-19.	(", Invalid input) (nonono", Invalid input) 									    |	19.	(=", Invalid input) (nonono", Invalid input) 
 
 
               *** symbol_table.txt diffrences ***
@@ -6487,17 +6241,9 @@
 
 
               *** tokens.txt diffrences ***
-11.	(ID, sizeof) (SYMBOL, () (SYMBOL, )) (SYMBOL, ==) (NUM, 8) (SYMBOL, )) (SYMBOL, {) 				    |	11.	(ID, sizeof) (SYMBOL, () (KEYWORD, void) (SYMBOL, *) (SYMBOL, )) (SYMBOL, ==) (NUM, 8) (SYMBOL, )) (SYMBOL, {) 
-21.	(ID, sizeof) (SYMBOL, () (SYMBOL, )) (SYMBOL, ==) (NUM, 8) (SYMBOL, )) (SYMBOL, {) 				    |	21.	(ID, sizeof) (SYMBOL, () (KEYWORD, void) (SYMBOL, *) (SYMBOL, )) (SYMBOL, ==) (NUM, 8) (SYMBOL, )) (SYMBOL, {) 
-30.	(ID, sizeof) (SYMBOL, () (SYMBOL, )) (SYMBOL, ==) (NUM, 4) (SYMBOL, )) (SYMBOL, {) 				    |	30.	(ID, sizeof) (SYMBOL, () (KEYWORD, void) (SYMBOL, *) (SYMBOL, )) (SYMBOL, ==) (NUM, 4) (SYMBOL, )) (SYMBOL, {) 
-36.	(SYMBOL, () (KEYWORD, void) (SYMBOL, )) (ID, printf) (SYMBOL, () (ID, KO) (ID, no) (SYMBOL, *) (SYMBOL, )) (SYMBOL  |	36.	(SYMBOL, () (KEYWORD, void) (SYMBOL, )) (ID, printf) (SYMBOL, () (ID, KO) (ID, no) (SYMBOL, *) (ID, LP) (SYMBOL, )
 
 
               *** lexical_errors.txt diffrences ***
-11.	(&, Invalid input) (&, Invalid input) (void*, Invalid input) 							    |	11.	(&, Invalid input) (&, Invalid input) 
-21.	(&, Invalid input) (&, Invalid input) (void*, Invalid input) 							    |	21.	(&, Invalid input) (&, Invalid input) 
-30.	(&, Invalid input) (&, Invalid input) (void*, Invalid input) 							    |	30.	(&, Invalid input) (&, Invalid input) 
-36.	(", Invalid input) (_, Invalid input) (_, Invalid input) (LP*, Invalid input) (_, Invalid input) (_, Invalid input  |	36.	(", Invalid input) (_, Invalid input) (_, Invalid input) (*_, Invalid input) (_, Invalid input) (defined., Invalid
 
 
               *** symbol_table.txt diffrences ***
@@ -6515,12 +6261,12 @@
 12.	KO														    |	12.	sizeof
 13.	elif														    |	13.	short
 14.	no														    |	14.	long
-15.	endif														    |	15.	printf
-16.	repeat														    |	16.	KO
-17.	break														    |	17.	elif
-18.	until														    |	18.	no
-19.	return														    |	19.	LP
-															    >	20.	endif
+15.	LP														    |	15.	printf
+16.	endif														    |	16.	KO
+17.	repeat														    |	17.	elif
+18.	break														    |	18.	no
+19.	until														    |	19.	LP
+20.	return														    |	20.	endif
 
 
 
@@ -6529,13 +6275,9 @@
 
 
               *** tokens.txt diffrences ***
-16.	(ID, printf) (SYMBOL, () (SYMBOL, ,) (ID, timeout) (SYMBOL, )) (SYMBOL, :) 					    |	16.	(ID, printf) (SYMBOL, () (ID, timeout) (SYMBOL, ,) (ID, timeout) (SYMBOL, )) (SYMBOL, :) 
-35.	(ID, printf) (SYMBOL, () (SYMBOL, ,) (ID, global) (SYMBOL, )) (SYMBOL, ;) 					    |	35.	(ID, printf) (SYMBOL, () (ID, g) (SYMBOL, ,) (ID, global) (SYMBOL, )) (SYMBOL, ;) 
 
 
               *** lexical_errors.txt diffrences ***
-16.	(", Invalid input) (timeout=, Invalid input) (%, Invalid input) (ld\, Invalid input) (n", Invalid input) 	    |	16.	(", Invalid input) (=%, Invalid input) (ld\, Invalid input) (n", Invalid input) 
-35.	(", Invalid input) (g=, Invalid input) (%, Invalid input) (d\, Invalid input) (n", Invalid input) 		    |	35.	(", Invalid input) (=%, Invalid input) (d\, Invalid input) (n", Invalid input) 
 
 
               *** symbol_table.txt diffrences ***
@@ -6556,27 +6298,27 @@
 15.	goto														    |	15.	long
 16.	global														    |	16.	timeout
 17.	foo														    |	17.	do
-18.	check														    |	18.	i
-19.	return														    |	19.	while
-20.	dowhile														    |	20.	label
-21.	if														    |	21.	goto
-22.	continue													    |	22.	global
-23.	else														    |	23.	foo
-24.	break														    |	24.	g
-25.	main														    |	25.	check
-26.	yeah														    |	26.	dowhile
-27.	enterloop													    |	27.	continue
-28.	j														    |	28.	main
-29.	enterexprloop													    |	29.	yeah
-30.	for														    |	30.	enterloop
-31.	enterloop2													    |	31.	j
-32.	enterloop3													    |	32.	enterexprloop
-33.	switch														    |	33.	for
-34.	case														    |	34.	enterloop2
-35.	default														    |	35.	enterloop3
-36.	repeat														    |	36.	switch
-37.	until														    |	37.	case
-															    >	38.	default
+18.	g														    |	18.	i
+19.	check														    |	19.	while
+20.	return														    |	20.	label
+21.	dowhile														    |	21.	goto
+22.	if														    |	22.	global
+23.	continue													    |	23.	foo
+24.	else														    |	24.	g
+25.	break														    |	25.	check
+26.	main														    |	26.	dowhile
+27.	yeah														    |	27.	continue
+28.	enterloop													    |	28.	main
+29.	j														    |	29.	yeah
+30.	enterexprloop													    |	30.	enterloop
+31.	for														    |	31.	j
+32.	enterloop2													    |	32.	enterexprloop
+33.	enterloop3													    |	33.	for
+34.	switch														    |	34.	enterloop2
+35.	case														    |	35.	enterloop3
+36.	default														    |	36.	switch
+37.	repeat														    |	37.	case
+38.	until														    |	38.	default
 
 
 
@@ -6638,35 +6380,9 @@
 
 
               *** tokens.txt diffrences ***
-6.	(KEYWORD, if) (SYMBOL, () (NUM, 1) (SYMBOL, )) (ID, printf) (SYMBOL, () (SYMBOL, ,) (ID, timeout) (SYMBOL, )) (SYM  |	6.	(KEYWORD, if) (SYMBOL, () (NUM, 1) (SYMBOL, )) (ID, printf) (SYMBOL, () (ID, timeout) (SYMBOL, ,) (ID, timeout) (S
-19.	(KEYWORD, if) (SYMBOL, () (NUM, 1) (SYMBOL, )) (ID, printf) (SYMBOL, () (SYMBOL, ,) (ID, timeout) (SYMBOL, )) (SYM  |	19.	(KEYWORD, if) (SYMBOL, () (NUM, 1) (SYMBOL, )) (ID, printf) (SYMBOL, () (ID, timeout) (SYMBOL, ,) (ID, timeout) (S
-28.	(ID, static) (KEYWORD, void) (NUM, 2) (NUM, 1) (SYMBOL, () (KEYWORD, void) (SYMBOL, )) 				    |	28.	(ID, static) (KEYWORD, void) (NUM, 1) (SYMBOL, () (KEYWORD, void) (SYMBOL, )) 
-32.	(KEYWORD, if) (SYMBOL, () (NUM, 1) (SYMBOL, )) (ID, printf) (SYMBOL, () (SYMBOL, ,) (ID, timeout) (SYMBOL, )) (SYM  |	32.	(KEYWORD, if) (SYMBOL, () (NUM, 1) (SYMBOL, )) (ID, printf) (SYMBOL, () (ID, timeout) (SYMBOL, ,) (ID, timeout) (S
-42.	(ID, static) (KEYWORD, void) (NUM, 2) (NUM, 2) (SYMBOL, () (KEYWORD, void) (SYMBOL, )) 				    |	42.	(ID, static) (KEYWORD, void) (NUM, 2) (SYMBOL, () (KEYWORD, void) (SYMBOL, )) 
-46.	(KEYWORD, if) (SYMBOL, () (NUM, 1) (SYMBOL, )) (ID, printf) (SYMBOL, () (SYMBOL, ,) (ID, timeout) (SYMBOL, )) (SYM  |	46.	(KEYWORD, if) (SYMBOL, () (NUM, 1) (SYMBOL, )) (ID, printf) (SYMBOL, () (ID, timeout) (SYMBOL, ,) (ID, timeout) (S
-60.	(KEYWORD, if) (SYMBOL, () (NUM, 1) (SYMBOL, )) (ID, printf) (SYMBOL, () (SYMBOL, ,) (ID, timeout) (SYMBOL, )) (SYM  |	60.	(KEYWORD, if) (SYMBOL, () (NUM, 1) (SYMBOL, )) (ID, printf) (SYMBOL, () (ID, timeout) (SYMBOL, ,) (ID, timeout) (S
-76.	(KEYWORD, if) (SYMBOL, () (NUM, 1) (SYMBOL, )) (ID, printf) (SYMBOL, () (SYMBOL, ,) (ID, timeout) (SYMBOL, )) (SYM  |	76.	(KEYWORD, if) (SYMBOL, () (NUM, 1) (SYMBOL, )) (ID, printf) (SYMBOL, () (ID, timeout) (SYMBOL, ,) (ID, timeout) (S
-81.	(ID, printf) (SYMBOL, () (ID, timeout) (ID, is) (NUM, 2) (SYMBOL, )) (SYMBOL, ;) 				    |	81.	(ID, printf) (SYMBOL, () (ID, timeout) (ID, is) (SYMBOL, )) (SYMBOL, ;) 
-84.	(ID, printf) (SYMBOL, () (ID, timeout) (ID, is) (NUM, 1) (SYMBOL, )) (SYMBOL, ;) 				    |	84.	(ID, printf) (SYMBOL, () (ID, timeout) (ID, is) (SYMBOL, )) (SYMBOL, ;) 
-87.	(ID, printf) (SYMBOL, () (ID, timeout) (ID, is) (NUM, 0) (SYMBOL, )) (SYMBOL, ;) 				    |	87.	(ID, printf) (SYMBOL, () (ID, timeout) (ID, is) (SYMBOL, )) (SYMBOL, ;) 
-100.	(NUM, 2) (NUM, 1) (SYMBOL, () (SYMBOL, )) (SYMBOL, ;) 								    |	100.	(NUM, 1) (SYMBOL, () (SYMBOL, )) (SYMBOL, ;) 
-101.	(NUM, 2) (NUM, 2) (SYMBOL, () (SYMBOL, )) (SYMBOL, ;) 								    |	101.	(NUM, 2) (SYMBOL, () (SYMBOL, )) (SYMBOL, ;) 
 
 
               *** lexical_errors.txt diffrences ***
-6.	(", Invalid input) (timeout=, Invalid input) (%, Invalid input) (ld\, Invalid input) (n", Invalid input) 	    |	6.	(", Invalid input) (=%, Invalid input) (ld\, Invalid input) (n", Invalid input) 
-19.	(", Invalid input) (timeout=, Invalid input) (%, Invalid input) (ld\, Invalid input) (n", Invalid input) 	    |	19.	(", Invalid input) (=%, Invalid input) (ld\, Invalid input) (n", Invalid input) 
-28.	(kb_, Invalid input) (wait_, Invalid input) (_, Invalid input) 							    |	28.	(kb_, Invalid input) (wait_, Invalid input) (2_, Invalid number) 
-32.	(", Invalid input) (timeout=, Invalid input) (%, Invalid input) (ld\, Invalid input) (n", Invalid input) 	    |	32.	(", Invalid input) (=%, Invalid input) (ld\, Invalid input) (n", Invalid input) 
-42.	(kb_, Invalid input) (wait_, Invalid input) (_, Invalid input) 							    |	42.	(kb_, Invalid input) (wait_, Invalid input) (2_, Invalid number) 
-46.	(", Invalid input) (timeout=, Invalid input) (%, Invalid input) (ld\, Invalid input) (n", Invalid input) 	    |	46.	(", Invalid input) (=%, Invalid input) (ld\, Invalid input) (n", Invalid input) 
-60.	(", Invalid input) (timeout=, Invalid input) (%, Invalid input) (ld\, Invalid input) (n", Invalid input) 	    |	60.	(", Invalid input) (=%, Invalid input) (ld\, Invalid input) (n", Invalid input) 
-76.	(", Invalid input) (timeout=, Invalid input) (%, Invalid input) (ld\, Invalid input) (n", Invalid input) 	    |	76.	(", Invalid input) (=%, Invalid input) (ld\, Invalid input) (n", Invalid input) 
-81.	(", Invalid input) (", Invalid input) 										    |	81.	(", Invalid input) (2", Invalid number) 
-84.	(", Invalid input) (", Invalid input) 										    |	84.	(", Invalid input) (1", Invalid number) 
-87.	(", Invalid input) (?, Invalid input) (", Invalid input) 							    |	87.	(", Invalid input) (0?, Invalid number) (", Invalid input) 
-100.	(kb_, Invalid input) (wait_, Invalid input) (_, Invalid input) 							    |	100.	(kb_, Invalid input) (wait_, Invalid input) (2_, Invalid number) 
-101.	(kb_, Invalid input) (wait_, Invalid input) (_, Invalid input) 							    |	101.	(kb_, Invalid input) (wait_, Invalid input) (2_, Invalid number) 
 
 
               *** symbol_table.txt diffrences ***
@@ -6706,11 +6422,9 @@
 
 
               *** tokens.txt diffrences ***
-136.	(ID, define) (ID, print) (SYMBOL, () (ID, x) (SYMBOL, )) (SYMBOL, () (ID, x) (SYMBOL, ,) (SYMBOL, () (SYMBOL, )) (  |	136.	(ID, define) (ID, print) (SYMBOL, () (ID, x) (SYMBOL, )) (SYMBOL, () (ID, x) (SYMBOL, ,) (SYMBOL, () (ID, u8) (SYM
 
 
               *** lexical_errors.txt diffrences ***
-136.	(#, Invalid input) (print_, Invalid input) (#, Invalid input) (u8*, Invalid input) (&, Invalid input) 		    |	136.	(#, Invalid input) (print_, Invalid input) (#, Invalid input) (&, Invalid input) 
 
 
               *** symbol_table.txt diffrences ***
@@ -6839,13 +6553,9 @@
 
 
               *** tokens.txt diffrences ***
-2.	(ID, char) (ID, t) (SYMBOL, [) (SYMBOL, ]) (SYMBOL, =) (NUM, 012345678) (SYMBOL, ;) 				    |	2.	(ID, char) (ID, t) (SYMBOL, [) (SYMBOL, ]) (SYMBOL, =) (SYMBOL, ;) 
-11.	(SYMBOL, *) (SYMBOL, () (SYMBOL, )) (SYMBOL, () (ID, data) (SYMBOL, +) (ID, r) (SYMBOL, )) (SYMBOL, +) (SYMBOL, =)  |	11.	(SYMBOL, *) (SYMBOL, () (ID, unsigned) (SYMBOL, *) (SYMBOL, )) (SYMBOL, () (ID, data) (SYMBOL, +) (ID, r) (SYMBOL,
 
 
               *** lexical_errors.txt diffrences ***
-2.	(", Invalid input) (", Invalid input) 										    |	2.	(", Invalid input) (012345678", Invalid number) 
-11.	(unsigned*, Invalid input) 											    <
 
 
               *** symbol_table.txt diffrences ***

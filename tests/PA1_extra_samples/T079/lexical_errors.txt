@@ -1,2 +1,0 @@
-1.	(#, Invalid input) 
-12.	(!, Invalid input) 

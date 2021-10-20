@@ -1,20 +1,167 @@
 
 
+
+=====================================>>>>> Running Test ../PA1_extra_samples/T001...
+Files ./symbol_table.txt and ../PA1_extra_samples/T001/symbol_table.txt differ
+
+
+=====================================>>>>> Running Test ../PA1_extra_samples/T002...
+Files ./symbol_table.txt and ../PA1_extra_samples/T002/symbol_table.txt differ
+
+
+=====================================>>>>> Running Test ../PA1_extra_samples/T003...
+Files ./symbol_table.txt and ../PA1_extra_samples/T003/symbol_table.txt differ
+
+
+=====================================>>>>> Running Test ../PA1_extra_samples/T004...
+Files ./symbol_table.txt and ../PA1_extra_samples/T004/symbol_table.txt differ
+
+
+=====================================>>>>> Running Test ../PA1_extra_samples/T005...
+Files ./symbol_table.txt and ../PA1_extra_samples/T005/symbol_table.txt differ
+
+
+=====================================>>>>> Running Test ../PA1_extra_samples/T006...
+Files ./symbol_table.txt and ../PA1_extra_samples/T006/symbol_table.txt differ
+
+
+=====================================>>>>> Running Test ../PA1_extra_samples/T007...
+Files ./symbol_table.txt and ../PA1_extra_samples/T007/symbol_table.txt differ
+
+
+=====================================>>>>> Running Test ../PA1_extra_samples/T008...
+Files ./symbol_table.txt and ../PA1_extra_samples/T008/symbol_table.txt differ
+
+
+=====================================>>>>> Running Test ../PA1_extra_samples/T009...
+Files ./symbol_table.txt and ../PA1_extra_samples/T009/symbol_table.txt differ
+
+
+=====================================>>>>> Running Test ../PA1_extra_samples/T010...
+Files ./symbol_table.txt and ../PA1_extra_samples/T010/symbol_table.txt differ
+
+
+=====================================>>>>> Running Test ../PA1_extra_samples/T011...
+Files ./symbol_table.txt and ../PA1_extra_samples/T011/symbol_table.txt differ
+
+
+=====================================>>>>> Running Test ../PA1_extra_samples/T012...
+Files ./symbol_table.txt and ../PA1_extra_samples/T012/symbol_table.txt differ
+
+
+=====================================>>>>> Running Test ../PA1_extra_samples/T013...
+Files ./symbol_table.txt and ../PA1_extra_samples/T013/symbol_table.txt differ
+
+
+=====================================>>>>> Running Test ../PA1_extra_samples/T014...
+Files ./symbol_table.txt and ../PA1_extra_samples/T014/symbol_table.txt differ
+
+
+=====================================>>>>> Running Test ../PA1_extra_samples/T015...
+Files ./symbol_table.txt and ../PA1_extra_samples/T015/symbol_table.txt differ
+
+
+=====================================>>>>> Running Test ../PA1_extra_samples/T016...
+Files ./symbol_table.txt and ../PA1_extra_samples/T016/symbol_table.txt differ
+
+
+=====================================>>>>> Running Test ../PA1_extra_samples/T017...
+Files ./symbol_table.txt and ../PA1_extra_samples/T017/symbol_table.txt differ
+
+
+=====================================>>>>> Running Test ../PA1_extra_samples/T018...
+Files ./symbol_table.txt and ../PA1_extra_samples/T018/symbol_table.txt differ
+
+
+=====================================>>>>> Running Test ../PA1_extra_samples/T019...
+Files ./symbol_table.txt and ../PA1_extra_samples/T019/symbol_table.txt differ
+
+
+=====================================>>>>> Running Test ../PA1_extra_samples/T020...
+Files ./symbol_table.txt and ../PA1_extra_samples/T020/symbol_table.txt differ
+
+
+=====================================>>>>> Running Test ../PA1_extra_samples/T021...
+Files ./symbol_table.txt and ../PA1_extra_samples/T021/symbol_table.txt differ
+
+
+=====================================>>>>> Running Test ../PA1_extra_samples/T022...
+Files ./symbol_table.txt and ../PA1_extra_samples/T022/symbol_table.txt differ
+
+
+=====================================>>>>> Running Test ../PA1_extra_samples/T023...
+Files ./symbol_table.txt and ../PA1_extra_samples/T023/symbol_table.txt differ
+
+
+=====================================>>>>> Running Test ../PA1_extra_samples/T024...
+Files ./symbol_table.txt and ../PA1_extra_samples/T024/symbol_table.txt differ
+
+
+=====================================>>>>> Running Test ../PA1_extra_samples/T025...
+Files ./symbol_table.txt and ../PA1_extra_samples/T025/symbol_table.txt differ
+
+
+=====================================>>>>> Running Test ../PA1_extra_samples/T026...
+Files ./symbol_table.txt and ../PA1_extra_samples/T026/symbol_table.txt differ
+
+
+=====================================>>>>> Running Test ../PA1_extra_samples/T027...
+Files ./symbol_table.txt and ../PA1_extra_samples/T027/symbol_table.txt differ
+
+
+=====================================>>>>> Running Test ../PA1_extra_samples/T028...
+Files ./symbol_table.txt and ../PA1_extra_samples/T028/symbol_table.txt differ
+
+
+=====================================>>>>> Running Test ../PA1_extra_samples/T029...
+Files ./symbol_table.txt and ../PA1_extra_samples/T029/symbol_table.txt differ
+
+
+=====================================>>>>> Running Test ../PA1_extra_samples/T030...
+Files ./symbol_table.txt and ../PA1_extra_samples/T030/symbol_table.txt differ
+
+
+=====================================>>>>> Running Test ../PA1_extra_samples/T031...
+Files ./symbol_table.txt and ../PA1_extra_samples/T031/symbol_table.txt differ
+
+
+=====================================>>>>> Running Test ../PA1_extra_samples/T032...
+Files ./symbol_table.txt and ../PA1_extra_samples/T032/symbol_table.txt differ
+
+
+=====================================>>>>> Running Test ../PA1_extra_samples/T033...
+Files ./symbol_table.txt and ../PA1_extra_samples/T033/symbol_table.txt differ
+
+
+=====================================>>>>> Running Test ../PA1_extra_samples/T034...
+Files ./symbol_table.txt and ../PA1_extra_samples/T034/symbol_table.txt differ
+
+
+=====================================>>>>> Running Test ../PA1_extra_samples/T035...
+Files ./symbol_table.txt and ../PA1_extra_samples/T035/symbol_table.txt differ
+
+
+=====================================>>>>> Running Test ../PA1_extra_samples/T036...
+Files ./symbol_table.txt and ../PA1_extra_samples/T036/symbol_table.txt differ
+
+
+=====================================>>>>> Running Test ../PA1_extra_samples/T037...
+Files ./symbol_table.txt and ../PA1_extra_samples/T037/symbol_table.txt differ
+
+
+=====================================>>>>> Running Test ../PA1_extra_samples/T038...
+Files ./symbol_table.txt and ../PA1_extra_samples/T038/symbol_table.txt differ
+
+
 =====================================>>>>> Running Test ../PA1_extra_samples/T039...
-Files ./tokens.txt and ../PA1_extra_samples/T039/tokens.txt differ
-Files ./lexical_errors.txt and ../PA1_extra_samples/T039/lexical_errors.txt differ
 Files ./symbol_table.txt and ../PA1_extra_samples/T039/symbol_table.txt differ
 
 
 =====================================>>>>> Running Test ../PA1_extra_samples/T040...
-Files ./tokens.txt and ../PA1_extra_samples/T040/tokens.txt differ
-Files ./lexical_errors.txt and ../PA1_extra_samples/T040/lexical_errors.txt differ
 Files ./symbol_table.txt and ../PA1_extra_samples/T040/symbol_table.txt differ
 
 
 =====================================>>>>> Running Test ../PA1_extra_samples/T041...
-Files ./tokens.txt and ../PA1_extra_samples/T041/tokens.txt differ
-Files ./lexical_errors.txt and ../PA1_extra_samples/T041/lexical_errors.txt differ
 Files ./symbol_table.txt and ../PA1_extra_samples/T041/symbol_table.txt differ
 
 
@@ -159,8 +306,6 @@ Files ./symbol_table.txt and ../PA1_extra_samples/T076/symbol_table.txt differ
 
 
 =====================================>>>>> Running Test ../PA1_extra_samples/T077...
-Files ./tokens.txt and ../PA1_extra_samples/T077/tokens.txt differ
-Files ./lexical_errors.txt and ../PA1_extra_samples/T077/lexical_errors.txt differ
 Files ./symbol_table.txt and ../PA1_extra_samples/T077/symbol_table.txt differ
 
 
@@ -193,8 +338,6 @@ Files ./symbol_table.txt and ../PA1_extra_samples/T084/symbol_table.txt differ
 
 
 =====================================>>>>> Running Test ../PA1_extra_samples/T085...
-Files ./tokens.txt and ../PA1_extra_samples/T085/tokens.txt differ
-Files ./lexical_errors.txt and ../PA1_extra_samples/T085/lexical_errors.txt differ
 Files ./symbol_table.txt and ../PA1_extra_samples/T085/symbol_table.txt differ
 
 
@@ -243,14 +386,10 @@ Files ./symbol_table.txt and ../PA1_extra_samples/T096/symbol_table.txt differ
 
 
 =====================================>>>>> Running Test ../PA1_extra_samples/T097...
-Files ./tokens.txt and ../PA1_extra_samples/T097/tokens.txt differ
-Files ./lexical_errors.txt and ../PA1_extra_samples/T097/lexical_errors.txt differ
 Files ./symbol_table.txt and ../PA1_extra_samples/T097/symbol_table.txt differ
 
 
 =====================================>>>>> Running Test ../PA1_extra_samples/T098...
-Files ./tokens.txt and ../PA1_extra_samples/T098/tokens.txt differ
-Files ./lexical_errors.txt and ../PA1_extra_samples/T098/lexical_errors.txt differ
 Files ./symbol_table.txt and ../PA1_extra_samples/T098/symbol_table.txt differ
 
 
@@ -271,8 +410,6 @@ Files ./symbol_table.txt and ../PA1_extra_samples/T102/symbol_table.txt differ
 
 
 =====================================>>>>> Running Test ../PA1_extra_samples/T103...
-Files ./tokens.txt and ../PA1_extra_samples/T103/tokens.txt differ
-Files ./lexical_errors.txt and ../PA1_extra_samples/T103/lexical_errors.txt differ
 Files ./symbol_table.txt and ../PA1_extra_samples/T103/symbol_table.txt differ
 
 
@@ -321,8 +458,6 @@ Files ./symbol_table.txt and ../PA1_extra_samples/T114/symbol_table.txt differ
 
 
 =====================================>>>>> Running Test ../PA1_extra_samples/T115...
-Files ./tokens.txt and ../PA1_extra_samples/T115/tokens.txt differ
-Files ./lexical_errors.txt and ../PA1_extra_samples/T115/lexical_errors.txt differ
 Files ./symbol_table.txt and ../PA1_extra_samples/T115/symbol_table.txt differ
 
 
@@ -355,8 +490,6 @@ Files ./symbol_table.txt and ../PA1_extra_samples/T122/symbol_table.txt differ
 
 
 =====================================>>>>> Running Test ../PA1_extra_samples/T123...
-Files ./tokens.txt and ../PA1_extra_samples/T123/tokens.txt differ
-Files ./lexical_errors.txt and ../PA1_extra_samples/T123/lexical_errors.txt differ
 Files ./symbol_table.txt and ../PA1_extra_samples/T123/symbol_table.txt differ
 
 
@@ -421,8 +554,6 @@ Files ./symbol_table.txt and ../PA1_extra_samples/T138/symbol_table.txt differ
 
 
 =====================================>>>>> Running Test ../PA1_extra_samples/T139...
-Files ./tokens.txt and ../PA1_extra_samples/T139/tokens.txt differ
-Files ./lexical_errors.txt and ../PA1_extra_samples/T139/lexical_errors.txt differ
 Files ./symbol_table.txt and ../PA1_extra_samples/T139/symbol_table.txt differ
 
 
@@ -503,8 +634,6 @@ Files ./symbol_table.txt and ../PA1_extra_samples/T158/symbol_table.txt differ
 
 
 =====================================>>>>> Running Test ../PA1_extra_samples/T159...
-Files ./tokens.txt and ../PA1_extra_samples/T159/tokens.txt differ
-Files ./lexical_errors.txt and ../PA1_extra_samples/T159/lexical_errors.txt differ
 Files ./symbol_table.txt and ../PA1_extra_samples/T159/symbol_table.txt differ
 
 
@@ -565,14 +694,10 @@ Files ./symbol_table.txt and ../PA1_extra_samples/T173/symbol_table.txt differ
 
 
 =====================================>>>>> Running Test ../PA1_extra_samples/T174...
-Files ./tokens.txt and ../PA1_extra_samples/T174/tokens.txt differ
-Files ./lexical_errors.txt and ../PA1_extra_samples/T174/lexical_errors.txt differ
 Files ./symbol_table.txt and ../PA1_extra_samples/T174/symbol_table.txt differ
 
 
 =====================================>>>>> Running Test ../PA1_extra_samples/T175...
-Files ./tokens.txt and ../PA1_extra_samples/T175/tokens.txt differ
-Files ./lexical_errors.txt and ../PA1_extra_samples/T175/lexical_errors.txt differ
 Files ./symbol_table.txt and ../PA1_extra_samples/T175/symbol_table.txt differ
 
 
@@ -581,8 +706,6 @@ Files ./symbol_table.txt and ../PA1_extra_samples/T176/symbol_table.txt differ
 
 
 =====================================>>>>> Running Test ../PA1_extra_samples/T177...
-Files ./tokens.txt and ../PA1_extra_samples/T177/tokens.txt differ
-Files ./lexical_errors.txt and ../PA1_extra_samples/T177/lexical_errors.txt differ
 Files ./symbol_table.txt and ../PA1_extra_samples/T177/symbol_table.txt differ
 
 
@@ -599,20 +722,14 @@ Files ./symbol_table.txt and ../PA1_extra_samples/T180/symbol_table.txt differ
 
 
 =====================================>>>>> Running Test ../PA1_extra_samples/T181...
-Files ./tokens.txt and ../PA1_extra_samples/T181/tokens.txt differ
-Files ./lexical_errors.txt and ../PA1_extra_samples/T181/lexical_errors.txt differ
 Files ./symbol_table.txt and ../PA1_extra_samples/T181/symbol_table.txt differ
 
 
 =====================================>>>>> Running Test ../PA1_extra_samples/T182...
-Files ./tokens.txt and ../PA1_extra_samples/T182/tokens.txt differ
-Files ./lexical_errors.txt and ../PA1_extra_samples/T182/lexical_errors.txt differ
 Files ./symbol_table.txt and ../PA1_extra_samples/T182/symbol_table.txt differ
 
 
 =====================================>>>>> Running Test ../PA1_extra_samples/T183...
-Files ./tokens.txt and ../PA1_extra_samples/T183/tokens.txt differ
-Files ./lexical_errors.txt and ../PA1_extra_samples/T183/lexical_errors.txt differ
 Files ./symbol_table.txt and ../PA1_extra_samples/T183/symbol_table.txt differ
 
 
@@ -629,8 +746,6 @@ Files ./symbol_table.txt and ../PA1_extra_samples/T186/symbol_table.txt differ
 
 
 =====================================>>>>> Running Test ../PA1_extra_samples/T187...
-Files ./tokens.txt and ../PA1_extra_samples/T187/tokens.txt differ
-Files ./lexical_errors.txt and ../PA1_extra_samples/T187/lexical_errors.txt differ
 Files ./symbol_table.txt and ../PA1_extra_samples/T187/symbol_table.txt differ
 
 
@@ -655,8 +770,6 @@ Files ./symbol_table.txt and ../PA1_extra_samples/T192/symbol_table.txt differ
 
 
 =====================================>>>>> Running Test ../PA1_extra_samples/T193...
-Files ./tokens.txt and ../PA1_extra_samples/T193/tokens.txt differ
-Files ./lexical_errors.txt and ../PA1_extra_samples/T193/lexical_errors.txt differ
 Files ./symbol_table.txt and ../PA1_extra_samples/T193/symbol_table.txt differ
 
 
@@ -665,8 +778,6 @@ Files ./symbol_table.txt and ../PA1_extra_samples/T194/symbol_table.txt differ
 
 
 =====================================>>>>> Running Test ../PA1_extra_samples/T195...
-Files ./tokens.txt and ../PA1_extra_samples/T195/tokens.txt differ
-Files ./lexical_errors.txt and ../PA1_extra_samples/T195/lexical_errors.txt differ
 Files ./symbol_table.txt and ../PA1_extra_samples/T195/symbol_table.txt differ
 
 
@@ -679,8 +790,6 @@ Files ./symbol_table.txt and ../PA1_extra_samples/T197/symbol_table.txt differ
 
 
 =====================================>>>>> Running Test ../PA1_extra_samples/T198...
-Files ./tokens.txt and ../PA1_extra_samples/T198/tokens.txt differ
-Files ./lexical_errors.txt and ../PA1_extra_samples/T198/lexical_errors.txt differ
 Files ./symbol_table.txt and ../PA1_extra_samples/T198/symbol_table.txt differ
 
 
@@ -701,26 +810,18 @@ Files ./symbol_table.txt and ../PA1_extra_samples/T202/symbol_table.txt differ
 
 
 =====================================>>>>> Running Test ../PA1_extra_samples/T203...
-Files ./tokens.txt and ../PA1_extra_samples/T203/tokens.txt differ
-Files ./lexical_errors.txt and ../PA1_extra_samples/T203/lexical_errors.txt differ
 Files ./symbol_table.txt and ../PA1_extra_samples/T203/symbol_table.txt differ
 
 
 =====================================>>>>> Running Test ../PA1_extra_samples/T204...
-Files ./tokens.txt and ../PA1_extra_samples/T204/tokens.txt differ
-Files ./lexical_errors.txt and ../PA1_extra_samples/T204/lexical_errors.txt differ
 Files ./symbol_table.txt and ../PA1_extra_samples/T204/symbol_table.txt differ
 
 
 =====================================>>>>> Running Test ../PA1_extra_samples/T205...
-Files ./tokens.txt and ../PA1_extra_samples/T205/tokens.txt differ
-Files ./lexical_errors.txt and ../PA1_extra_samples/T205/lexical_errors.txt differ
 Files ./symbol_table.txt and ../PA1_extra_samples/T205/symbol_table.txt differ
 
 
 =====================================>>>>> Running Test ../PA1_extra_samples/T206...
-Files ./tokens.txt and ../PA1_extra_samples/T206/tokens.txt differ
-Files ./lexical_errors.txt and ../PA1_extra_samples/T206/lexical_errors.txt differ
 Files ./symbol_table.txt and ../PA1_extra_samples/T206/symbol_table.txt differ
 
 
@@ -729,8 +830,6 @@ Files ./symbol_table.txt and ../PA1_extra_samples/T207/symbol_table.txt differ
 
 
 =====================================>>>>> Running Test ../PA1_extra_samples/T208...
-Files ./tokens.txt and ../PA1_extra_samples/T208/tokens.txt differ
-Files ./lexical_errors.txt and ../PA1_extra_samples/T208/lexical_errors.txt differ
 Files ./symbol_table.txt and ../PA1_extra_samples/T208/symbol_table.txt differ
 
 
@@ -747,14 +846,10 @@ Files ./symbol_table.txt and ../PA1_extra_samples/T211/symbol_table.txt differ
 
 
 =====================================>>>>> Running Test ../PA1_extra_samples/T212...
-Files ./tokens.txt and ../PA1_extra_samples/T212/tokens.txt differ
-Files ./lexical_errors.txt and ../PA1_extra_samples/T212/lexical_errors.txt differ
 Files ./symbol_table.txt and ../PA1_extra_samples/T212/symbol_table.txt differ
 
 
 =====================================>>>>> Running Test ../PA1_extra_samples/T213...
-Files ./tokens.txt and ../PA1_extra_samples/T213/tokens.txt differ
-Files ./lexical_errors.txt and ../PA1_extra_samples/T213/lexical_errors.txt differ
 Files ./symbol_table.txt and ../PA1_extra_samples/T213/symbol_table.txt differ
 
 
@@ -763,20 +858,14 @@ Files ./symbol_table.txt and ../PA1_extra_samples/T214/symbol_table.txt differ
 
 
 =====================================>>>>> Running Test ../PA1_extra_samples/T215...
-Files ./tokens.txt and ../PA1_extra_samples/T215/tokens.txt differ
-Files ./lexical_errors.txt and ../PA1_extra_samples/T215/lexical_errors.txt differ
 Files ./symbol_table.txt and ../PA1_extra_samples/T215/symbol_table.txt differ
 
 
 =====================================>>>>> Running Test ../PA1_extra_samples/T216...
-Files ./tokens.txt and ../PA1_extra_samples/T216/tokens.txt differ
-Files ./lexical_errors.txt and ../PA1_extra_samples/T216/lexical_errors.txt differ
 Files ./symbol_table.txt and ../PA1_extra_samples/T216/symbol_table.txt differ
 
 
 =====================================>>>>> Running Test ../PA1_extra_samples/T217...
-Files ./tokens.txt and ../PA1_extra_samples/T217/tokens.txt differ
-Files ./lexical_errors.txt and ../PA1_extra_samples/T217/lexical_errors.txt differ
 Files ./symbol_table.txt and ../PA1_extra_samples/T217/symbol_table.txt differ
 
 
