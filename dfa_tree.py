@@ -40,7 +40,7 @@ class State:
 
 def create_symbol_tree(mother_state: State):
     error_state = State(next_edges=[])
-    error_edge = Edge(char="#", next_state=error_state)
+    error_edge = Edge(pattern="[#%\/_\"']", next_state=error_state)
     symbol_end_state = State(next_edges=[])
     for i in [";", ":", ",", "[", "]", "(", ")", "{", "}", "+", "-", "<"]:
         mother_state.next_edges.append(Edge(char=i, next_state=symbol_end_state))
@@ -107,7 +107,7 @@ def create_comment_tree(mother_state):
 
 def create_digits_tree(mother_state):
     number_error_state = State(next_edges=[])
-    edge_error = Edge(pattern="[a-zA-Z]+", next_state=number_error_state)
+    edge_error = Edge(pattern="[a-zA-Z'_\?\"\.\\\\]+", next_state=number_error_state)
 
     number_end_state = State()
     edge_number = Edge(pattern="[0-9]+", next_state=number_end_state)
@@ -118,7 +118,7 @@ def create_digits_tree(mother_state):
 def create_keyword_identifier_tree(mother_state):
     error_state = State(next_edges=[])
     error_edge = Edge(
-        pattern="[^a-zA-Z0-9\x09\x0A\x0B\x0C\x20;:,\[\]\(\)\{\}\+\-\<]",
+        pattern="[^a-zA-Z0-9\x09\x0A\x0B\x0C\x20;:,\[\]\(\)\{\}\+\-\<\*\=\/]",
         next_state=error_state,
     )
 

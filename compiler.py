@@ -22,7 +22,7 @@ class TokenType(Enum):
 
 class LexicalError(Enum):
     UNMATCHED_COMMENT = ("\*/", "Unmatched comment")
-    INVALID_NUMBER = ("^[0-9]+[A-Za-z]+", "Invalid number")
+    INVALID_NUMBER = ("^[0-9]+[^0-9]+$", "Invalid number")
 
 
 class Token:
@@ -90,7 +90,7 @@ error_dict: dict[int:Tuple] = {}
 buffer = []
 line_number: int = 0
 char_pointer = 0
-last_comment_line_number= 0
+last_comment_line_number = 0
 
 if __name__ == "__main__":
 
@@ -131,7 +131,10 @@ if __name__ == "__main__":
         if selected_state:
             next_state = selected_state.next_dfa_tree_state(next_char)
 
-        can_be_continued = next_state != None
+        try:
+            can_be_continued = next_state != None
+        except NameError:
+            can_be_continued = False
 
         if line_number == 2 and False:
             print_log(
