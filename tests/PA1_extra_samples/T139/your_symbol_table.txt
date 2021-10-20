@@ -1,0 +1,13 @@
+1.	define
+2.	f
+3.	a
+4.	g
+5.	int
+6.	main
+7.	void
+8.	return
+9.	if
+10.	else
+11.	repeat
+12.	break
+13.	until

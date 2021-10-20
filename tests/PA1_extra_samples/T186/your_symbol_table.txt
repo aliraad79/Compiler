@@ -1,0 +1,16 @@
+1.	include
+2.	int
+3.	main
+4.	char
+5.	Buf
+6.	Count
+7.	for
+8.	sprintf
+9.	printf
+10.	return
+11.	if
+12.	else
+13.	void
+14.	repeat
+15.	break
+16.	until

@@ -1,0 +1,3 @@
+13.	(t*, Invalid input) 
+14.	(%, Invalid input) 
+22.	(!, Invalid input) 

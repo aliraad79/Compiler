@@ -1,0 +1,12 @@
+1.	int
+2.	main
+3.	x
+4.	p
+5.	pp
+6.	return
+7.	if
+8.	else
+9.	void
+10.	repeat
+11.	break
+12.	until

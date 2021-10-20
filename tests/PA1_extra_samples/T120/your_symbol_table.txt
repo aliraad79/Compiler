@@ -1,0 +1,14 @@
+1.	struct
+2.	enum
+3.	X
+4.	x
+5.	s
+6.	int
+7.	main
+8.	return
+9.	if
+10.	else
+11.	void
+12.	repeat
+13.	break
+14.	until

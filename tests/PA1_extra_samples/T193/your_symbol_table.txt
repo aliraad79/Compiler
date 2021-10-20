@@ -1,0 +1,15 @@
+1.	include
+2.	void
+3.	fred
+4.	int
+5.	x
+6.	switch
+7.	case
+8.	printf
+9.	return
+10.	break
+11.	main
+12.	if
+13.	else
+14.	repeat
+15.	until

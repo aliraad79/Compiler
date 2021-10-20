@@ -1,0 +1,15 @@
+1.	if
+2.	defined
+3.	X
+4.	endif
+5.	define
+6.	int
+7.	x
+8.	undef
+9.	main
+10.	return
+11.	else
+12.	void
+13.	repeat
+14.	break
+15.	until

@@ -1,0 +1,16 @@
+1.	int
+2.	f2
+3.	c
+4.	b
+5.	return
+6.	f1
+7.	a
+8.	if
+9.	main
+10.	p
+11.	d
+12.	else
+13.	void
+14.	repeat
+15.	break
+16.	until

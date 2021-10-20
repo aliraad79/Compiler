@@ -1,0 +1,16 @@
+1.	int
+2.	x
+3.	main
+4.	switch
+5.	case
+6.	goto
+7.	next
+8.	default
+9.	return
+10.	foo
+11.	if
+12.	else
+13.	void
+14.	repeat
+15.	break
+16.	until

@@ -1,0 +1,17 @@
+1.	typedef
+2.	struct
+3.	s
+4.	s1
+5.	int
+6.	s2
+7.	define
+8.	main
+9.	void
+10.	undef
+11.	goto
+12.	return
+13.	if
+14.	else
+15.	repeat
+16.	break
+17.	until

@@ -1,0 +1,10 @@
+1.	int
+2.	arr
+3.	main
+4.	void
+5.	return
+6.	if
+7.	else
+8.	repeat
+9.	break
+10.	until

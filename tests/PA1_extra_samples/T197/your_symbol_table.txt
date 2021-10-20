@@ -1,0 +1,15 @@
+1.	include
+2.	static
+3.	int
+4.	fred
+5.	joe
+6.	void
+7.	henry
+8.	printf
+9.	main
+10.	return
+11.	if
+12.	else
+13.	repeat
+14.	break
+15.	until

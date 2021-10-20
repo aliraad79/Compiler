@@ -1,0 +1,16 @@
+1.	define
+2.	NULL
+3.	FOO
+4.	X
+5.	Y
+6.	Z
+7.	BAR
+8.	int
+9.	main
+10.	return
+11.	if
+12.	else
+13.	void
+14.	repeat
+15.	break
+16.	until

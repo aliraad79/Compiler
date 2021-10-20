@@ -1,0 +1,16 @@
+1.	include
+2.	int
+3.	main
+4.	t
+5.	s
+6.	p
+7.	for
+8.	printf
+9.	unsigned
+10.	return
+11.	if
+12.	else
+13.	void
+14.	repeat
+15.	break
+16.	until

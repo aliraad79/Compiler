@@ -1,0 +1,15 @@
+1.	include
+2.	int
+3.	main
+4.	a
+5.	char
+6.	b
+7.	while
+8.	printf
+9.	break
+10.	return
+11.	if
+12.	else
+13.	void
+14.	repeat
+15.	until

@@ -1,0 +1,17 @@
+1.	include
+2.	int
+3.	main
+4.	printf
+5.	Hello
+6.	Count
+7.	for
+8.	String
+9.	is
+10.	Character
+11.	return
+12.	if
+13.	else
+14.	void
+15.	repeat
+16.	break
+17.	until

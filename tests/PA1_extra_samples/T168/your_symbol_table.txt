@@ -1,0 +1,15 @@
+1.	include
+2.	int
+3.	factorial
+4.	i
+5.	if
+6.	return
+7.	else
+8.	main
+9.	Count
+10.	for
+11.	printf
+12.	void
+13.	repeat
+14.	break
+15.	until

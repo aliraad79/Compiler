@@ -1,0 +1,11 @@
+1.	include
+2.	int
+3.	main
+4.	printf
+5.	return
+6.	if
+7.	else
+8.	void
+9.	repeat
+10.	break
+11.	until

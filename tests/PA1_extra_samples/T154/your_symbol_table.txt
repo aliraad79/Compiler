@@ -1,0 +1,17 @@
+1.	include
+2.	struct
+3.	fred
+4.	int
+5.	boris
+6.	natasha
+7.	main
+8.	bloggs
+9.	printf
+10.	jones
+11.	return
+12.	if
+13.	else
+14.	void
+15.	repeat
+16.	break
+17.	until

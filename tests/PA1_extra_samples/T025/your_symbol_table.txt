@@ -1,0 +1,12 @@
+1.	int
+2.	strlen
+3.	char
+4.	main
+5.	p
+6.	return
+7.	if
+8.	else
+9.	void
+10.	repeat
+11.	break
+12.	until
