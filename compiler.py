@@ -8,5 +8,5 @@ scanner = Scanner()
 token = ""
 while token != "$":
     token = scanner.get_next_token()
-    print(token)
+    # print(token)
 scanner.save_to_file()
