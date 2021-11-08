@@ -11,7 +11,7 @@ from utils import *
 class TokenType(Enum):
     COMMENT = "(\/\*(\*(?!\/)|[^*])*\*\/)|(\/\/.*\n)"
     ID = "^[A-Za-z][A-Za-z0-9]*$"
-    KEYWORD = "^(if|else|void|int|repeat|break|until|return)$"
+    KEYWORD = "^(if|endif|else|void|int|repeat|break|until|return)$"
     NUM = "^[0-9]+$"
     SYMBOL = "^(;|:|,|\[|\]|\(|\)|{|}|\+|-|\*|=|<|==)$"
     WHITESPACE = "^(\x09|\x0A|\x0B|\x0C|\x20)$"
