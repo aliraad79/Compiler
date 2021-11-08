@@ -2,11 +2,8 @@
 # Ali Ahmadi Kafeshani 97105703
 
 from scanner import Scanner
+from parser import Parser
 
 scanner = Scanner()
-
-token = ""
-while token != "$":
-    token = scanner.get_next_token()
-    # print(token)
-scanner.save_to_file()
+parser = Parser(scanner)
+parser.start()

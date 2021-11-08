@@ -49,3 +49,19 @@ def print_log(
     print(f"Can be continued {can_be_continued}")
     print(f"Present =>\t {selected_state.next_edges if selected_state else ''}")
     print(f"NExt =>\t\t {next_state.next_edges if next_state else ''}")
+
+
+def write_syntax_errors_to_file(errors):
+    with open("syntax_errors.txt", "w") as file:
+        if len(errors) == 0:
+            file.write("There is no syntax error.")
+            return
+        file.write(errors)
+
+    with open("syntax_errors.txt", "w") as file:
+        file.write(errors)
+
+
+def write_parse_tree_to_file(parse_tree):
+    with open("parse_tree.txt", "w") as file:
+        file.write(parse_tree)
