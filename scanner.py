@@ -8,6 +8,10 @@ from dfa_tree import create_dfa_tree, State
 from utils import *
 
 
+class ErrorFound(Exception):
+    pass
+
+
 class TokenType(Enum):
     COMMENT = "(\/\*(\*(?!\/)|[^*])*\*\/)|(\/\/.*\n)"
     ID = "^[A-Za-z][A-Za-z0-9]*$"
@@ -26,12 +30,16 @@ class Token:
     def __init__(self, _type: TokenType, lexeme):
         self.type = _type
         self.lexeme = lexeme
+    
+    def __str__(self):
+        return f"Token<type = {self.type}, lexeme = {repr(self.lexeme)}>"
 
 
 # global vars
 token_dict: dict[int : List[Token]] = {}
 symbol_list: list[str] = []
 error_dict: dict[int:Tuple] = {}
+
 
 class Scanner:
     def __init__(self):
@@ -85,7 +93,7 @@ class Scanner:
 
         # end of file
         if self.char == "":
-            return "$"
+            return Token(None, "$")
 
         if can_be_continued:
             self.char = self.next_char
@@ -93,10 +101,10 @@ class Scanner:
             self.next_selected_state = next_state
         elif self.buffer != []:
             self.next_selected_state = None
-            token = self.add_token_to_array(self.get_token_from_buffer())
+            token = self.add_token_to_array()
             if token != None:
                 return token
-        
+
         return self.get_next_token()
 
     def get_next_char(self):
@@ -106,32 +114,12 @@ class Scanner:
         self.buffer.append(char[self.char_pointer - 1 :])
         return char[self.char_pointer - 1 :]
 
-    def add_token_to_array(self, token) -> None:
-        global last_comment_line_number
+    def add_token_to_array(self) -> None:
+        token = self.get_token_from_buffer()
 
-        if token == "":
-            return None
-
-        if token[:2] == "/*" and token[-2:] != "*/":
-            error_dict.setdefault(self.last_comment_line_number, []).append(
-                ("Unclosed comment", token[:7] + "..." if len(token) > 7 else "")
-            )
-            return None
-
-        for error_regex in LexicalError:
-            if re.match(error_regex.value[0], token):
-                error_dict.setdefault(self.line_number, []).append(
-                    (error_regex.value[1], token)
-                )
-                return None
-
-        _type = ""
-        for regex in TokenType:
-            if re.search(regex.value, token):
-                _type = regex
-
-        if _type == "":
-            error_dict.setdefault(self.line_number, []).append(("Invalid input", token))
+        try:
+            _type = self.get_type_or_error(token)
+        except ErrorFound:
             return None
 
         if _type not in ["", TokenType.WHITESPACE, TokenType.COMMENT]:
@@ -141,7 +129,7 @@ class Scanner:
                     symbol_list.append(token)
 
         if _type not in ["", TokenType.WHITESPACE, TokenType.COMMENT]:
-            return (_type.name, token)
+            return Token(_type.name, token)
 
     def get_token_from_buffer(self):
         length = len(self.buffer) - 1
@@ -153,3 +141,31 @@ class Scanner:
         add_tokens_to_file(self.line_number, token_dict)
         add_symbols_to_file(symbol_list)
         add_errors_to_file(self.line_number, error_dict)
+
+    def get_type_or_error(self, token):
+        if token == "":
+            raise ErrorFound
+
+        if token[:2] == "/*" and token[-2:] != "*/":
+            error_dict.setdefault(self.last_comment_line_number, []).append(
+                ("Unclosed comment", token[:7] + "..." if len(token) > 7 else "")
+            )
+            raise ErrorFound
+
+        for error_regex in LexicalError:
+            if re.match(error_regex.value[0], token):
+                error_dict.setdefault(self.line_number, []).append(
+                    (error_regex.value[1], token)
+                )
+                raise ErrorFound
+
+        _type = ""
+        for regex in TokenType:
+            if re.search(regex.value, token):
+                _type = regex
+
+        if _type == "":
+            error_dict.setdefault(self.line_number, []).append(("Invalid input", token))
+            raise ErrorFound
+
+        return _type
