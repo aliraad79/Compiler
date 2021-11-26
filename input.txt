@@ -1,16 +1,7 @@
-/* test case */
+/* sample 1 */
+
 void main(void){
-	int prod;
-	int i ;
-		prod = 1;
-		i = 1;
-	repeat {
-		prod = i * prod ;
-		i = i + 2;
-	} until (i < 7)
-		output(prod);
-		endif;
-		return;
-
-
+	int a;
+	int b;
+	a = b + 1;
 }
