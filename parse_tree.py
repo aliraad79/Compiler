@@ -526,6 +526,88 @@ def get_parse_tree():
     # start_node = ParseTreeNode(next_edges=[open_par, num, id])
     # first_nodes.append(start_node)
 
+    # 39
+    # end = ParseTreeNode(next_edges=[])
+    # close_par = ParseTreeEdge(next_node=end, terminal=")")
+    # close_par_node = ParseTreeNode(next_edges=[close_par])
+    # args = ParseTreeEdge(next_node=close_par_node, non_terminal="args")
+    # args_node = ParseTreeNode(next_edges=[args])
+    # open_par = ParseTreeEdge(next_node=args_node, terminal="(")
+
+    # var_prime = ParseTreeEdge(next_node=end, non_terminal="var_prime")
+
+    # start_node = ParseTreeNode(next_edges=[open_par, var_prime])
+    # first_nodes.append(start_node)
+
+    # 40
+    # end = ParseTreeNode(next_edges=[])
+    # close_par = ParseTreeEdge(next_node=end, terminal="]")
+    # close_par_node = ParseTreeNode(next_edges=[close_par])
+    # expression = ParseTreeEdge(next_node=close_par_node, non_terminal="expression")
+    # expression_node = ParseTreeNode(next_edges=[expression])
+    # open_par = ParseTreeEdge(next_node=expression_node, terminal="[")
+
+    # epsilon_node = ParseTreeEdge(next_node=end, terminal="ε")
+    
+    # start_node = ParseTreeNode(next_edges=[open_par, epsilon_node])
+    # first_nodes.append(start_node)
+
+    # 41
+    # end = ParseTreeNode(next_edges=[])
+    # close_par = ParseTreeEdge(next_node=end, terminal=")")
+    # close_par_node = ParseTreeNode(next_edges=[close_par])
+    # args = ParseTreeEdge(next_node=close_par_node, non_terminal="args")
+    # args_node = ParseTreeNode(next_edges=[args])
+    # open_par = ParseTreeEdge(next_node=args_node, terminal="(")
+
+    # epsilon_node = ParseTreeEdge(next_node=end, terminal="ε")
+    
+    # start_node = ParseTreeNode(next_edges=[open_par, epsilon_node])
+    # first_nodes.append(start_node)
+
+    # 42
+    # end = ParseTreeNode(next_edges=[])
+    # close_par = ParseTreeEdge(next_node=end, terminal=")")
+    # close_par_node = ParseTreeNode(next_edges=[close_par])
+    # expression = ParseTreeEdge(next_node=close_par_node, non_terminal="expression")
+    # expression_node = ParseTreeNode(next_edges=[expression])
+    # open_par = ParseTreeEdge(next_node=expression_node, terminal="(")
+
+    # num = ParseTreeEdge(next_node=end, terminal="NUM")
+    
+    # start_node = ParseTreeNode(next_edges=[open_par, num])
+    # first_nodes.append(start_node)
+
+    # 43
+    # end = ParseTreeNode(next_edges=[])
+    # arg_list = ParseTreeEdge(next_node=end,non_terminal='arg_list')
+
+    # epsilon_node = ParseTreeEdge(next_node=end, terminal="ε")
+
+    # start_node = ParseTreeNode(next_edges=[arg_list, epsilon_node])
+    # first_nodes.append(start_node)
+
+    # 44
+    # end = ParseTreeNode(next_edges=[])
+    # arg_list_prime = ParseTreeEdge(next_node=end, non_terminal="arg_list_prime")
+    # arg_list_prime_node = ParseTreeNode(next_edges=[arg_list_prime])
+    # expression = ParseTreeEdge(next_node=arg_list_prime_node, non_terminal="expression")
+
+    # start_node = ParseTreeNode(next_edges=[expression])
+    # first_nodes.append(start_node)
+
+    # 45
+    # end = ParseTreeNode(next_edges=[])
+    # arg_list_prime = ParseTreeEdge(next_node=end, non_terminal='arg_list_prime')
+    # arg_list_prime_node = ParseTreeNode(next_edges=[arg_list_prime])
+    # expression = ParseTreeEdge(next_node=arg_list_prime_node, non_terminal='expression')
+    # expression_node = ParseTreeNode(next_edges=[expression])
+    # comma = ParseTreeEdge(next_node=expression_node, terminal=",")
+
+    # epsilon_node = ParseTreeEdge(next_node=end, terminal="ε")
+
+    # start_node = ParseTreeNode(next_edges=[comma, epsilon_node])
+    # first_nodes.append(start_node)
     return
 
 
