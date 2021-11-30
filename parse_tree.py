@@ -9,7 +9,7 @@
 #         print_tree(graph, i, depth + 1)
 
 
-from scanner import Token
+from scanner import Token, TokenType
 from typing import List
 
 
@@ -22,11 +22,16 @@ class ParseTreeEdge:
         self.firsts: List[str] = None
         self.non_terminal = non_terminal
 
-    def match(self, other):
+    def match(self, other: Token, stack: List[str]):
         if self.non_terminal:
-            return other in first_dict[self.non_terminal]
+            stack.append(self.non_terminal)
+            return other.lexeme in first_dict[self.non_terminal]
         elif self.terminal:
-            return other == self.terminal
+            return (
+                other.lexeme == self.terminal
+                if other.type != "ID"
+                else "ID" == self.terminal
+            )
         if self.terminal == "ε":
             return True
 
@@ -38,16 +43,17 @@ class ParseTreeNode:
     def __init__(self, next_edges: List[ParseTreeEdge] = []):
         self.next_edges = next_edges
 
-    def next_parse_tree_node(self, other: str):
+    def next_parse_tree_node(self, other: Token, stack: List[str]):
         for i in self.next_edges:
-            if i.match(other):
+            if i.match(other, stack):
                 return i.next_node, i.terminal != None
         if len(self.next_edges) == 0:
+            print("End of diagram")
             return None, False
-        print("wtf ", self.next_edges)
+        print("WTF", self.next_edges)
 
     def __repr__(self):
-        return f"ParseTreeNode<next_edges = {self.next_edges}>"
+        return f"Node<next_edges = {self.next_edges}>"
 
 
 first_dict = {}
@@ -68,7 +74,7 @@ def init_transation_diagrams():
         "param_list": param_list_diagram(),
         "param": param_diagram(),
         "param_prime": param_prime_diagram(),
-        "compund_stmt": compund_stmt(),
+        "compound_stmt": compund_stmt(),
         "statement_list": statement_list_diagram(),
         "statement": statement_diagram(),
         "expression_stmt": expression_stmt_diagram(),
@@ -516,11 +522,11 @@ def compund_stmt():
         next_node=close_bracket_node, non_terminal="statement_list"
     )
     statement_list_node = ParseTreeNode(next_edges=[statement_list])
-    declarion_list = ParseTreeEdge(
-        next_node=statement_list_node, non_terminal="declarion_list"
+    declaration_list = ParseTreeEdge(
+        next_node=statement_list_node, non_terminal="declaration_list"
     )
-    declarion_list_node = ParseTreeNode(next_edges=[declarion_list])
-    open_bracket = ParseTreeEdge(next_node=declarion_list_node, terminal="{")
+    declaration_list_node = ParseTreeNode(next_edges=[declaration_list])
+    open_bracket = ParseTreeEdge(next_node=declaration_list_node, terminal="{")
 
     return ParseTreeNode(next_edges=[open_bracket])
 
@@ -590,7 +596,8 @@ def fun_declaration_prime():
     close_par_node = ParseTreeNode(next_edges=[close_par])
     params = ParseTreeEdge(next_node=close_par_node, non_terminal="params")
     params_node = ParseTreeNode(next_edges=[params])
-    return ParseTreeEdge(next_node=params_node, terminal="(")
+    open_par = ParseTreeEdge(next_node=params_node, terminal="(")
+    return ParseTreeNode(next_edges=[open_par])
 
 
 def var_declarion_prime_diagram():
@@ -611,15 +618,16 @@ def var_declarion_prime_diagram():
 
 def declaration_prime_diagram():
     end = ParseTreeNode(next_edges=[])
-    fun_declartion_prime = ParseTreeEdge(
-        next_node=end, non_terminal="fun_declartion_prime"
+    fun_declaration_prime = ParseTreeEdge(
+        next_node=end, non_terminal="fun_declaration_prime"
+    )
+    
+
+    var_declaration_prime = ParseTreeEdge(
+        next_node=end, non_terminal="var_declaration_prime"
     )
 
-    var_declartion_prime = ParseTreeEdge(
-        next_node=end, non_terminal="var_declartion_prime"
-    )
-
-    return ParseTreeNode(next_edges=[fun_declartion_prime, var_declartion_prime])
+    return ParseTreeNode(next_edges=[fun_declaration_prime, var_declaration_prime])
 
 
 def declaration_initial_diagram():

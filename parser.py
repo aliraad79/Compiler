@@ -27,18 +27,19 @@ class Parser:
         write_parse_tree_to_file(self.parse_tree)
 
     def log(self):
-        print_parser_log(self.nodes_buffer, self.current_node, self.curret_token)
+        print_parser_log(self.current_node, self.curret_token, self.return_nodes)
 
     def start(self):
         print("INIT")
         self.get_next_token()
         terminal = False
-        # while self.curret_token.lexeme != "$":
-        for i in range(8):
+        while self.curret_token.lexeme != "$":
+            # for i in range(15):
             self.log()
             if self.current_node:
                 self.current_node, terminal = self.current_node.next_parse_tree_node(
-                    self.curret_token.lexeme
+                    self.curret_token,
+                    self.nodes_buffer,
                 )
                 if len(self.nodes_buffer) != 0:
                     self.return_nodes.append(self.current_node)
@@ -48,5 +49,4 @@ class Parser:
                 if terminal:
                     self.get_next_token()
             else:
-                print(self.return_nodes)
-                self.current_node = self.return_nodes.pop(0)
+                self.current_node = self.return_nodes.pop(len(self.return_nodes) - 1)

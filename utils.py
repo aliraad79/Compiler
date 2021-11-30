@@ -67,7 +67,8 @@ def write_parse_tree_to_file(parse_tree):
         file.write(parse_tree)
 
 
-def print_parser_log(buffer, current_node, curret_token):
-    print(f"Buffer ==> {buffer}")
+def print_parser_log(current_node, curret_token, return_nodes):
+    print("________________________________________________")
+    print(f"Return Nodes => {return_nodes}")
     print(f"current Node ==> {current_node}")
     print(f"Current token ==> {curret_token}")
