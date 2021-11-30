@@ -48,7 +48,6 @@ class ParseTreeNode:
             if i.match(other, stack):
                 return i.next_node, i.terminal != None
         if len(self.next_edges) == 0:
-            print("End of diagram")
             return None, False
         print("WTF", self.next_edges)
 
@@ -67,7 +66,7 @@ def init_transation_diagrams():
         "declaration": declaration_diagram(),
         "declaration_initial": declaration_initial_diagram(),
         "declaration_prime": declaration_prime_diagram(),
-        "var_declarion_prime": var_declarion_prime_diagram(),
+        "var_declaration_prime": var_declaration_prime_diagram(),
         "fun_declaration_prime": fun_declaration_prime(),
         "type_specifier": type_specifier_diagram(),
         "params": params_diagram(),
@@ -600,7 +599,7 @@ def fun_declaration_prime():
     return ParseTreeNode(next_edges=[open_par])
 
 
-def var_declarion_prime_diagram():
+def var_declaration_prime_diagram():
     end = ParseTreeNode(next_edges=[])
 
     semicolon = ParseTreeEdge(next_node=end, terminal=";")
@@ -621,7 +620,6 @@ def declaration_prime_diagram():
     fun_declaration_prime = ParseTreeEdge(
         next_node=end, non_terminal="fun_declaration_prime"
     )
-    
 
     var_declaration_prime = ParseTreeEdge(
         next_node=end, non_terminal="var_declaration_prime"

@@ -14,8 +14,8 @@ class Parser:
         self.curret_token: Token = None
         self.transation_diagrams: dict[str, ParseTreeNode] = init_transation_diagrams()
         self.current_node: ParseTreeNode = self.transation_diagrams["program"]
-        self.parse_tree = None
-        self.nodes_buffer: List = []
+        self.parse_tree = []  # For test
+        self.nodes_buffer: List[str] = []
         self.return_nodes: List[ParseTreeNode] = []
         self.syntax_errors: List = []
 
@@ -34,7 +34,6 @@ class Parser:
         self.get_next_token()
         terminal = False
         while self.curret_token.lexeme != "$":
-            # for i in range(15):
             self.log()
             if self.current_node:
                 self.current_node, terminal = self.current_node.next_parse_tree_node(
@@ -42,11 +41,13 @@ class Parser:
                     self.nodes_buffer,
                 )
                 if len(self.nodes_buffer) != 0:
-                    self.return_nodes.append(self.current_node)
+                    if len(self.current_node.next_edges) != 0:
+                        self.return_nodes.append(self.current_node)
                     self.current_node = self.transation_diagrams[
-                        self.nodes_buffer.pop(0)
+                        self.nodes_buffer.pop(len(self.nodes_buffer) - 1)
                     ]
                 if terminal:
+                    self.parse_tree.append(self.curret_token)
                     self.get_next_token()
             else:
                 self.current_node = self.return_nodes.pop(len(self.return_nodes) - 1)
