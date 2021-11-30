@@ -22,85 +22,87 @@ class ParseTreeEdge:
         self.firsts: List[str] = None
         self.non_terminal = non_terminal
 
-    def match(self, other, stack: List[str]):
+    def match(self, other):
         if self.non_terminal:
-            return self.non_terminal == other
-        elif other in self.firsts:
-            stack.append(self.terminal)
-            return True
+            return other in first_dict[self.non_terminal]
+        elif self.terminal:
+            return other == self.terminal
         if self.terminal == "ε":
             return True
+
+    def __repr__(self):
+        return f"Edge<{self.terminal if self.terminal else self.non_terminal}>"
 
 
 class ParseTreeNode:
     def __init__(self, next_edges: List[ParseTreeEdge] = []):
         self.next_edges = next_edges
 
-    def next_parse_tree_node(self, other: str, stack: List[str]):
+    def next_parse_tree_node(self, other: str):
         for i in self.next_edges:
-            if i.match(other, stack):
-                return i.next_state
+            if i.match(other):
+                return i.next_node, i.terminal != None
         if len(self.next_edges) == 0:
-            stack.pop(len(stack) - 1)
-            return None
+            return None, False
+        print("wtf ", self.next_edges)
 
     def __repr__(self):
-        return f"ParseTreeNode<next_nodes = {self.next_edges}>"
+        return f"ParseTreeNode<next_edges = {self.next_edges}>"
 
 
 first_dict = {}
 
 
-def get_parse_tree():
+def init_transation_diagrams():
     add_firsts()
-    first_nodes = [
-        program_diagram(),
-        declration_list_diagram(),
-        declration_diagram(),
-        declaration_initial_diagram(),
-        declration_prime_diagram(),
-        var_declarion_prime_diagram(),
-        fun_declaration_prime(),
-        type_specifier_diagram(),
-        params_diagram(),
-        param_list_diagram(),
-        param_diagram(),
-        param_prime_diagram(),
-        compund_stmt(),
-        statement_list_diagram(),
-        statement_diagram(),
-        expression_stmt_diagram(),
-        selection_stmt_diagram(),
-        else_stmt_diagram(),
-        iteration_stmt_diagram(),
-        return_stmt_diagram(),
-        return_stmt_prime_diagram(),
-        expression_diagram(),
-        B_diagram(),
-        H_diagram(),
-        simple_expression_zegond_diagram(),
-        simple_expression_prime_diagram(),
-        C_diagram(),
-        relop_diagram(),
-        additive_expression_diagram(),
-        additive_expression_prime_diagram(),
-        additive_expression_zegond_diagram(),
-        D_diagram(),
-        addop_diagram(),
-        term_diagram(),
-        term_prime_diagram(),
-        term_zegond_diagram(),
-        G_diagram(),
-        factor_diagram(),
-        var_call_prime_diagram(),
-        var_prime_diagram(),
-        factor_prime_diagram(),
-        factor_zegond_diagram(),
-        args_diagram(),
-        arg_list_diagram(),
-        arg_list_prime_diagram(),
-    ]
-    return
+    first_nodes = {
+        "program": program_diagram(),
+        "declaration_list": declaration_list_diagram(),
+        "declaration": declaration_diagram(),
+        "declaration_initial": declaration_initial_diagram(),
+        "declaration_prime": declaration_prime_diagram(),
+        "var_declarion_prime": var_declarion_prime_diagram(),
+        "fun_declaration_prime": fun_declaration_prime(),
+        "type_specifier": type_specifier_diagram(),
+        "params": params_diagram(),
+        "param_list": param_list_diagram(),
+        "param": param_diagram(),
+        "param_prime": param_prime_diagram(),
+        "compund_stmt": compund_stmt(),
+        "statement_list": statement_list_diagram(),
+        "statement": statement_diagram(),
+        "expression_stmt": expression_stmt_diagram(),
+        "selection_stmt": selection_stmt_diagram(),
+        "else_stmt": else_stmt_diagram(),
+        "iteration_stmt": iteration_stmt_diagram(),
+        "return_stmt": return_stmt_diagram(),
+        "return_stmt_prime": return_stmt_prime_diagram(),
+        "expression": expression_diagram(),
+        "B": B_diagram(),
+        "H": H_diagram(),
+        "simple_expression_zegond": simple_expression_zegond_diagram(),
+        "simple_expression_prime": simple_expression_prime_diagram(),
+        "C": C_diagram(),
+        "relop": relop_diagram(),
+        "additive_expression": additive_expression_diagram(),
+        "additive_expression_prime": additive_expression_prime_diagram(),
+        "additive_expression_zegond": additive_expression_zegond_diagram(),
+        "D": D_diagram(),
+        "addop": addop_diagram(),
+        "term": term_diagram(),
+        "term_prime": term_prime_diagram(),
+        "term_zegond": term_zegond_diagram(),
+        "G": G_diagram(),
+        "factor": factor_diagram(),
+        "var_call_prime": var_call_prime_diagram(),
+        "var_prime": var_prime_diagram(),
+        "factor_prime": factor_prime_diagram(),
+        "factor_zegond": factor_zegond_diagram(),
+        "args": args_diagram(),
+        "arg_list": arg_list_diagram(),
+        "arg_list_prime": arg_list_prime_diagram(),
+    }
+    return first_nodes
 
 
 def arg_list_prime_diagram():
@@ -607,7 +609,7 @@ def var_declarion_prime_diagram():
     return ParseTreeNode(next_edges=[semicolon, open_t])
 
 
-def declration_prime_diagram():
+def declaration_prime_diagram():
     end = ParseTreeNode(next_edges=[])
     fun_declartion_prime = ParseTreeEdge(
         next_node=end, non_terminal="fun_declartion_prime"
@@ -628,41 +630,41 @@ def declaration_initial_diagram():
     return ParseTreeNode(next_edges=[type_specifier])
 
 
-def declration_diagram():
+def declaration_diagram():
     end = ParseTreeNode(next_edges=[])
-    declration_prime = ParseTreeEdge(next_node=end, non_terminal="declration_prime")
-    declration_prime_node = ParseTreeNode(next_edges=[declration_prime])
-    declration_initial = ParseTreeEdge(
-        next_node=declration_prime_node, non_terminal="declration_initial"
+    declaration_prime = ParseTreeEdge(next_node=end, non_terminal="declaration_prime")
+    declaration_prime_node = ParseTreeNode(next_edges=[declaration_prime])
+    declaration_initial = ParseTreeEdge(
+        next_node=declaration_prime_node, non_terminal="declaration_initial"
     )
-    return ParseTreeNode(next_edges=[declration_initial])
+    return ParseTreeNode(next_edges=[declaration_initial])
 
 
-def declration_list_diagram():
+def declaration_list_diagram():
     end = ParseTreeNode(next_edges=[])
-    declration_list = ParseTreeEdge(next_node=end, non_terminal="declration_list")
-    declration_list_node = ParseTreeNode(next_edges=[declration_list])
-    declration = ParseTreeEdge(
-        next_node=declration_list_node, non_terminal="declration"
+    declaration_list = ParseTreeEdge(next_node=end, non_terminal="declaration_list")
+    declaration_list_node = ParseTreeNode(next_edges=[declaration_list])
+    declaration = ParseTreeEdge(
+        next_node=declaration_list_node, non_terminal="declaration"
     )
 
     epsilon_node = ParseTreeEdge(next_node=end, terminal="ε")
 
-    return ParseTreeNode(next_edges=[declration, epsilon_node])
+    return ParseTreeNode(next_edges=[declaration, epsilon_node])
 
 
 def program_diagram():
     end = ParseTreeNode(next_edges=[])
     dollar = ParseTreeEdge(next_node=end, terminal="$")
     dollar_node = ParseTreeNode(next_edges=[dollar])
-    declration_list = ParseTreeEdge(
-        next_node=dollar_node, non_terminal="declration_list"
+    declaration_list = ParseTreeEdge(
+        next_node=dollar_node, non_terminal="declaration_list"
     )
-    return ParseTreeNode(next_edges=[declration_list])
+    return ParseTreeNode(next_edges=[declaration_list])
 
 
 def add_firsts():
     with open("firsts.txt", "r") as file:
         a = list(map(str.split, file.readlines()))
     for line in a:
-        first_dict[line[0]] = line[1:]
+        first_dict[str(line[0]).lower()] = line[1:]

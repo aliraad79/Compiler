@@ -27,10 +27,10 @@ class LexicalError(Enum):
 
 
 class Token:
-    def __init__(self, _type: TokenType, lexeme):
+    def __init__(self, _type: TokenType, lexeme: str):
         self.type = _type
         self.lexeme = lexeme
-    
+
     def __str__(self):
         return f"Token<type = {self.type}, lexeme = {repr(self.lexeme)}>"
 

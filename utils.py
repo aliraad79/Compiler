@@ -39,7 +39,7 @@ def add_tokens_to_file(line_number: int, token_dict):
                 pass
 
 
-def print_log(
+def print_scanner_log(
     buffer, char, next_char, selected_state, next_state, can_be_continued, line_number=1
 ):
 
@@ -65,3 +65,9 @@ def write_syntax_errors_to_file(errors):
 def write_parse_tree_to_file(parse_tree):
     with open("parse_tree.txt", "w") as file:
         file.write(parse_tree)
+
+
+def print_parser_log(buffer, current_node, curret_token):
+    print(f"Buffer ==> {buffer}")
+    print(f"current Node ==> {current_node}")
+    print(f"Current token ==> {curret_token}")
