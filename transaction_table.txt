@@ -5,7 +5,8 @@ Declaration ->  Declaration_initial Declaration_prime
 Declaration_initial ->  Type_specifier ID
 Declaration_prime ->  Fun_Declaration_prime
 Declaration_prime ->  Var_Declaration_prime
-Var_Declaration_prime ->  ; | [ NUM ] ;
+Var_Declaration_prime ->  ;
+Var_Declaration_prime -> [ NUM ] ;
 Fun_Declaration_prime ->  ( Params ) Compound_stmt
 Type_specifier ->  int
 Type_specifier ->  void
@@ -45,11 +46,13 @@ Simple_expression_zegond ->  Additive_expression_zegond C
 Simple_expression_prime ->  Additive_expression_prime C
 C ->  Relop Additive_expression
 C ->  ε
-Relop ->  < | ==
+Relop ->  <
+Relop -> = =
 Additive_expression ->  Term D
 Additive_expression_prime ->  Term_prime D
 Additive_expression_zegond ->  Term_zegond D
-D ->  Addop Term D | 
+D ->  Addop Term D
+D -> ε
 Addop ->  +
 Addop ->  -
 Term ->  Factor G
