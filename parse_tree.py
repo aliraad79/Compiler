@@ -24,16 +24,16 @@ class ParseTreeEdge:
 
     def match(self, other: Token, stack: List[str]):
         if self.non_terminal:
-            stack.append(self.non_terminal)
-            return other.lexeme in first_dict[self.non_terminal]
-        elif self.terminal:
-            return (
-                other.lexeme == self.terminal
-                if other.type != "ID"
-                else "ID" == self.terminal
-            )
-        if self.terminal == "ε":
+            firsts = first_dict[self.non_terminal]
+            if (other.lexeme in firsts) or ("ε" in firsts) or (other.type in firsts):
+                stack.append(self.non_terminal)
+                return True
+
+        elif self.terminal == "ε":
             return True
+
+        elif self.terminal:
+            return other.lexeme == self.terminal or other.type == self.terminal
 
     def __repr__(self):
         return f"Edge<{self.terminal if self.terminal else self.non_terminal}>"
@@ -46,7 +46,7 @@ class ParseTreeNode:
     def next_parse_tree_node(self, other: Token, stack: List[str]):
         for i in self.next_edges:
             if i.match(other, stack):
-                return i.next_node, i.terminal != None
+                return i.next_node, (i.terminal != None and i.terminal != "ε")
         if len(self.next_edges) == 0:
             return None, False
         print("WTF", self.next_edges)
@@ -73,7 +73,7 @@ def init_transation_diagrams():
         "param_list": param_list_diagram(),
         "param": param_diagram(),
         "param_prime": param_prime_diagram(),
-        "compound_stmt": compund_stmt(),
+        "compound_stmt": compound_stmt(),
         "statement_list": statement_list_diagram(),
         "statement": statement_diagram(),
         "expression_stmt": expression_stmt_diagram(),
@@ -83,21 +83,21 @@ def init_transation_diagrams():
         "return_stmt": return_stmt_diagram(),
         "return_stmt_prime": return_stmt_prime_diagram(),
         "expression": expression_diagram(),
-        "B": B_diagram(),
-        "H": H_diagram(),
+        "b": B_diagram(),
+        "h": H_diagram(),
         "simple_expression_zegond": simple_expression_zegond_diagram(),
         "simple_expression_prime": simple_expression_prime_diagram(),
-        "C": C_diagram(),
+        "c": C_diagram(),
         "relop": relop_diagram(),
         "additive_expression": additive_expression_diagram(),
         "additive_expression_prime": additive_expression_prime_diagram(),
         "additive_expression_zegond": additive_expression_zegond_diagram(),
-        "D": D_diagram(),
+        "d": D_diagram(),
         "addop": addop_diagram(),
         "term": term_diagram(),
         "term_prime": term_prime_diagram(),
         "term_zegond": term_zegond_diagram(),
-        "G": G_diagram(),
+        "g": G_diagram(),
         "factor": factor_diagram(),
         "var_call_prime": var_call_prime_diagram(),
         "var_prime": var_prime_diagram(),
@@ -212,7 +212,7 @@ def factor_diagram():
 
 def G_diagram():
     end = ParseTreeNode(next_edges=[])
-    _G_edge = ParseTreeEdge(next_node=end, non_terminal="G")
+    _G_edge = ParseTreeEdge(next_node=end, non_terminal="g")
     _G_node = ParseTreeNode(next_edges=[_G_edge])
     factor = ParseTreeEdge(next_node=_G_node, non_terminal="factor")
     factor_node = ParseTreeNode(next_edges=[factor])
@@ -225,7 +225,7 @@ def G_diagram():
 
 def term_zegond_diagram():
     end = ParseTreeNode(next_edges=[])
-    _G_edge = ParseTreeEdge(next_node=end, non_terminal="G")
+    _G_edge = ParseTreeEdge(next_node=end, non_terminal="g")
     _G_node = ParseTreeNode(next_edges=[_G_edge])
     factor_zegond = ParseTreeEdge(next_node=_G_node, non_terminal="factor_zegond")
 
@@ -234,7 +234,7 @@ def term_zegond_diagram():
 
 def term_prime_diagram():
     end = ParseTreeNode(next_edges=[])
-    _G_edge = ParseTreeEdge(next_node=end, non_terminal="G")
+    _G_edge = ParseTreeEdge(next_node=end, non_terminal="g")
     _G_node = ParseTreeNode(next_edges=[_G_edge])
     factor_prime = ParseTreeEdge(next_node=_G_node, non_terminal="factor_prime")
 
@@ -243,7 +243,7 @@ def term_prime_diagram():
 
 def term_diagram():
     end = ParseTreeNode(next_edges=[])
-    _G_edge = ParseTreeEdge(next_node=end, non_terminal="G")
+    _G_edge = ParseTreeEdge(next_node=end, non_terminal="g")
     _G_node = ParseTreeNode(next_edges=[_G_edge])
     factor = ParseTreeEdge(next_node=_G_node, non_terminal="factor")
 
@@ -261,7 +261,7 @@ def addop_diagram():
 
 def D_diagram():
     end = ParseTreeNode(next_edges=[])
-    _D_edge = ParseTreeEdge(next_node=end, non_terminal="D")
+    _D_edge = ParseTreeEdge(next_node=end, non_terminal="d")
     _D_node = ParseTreeNode(next_edges=[_D_edge])
     term = ParseTreeEdge(next_node=_D_node, non_terminal="term")
     term_node = ParseTreeNode(next_edges=[term])
@@ -274,7 +274,7 @@ def D_diagram():
 
 def additive_expression_zegond_diagram():
     end = ParseTreeNode(next_edges=[])
-    _D_edge = ParseTreeEdge(next_node=end, non_terminal="D")
+    _D_edge = ParseTreeEdge(next_node=end, non_terminal="d")
     _D_node = ParseTreeNode(next_edges=[_D_edge])
     term_zegond = ParseTreeEdge(next_node=_D_node, non_terminal="term_zegond")
 
@@ -283,7 +283,7 @@ def additive_expression_zegond_diagram():
 
 def additive_expression_prime_diagram():
     end = ParseTreeNode(next_edges=[])
-    _D_edge = ParseTreeEdge(next_node=end, non_terminal="D")
+    _D_edge = ParseTreeEdge(next_node=end, non_terminal="d")
     _D_node = ParseTreeNode(next_edges=[_D_edge])
     term_prime = ParseTreeEdge(next_node=_D_node, non_terminal="term_prime")
 
@@ -292,7 +292,7 @@ def additive_expression_prime_diagram():
 
 def additive_expression_diagram():
     end = ParseTreeNode(next_edges=[])
-    _D_edge = ParseTreeEdge(next_node=end, non_terminal="D")
+    _D_edge = ParseTreeEdge(next_node=end, non_terminal="d")
     _D_node = ParseTreeNode(next_edges=[_D_edge])
     term = ParseTreeEdge(next_node=_D_node, non_terminal="term")
 
@@ -325,7 +325,7 @@ def C_diagram():
 
 def simple_expression_prime_diagram():
     end = ParseTreeNode(next_edges=[])
-    _C_edge = ParseTreeEdge(next_node=end, non_terminal="C")
+    _C_edge = ParseTreeEdge(next_node=end, non_terminal="c")
     _C_node = ParseTreeNode(next_edges=[_C_edge])
     additive_expression_prime = ParseTreeEdge(
         next_node=_C_node, non_terminal="additive_expression_prime"
@@ -336,7 +336,7 @@ def simple_expression_prime_diagram():
 
 def simple_expression_zegond_diagram():
     end = ParseTreeNode(next_edges=[])
-    _C_edge = ParseTreeEdge(next_node=end, non_terminal="C")
+    _C_edge = ParseTreeEdge(next_node=end, non_terminal="c")
     _C_node = ParseTreeNode(next_edges=[_C_edge])
     additive_expression_zegond = ParseTreeEdge(
         next_node=_C_node, non_terminal="additive_expression_zegond"
@@ -347,11 +347,11 @@ def simple_expression_zegond_diagram():
 
 def H_diagram():
     end = ParseTreeNode(next_edges=[])
-    _C_edge = ParseTreeEdge(next_node=end, non_terminal="C")
+    _C_edge = ParseTreeEdge(next_node=end, non_terminal="c")
     _C_node = ParseTreeNode(next_edges=[_C_edge])
-    _D_edge = ParseTreeEdge(next_node=_C_node, non_terminal="D")
+    _D_edge = ParseTreeEdge(next_node=_C_node, non_terminal="d")
     _D_node = ParseTreeNode(next_edges=[_D_edge])
-    _G_edge = ParseTreeEdge(next_node=_D_node, non_terminal="G")
+    _G_edge = ParseTreeEdge(next_node=_D_node, non_terminal="g")
 
     expression = ParseTreeEdge(next_node=end, non_terminal="expression")
 
@@ -361,7 +361,7 @@ def H_diagram():
 def B_diagram():
     end = ParseTreeNode(next_edges=[])
 
-    _H_edge = ParseTreeEdge(next_node=end, non_terminal="H")
+    _H_edge = ParseTreeEdge(next_node=end, non_terminal="h")
     _H_node = ParseTreeNode(next_edges=[_H_edge])
     close_par = ParseTreeEdge(next_node=_H_node, terminal="]")
     close_par_node = ParseTreeNode(next_edges=[close_par])
@@ -370,17 +370,19 @@ def B_diagram():
     open_par = ParseTreeEdge(next_node=expression_node, terminal="[")
 
     expression_2 = ParseTreeEdge(next_node=end, non_terminal="expression")
+    expression_2_node = ParseTreeNode(next_edges=[expression_2])
+    equal = ParseTreeEdge(next_node=expression_2_node, terminal="=")
 
     simple_expression_prime = ParseTreeEdge(
         next_node=end, non_terminal="simple_expression_prime"
     )
 
-    return ParseTreeNode(next_edges=[simple_expression_prime, expression_2, open_par])
+    return ParseTreeNode(next_edges=[open_par, equal, simple_expression_prime])
 
 
 def expression_diagram():
     end = ParseTreeNode(next_edges=[])
-    _B_edge = ParseTreeEdge(next_node=end, non_terminal="B")
+    _B_edge = ParseTreeEdge(next_node=end, non_terminal="b")
     _B_node = ParseTreeNode(next_edges=[_B_edge])
     _id = ParseTreeEdge(next_node=_B_node, terminal="ID")
 
@@ -480,18 +482,18 @@ def statement_diagram():
 
     expression_stmt = ParseTreeEdge(next_node=end, non_terminal="expression_stmt")
 
-    compund_stmt = ParseTreeEdge(next_node=end, non_terminal="compund_stmt")
+    compound_stmt = ParseTreeEdge(next_node=end, non_terminal="compound_stmt")
 
     selection_stmt = ParseTreeEdge(next_node=end, non_terminal="selection_stmt")
 
     iteration_stmt = ParseTreeEdge(next_node=end, non_terminal="iteration_stmt")
 
-    return_stmt = ParseTreeEdge(next_node=end, non_terminal="statement_list")
+    return_stmt = ParseTreeEdge(next_node=end, non_terminal="return_stmt")
 
     return ParseTreeNode(
         next_edges=[
             expression_stmt,
-            compund_stmt,
+            compound_stmt,
             selection_stmt,
             iteration_stmt,
             return_stmt,
@@ -503,17 +505,14 @@ def statement_list_diagram():
     end = ParseTreeNode(next_edges=[])
     statement_list = ParseTreeEdge(next_node=end, non_terminal="statement_list")
     statement_list_node = ParseTreeNode(next_edges=[statement_list])
-    statement_bracket = ParseTreeEdge(
-        next_node=statement_list_node, non_terminal="statement"
-    )
-    statement_node = ParseTreeNode(next_edges=[statement_bracket])
+    statement = ParseTreeEdge(next_node=statement_list_node, non_terminal="statement")
 
     epsilon_node = ParseTreeEdge(next_node=end, terminal="ε")
 
-    return ParseTreeNode(next_edges=[statement_node, epsilon_node])
+    return ParseTreeNode(next_edges=[statement, epsilon_node])
 
 
-def compund_stmt():
+def compound_stmt():
     end = ParseTreeNode(next_edges=[])
     close_bracket = ParseTreeEdge(next_node=end, terminal="}")
     close_bracket_node = ParseTreeNode(next_edges=[close_bracket])
