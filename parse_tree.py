@@ -1,7 +1,7 @@
 from scanner import Token
 from typing import List
 from anytree import Node
-
+from utils import format_non_terminal
 
 class DiagramEdge:
     def __init__(
@@ -16,16 +16,21 @@ class DiagramEdge:
         if self.non_terminal:
             firsts = first_dict[self.non_terminal]
             if (other.lexeme in firsts) or ("ε" in firsts) or (other.type in firsts):
-                Node(format_non_terminal(self.non_terminal), parent=current_parse_node)
                 stack.append(self.non_terminal)
-                return True
+                return True, Node(
+                    format_non_terminal(self.non_terminal), parent=current_parse_node
+                )
 
         elif self.terminal == "ε":
             Node("epsilon", parent=current_parse_node)
-            return True
+            return True, Node("epsilon", parent=current_parse_node)
 
         elif self.terminal:
-            return other.lexeme == self.terminal or other.type == self.terminal
+            return other.lexeme == self.terminal or other.type == self.terminal, Node(
+                self.terminal, current_parse_node
+            )
+
+        return False, None
 
     def __repr__(self):
         return f"Edge<{self.terminal if self.terminal else self.non_terminal}>"
@@ -37,20 +42,19 @@ class DiagramNode:
 
     def next_parse_tree_node(self, other: Token, stack: List[str], current_parse_node):
         for i in self.next_edges:
-            if i.match(other, stack, current_parse_node):
-                return i.next_node, (i.terminal != None and i.terminal != "ε")
+            result, next_node = i.match(other, stack, current_parse_node)
+            if result:
+                return (
+                    i.next_node,
+                    (i.terminal != None and i.terminal != "ε"),
+                    next_node,
+                )
         if len(self.next_edges) == 0:
-            return None, False
+            return None, False, None
         print("WTF", self.next_edges)
 
     def __repr__(self):
         return f"Node<next_edges = {self.next_edges}>"
-
-
-def format_non_terminal(non_terminal: str):
-    non_terminal = non_terminal.replace("_", "-")
-    return str(non_terminal[0]).upper() + non_terminal[1:]
-
 
 first_dict = {}
 
@@ -665,6 +669,6 @@ def program_diagram():
 
 def add_firsts():
     with open("firsts.txt", "r") as file:
-        a = list(map(str.split, file.readlines()))
-    for line in a:
+        all_firsts = list(map(str.split, file.readlines()))
+    for line in all_firsts:
         first_dict[str(line[0]).lower()] = line[1:]

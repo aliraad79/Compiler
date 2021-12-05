@@ -31,9 +31,7 @@ class Parser:
         write_parse_tree_to_file(self.parse_tree_repr)
 
     def log(self):
-        print_parser_log(
-            self.current_node, self.current_token, self.return_nodes, self.nodes_buffer
-        )
+        print_parser_log(self.current_node, self.current_token, self.return_nodes)
 
     def start(self):
         parse_tree_root = Node("program")
@@ -46,19 +44,26 @@ class Parser:
                     (
                         self.current_node,
                         terminal,
+                        next_node,
                     ) = self.current_node.next_parse_tree_node(
-                        self.current_token,
-                        self.nodes_buffer,
-                        current_parse_node
+                        self.current_token, self.nodes_buffer, current_parse_node
                     )
+
+                    if next_node:
+                        current_parse_node = next_node
+                    if not self.current_node:
+                        current_parse_node = current_parse_node.parent
+
                     if len(self.nodes_buffer) != 0:
                         if len(self.current_node.next_edges) != 0:
                             self.return_nodes.append(self.current_node)
+                        else:
+                            current_parse_node = current_parse_node.parent
+
                         self.current_node = self.transation_diagrams[
                             self.nodes_buffer.pop(len(self.nodes_buffer) - 1)
                         ]
                     if terminal:
-                        Node(self.current_token, parent=current_parse_node)
                         self.get_next_token()
                         terminal = False
                 else:
@@ -66,8 +71,9 @@ class Parser:
                         len(self.return_nodes) - 1
                     )
         except:
-            # self.log()
+            self.log()
             raise
         finally:
-            Node("$", current_parse_node)
-            print(RenderTree(parse_tree_root))
+            Node("$", parse_tree_root)
+            for pre, fill, node in RenderTree(parse_tree_root):
+                print(f"{pre}{node.name}")
