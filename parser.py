@@ -5,20 +5,23 @@ from utils import (
     write_syntax_errors_to_file,
     print_parser_log,
 )
-from parse_tree import init_transation_diagrams, ParseTreeNode
+from parse_tree import init_transation_diagrams, DiagramNode
+from anytree import Node, RenderTree
 
 
 class Parser:
     def __init__(self, scanner: Scanner):
         self.scanner = scanner
-        self.current_token: Token = None
-        self.transation_diagrams: dict[str, ParseTreeNode] = init_transation_diagrams()
-        self.current_node: ParseTreeNode = self.transation_diagrams["program"]
+
+        self.transation_diagrams: dict[str, DiagramNode] = init_transation_diagrams()
         self.parse_tree_repr: dict[int, str] = {}  # For test
         self.nodes_buffer: List[str] = []
-        self.return_nodes: List[ParseTreeNode] = []
+        self.return_nodes: List[DiagramNode] = []
+
+        self.current_token: Token = None
+        self.current_node: DiagramNode = self.transation_diagrams["program"]
+
         self.syntax_errors: List = []
-        self.current_depth = 0
 
     def get_next_token(self):
         self.current_token = self.scanner.get_next_token()
@@ -32,10 +35,9 @@ class Parser:
             self.current_node, self.current_token, self.return_nodes, self.nodes_buffer
         )
 
-    def add_to_parse_tree(self, string):  # or maybe get token obj ?
-        self.parse_tree_repr.setdefault(self.current_depth, []).append(string)
-
     def start(self):
+        parse_tree_root = Node("program")
+        current_parse_node = parse_tree_root
         try:
             self.get_next_token()
             terminal = False
@@ -47,6 +49,7 @@ class Parser:
                     ) = self.current_node.next_parse_tree_node(
                         self.current_token,
                         self.nodes_buffer,
+                        current_parse_node
                     )
                     if len(self.nodes_buffer) != 0:
                         if len(self.current_node.next_edges) != 0:
@@ -55,16 +58,16 @@ class Parser:
                             self.nodes_buffer.pop(len(self.nodes_buffer) - 1)
                         ]
                     if terminal:
-                        self.add_to_parse_tree(self.current_token.lexeme)
+                        Node(self.current_token, parent=current_parse_node)
                         self.get_next_token()
                         terminal = False
                 else:
-                    self.current_depth += 1
                     self.current_node = self.return_nodes.pop(
                         len(self.return_nodes) - 1
                     )
         except:
-            self.log()
+            # self.log()
             raise
         finally:
-            print(self.parse_tree_repr)
+            Node("$", current_parse_node)
+            print(RenderTree(parse_tree_root))

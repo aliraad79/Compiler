@@ -32,7 +32,7 @@ class Token:
         self.lexeme = lexeme
 
     def __str__(self):
-        return f"Token<type = {self.type}, lexeme = {repr(self.lexeme)}>"
+        return f"({self.type}, {self.lexeme})"
 
 
 # global vars

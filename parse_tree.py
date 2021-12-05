@@ -1,35 +1,27 @@
-# def print_tree(graph, node, depth):
-#     if depth == 0:
-#         print(node)
-#     elif depth == 1:
-#         print("|---", node)
-#     else:
-#         print("|   ", "\t" * (depth - 2), "|---", node)
-#     for i in graph[node]:
-#         print_tree(graph, i, depth + 1)
-
-
-from scanner import Token, TokenType
+from scanner import Token
 from typing import List
+from anytree import Node
 
 
-class ParseTreeEdge:
+class DiagramEdge:
     def __init__(
-        self, next_node: "ParseTreeNode", terminal: str = None, non_terminal: str = None
+        self, next_node: "DiagramNode", terminal: str = None, non_terminal: str = None
     ):
         self.next_node = next_node
         self.terminal = terminal
         self.firsts: List[str] = None
         self.non_terminal = non_terminal
 
-    def match(self, other: Token, stack: List[str]):
+    def match(self, other: Token, stack: List[str], current_parse_node):
         if self.non_terminal:
             firsts = first_dict[self.non_terminal]
             if (other.lexeme in firsts) or ("ε" in firsts) or (other.type in firsts):
+                Node(format_non_terminal(self.non_terminal), parent=current_parse_node)
                 stack.append(self.non_terminal)
                 return True
 
         elif self.terminal == "ε":
+            Node("epsilon", parent=current_parse_node)
             return True
 
         elif self.terminal:
@@ -39,13 +31,13 @@ class ParseTreeEdge:
         return f"Edge<{self.terminal if self.terminal else self.non_terminal}>"
 
 
-class ParseTreeNode:
-    def __init__(self, next_edges: List[ParseTreeEdge] = []):
+class DiagramNode:
+    def __init__(self, next_edges: List[DiagramEdge] = []):
         self.next_edges = next_edges
 
-    def next_parse_tree_node(self, other: Token, stack: List[str]):
+    def next_parse_tree_node(self, other: Token, stack: List[str], current_parse_node):
         for i in self.next_edges:
-            if i.match(other, stack):
+            if i.match(other, stack, current_parse_node):
                 return i.next_node, (i.terminal != None and i.terminal != "ε")
         if len(self.next_edges) == 0:
             return None, False
@@ -53,6 +45,11 @@ class ParseTreeNode:
 
     def __repr__(self):
         return f"Node<next_edges = {self.next_edges}>"
+
+
+def format_non_terminal(non_terminal: str):
+    non_terminal = non_terminal.replace("_", "-")
+    return str(non_terminal[0]).upper() + non_terminal[1:]
 
 
 first_dict = {}
@@ -111,386 +108,384 @@ def init_transation_diagrams():
 
 
 def arg_list_prime_diagram():
-    end = ParseTreeNode(next_edges=[])
-    arg_list_prime = ParseTreeEdge(next_node=end, non_terminal="arg_list_prime")
-    arg_list_prime_node = ParseTreeNode(next_edges=[arg_list_prime])
-    expression = ParseTreeEdge(next_node=arg_list_prime_node, non_terminal="expression")
-    expression_node = ParseTreeNode(next_edges=[expression])
-    comma = ParseTreeEdge(next_node=expression_node, terminal=",")
+    end = DiagramNode(next_edges=[])
+    arg_list_prime = DiagramEdge(next_node=end, non_terminal="arg_list_prime")
+    arg_list_prime_node = DiagramNode(next_edges=[arg_list_prime])
+    expression = DiagramEdge(next_node=arg_list_prime_node, non_terminal="expression")
+    expression_node = DiagramNode(next_edges=[expression])
+    comma = DiagramEdge(next_node=expression_node, terminal=",")
 
-    epsilon_node = ParseTreeEdge(next_node=end, terminal="ε")
+    epsilon_node = DiagramEdge(next_node=end, terminal="ε")
 
-    return ParseTreeNode(next_edges=[comma, epsilon_node])
+    return DiagramNode(next_edges=[comma, epsilon_node])
 
 
 def arg_list_diagram():
-    end = ParseTreeNode(next_edges=[])
-    arg_list_prime = ParseTreeEdge(next_node=end, non_terminal="arg_list_prime")
-    arg_list_prime_node = ParseTreeNode(next_edges=[arg_list_prime])
-    expression = ParseTreeEdge(next_node=arg_list_prime_node, non_terminal="expression")
+    end = DiagramNode(next_edges=[])
+    arg_list_prime = DiagramEdge(next_node=end, non_terminal="arg_list_prime")
+    arg_list_prime_node = DiagramNode(next_edges=[arg_list_prime])
+    expression = DiagramEdge(next_node=arg_list_prime_node, non_terminal="expression")
 
-    return ParseTreeNode(next_edges=[expression])
+    return DiagramNode(next_edges=[expression])
 
 
 def args_diagram():
-    end = ParseTreeNode(next_edges=[])
-    arg_list = ParseTreeEdge(next_node=end, non_terminal="arg_list")
+    end = DiagramNode(next_edges=[])
+    arg_list = DiagramEdge(next_node=end, non_terminal="arg_list")
 
-    epsilon_node = ParseTreeEdge(next_node=end, terminal="ε")
+    epsilon_node = DiagramEdge(next_node=end, terminal="ε")
 
-    return ParseTreeNode(next_edges=[arg_list, epsilon_node])
+    return DiagramNode(next_edges=[arg_list, epsilon_node])
 
 
 def factor_zegond_diagram():
-    end = ParseTreeNode(next_edges=[])
-    close_par = ParseTreeEdge(next_node=end, terminal=")")
-    close_par_node = ParseTreeNode(next_edges=[close_par])
-    expression = ParseTreeEdge(next_node=close_par_node, non_terminal="expression")
-    expression_node = ParseTreeNode(next_edges=[expression])
-    open_par = ParseTreeEdge(next_node=expression_node, terminal="(")
+    end = DiagramNode(next_edges=[])
+    close_par = DiagramEdge(next_node=end, terminal=")")
+    close_par_node = DiagramNode(next_edges=[close_par])
+    expression = DiagramEdge(next_node=close_par_node, non_terminal="expression")
+    expression_node = DiagramNode(next_edges=[expression])
+    open_par = DiagramEdge(next_node=expression_node, terminal="(")
 
-    num = ParseTreeEdge(next_node=end, terminal="NUM")
+    num = DiagramEdge(next_node=end, terminal="NUM")
 
-    return ParseTreeNode(next_edges=[open_par, num])
+    return DiagramNode(next_edges=[open_par, num])
 
 
 def factor_prime_diagram():
-    end = ParseTreeNode(next_edges=[])
-    close_par = ParseTreeEdge(next_node=end, terminal=")")
-    close_par_node = ParseTreeNode(next_edges=[close_par])
-    args = ParseTreeEdge(next_node=close_par_node, non_terminal="args")
-    args_node = ParseTreeNode(next_edges=[args])
-    open_par = ParseTreeEdge(next_node=args_node, terminal="(")
+    end = DiagramNode(next_edges=[])
+    close_par = DiagramEdge(next_node=end, terminal=")")
+    close_par_node = DiagramNode(next_edges=[close_par])
+    args = DiagramEdge(next_node=close_par_node, non_terminal="args")
+    args_node = DiagramNode(next_edges=[args])
+    open_par = DiagramEdge(next_node=args_node, terminal="(")
 
-    epsilon_node = ParseTreeEdge(next_node=end, terminal="ε")
+    epsilon_node = DiagramEdge(next_node=end, terminal="ε")
 
-    return ParseTreeNode(next_edges=[open_par, epsilon_node])
+    return DiagramNode(next_edges=[open_par, epsilon_node])
 
 
 def var_prime_diagram():
-    end = ParseTreeNode(next_edges=[])
-    close_par = ParseTreeEdge(next_node=end, terminal="]")
-    close_par_node = ParseTreeNode(next_edges=[close_par])
-    expression = ParseTreeEdge(next_node=close_par_node, non_terminal="expression")
-    expression_node = ParseTreeNode(next_edges=[expression])
-    open_par = ParseTreeEdge(next_node=expression_node, terminal="[")
+    end = DiagramNode(next_edges=[])
+    close_par = DiagramEdge(next_node=end, terminal="]")
+    close_par_node = DiagramNode(next_edges=[close_par])
+    expression = DiagramEdge(next_node=close_par_node, non_terminal="expression")
+    expression_node = DiagramNode(next_edges=[expression])
+    open_par = DiagramEdge(next_node=expression_node, terminal="[")
 
-    epsilon_node = ParseTreeEdge(next_node=end, terminal="ε")
+    epsilon_node = DiagramEdge(next_node=end, terminal="ε")
 
-    return ParseTreeNode(next_edges=[open_par, epsilon_node])
+    return DiagramNode(next_edges=[open_par, epsilon_node])
 
 
 def var_call_prime_diagram():
-    end = ParseTreeNode(next_edges=[])
-    close_par = ParseTreeEdge(next_node=end, terminal=")")
-    close_par_node = ParseTreeNode(next_edges=[close_par])
-    args = ParseTreeEdge(next_node=close_par_node, non_terminal="args")
-    args_node = ParseTreeNode(next_edges=[args])
-    open_par = ParseTreeEdge(next_node=args_node, terminal="(")
+    end = DiagramNode(next_edges=[])
+    close_par = DiagramEdge(next_node=end, terminal=")")
+    close_par_node = DiagramNode(next_edges=[close_par])
+    args = DiagramEdge(next_node=close_par_node, non_terminal="args")
+    args_node = DiagramNode(next_edges=[args])
+    open_par = DiagramEdge(next_node=args_node, terminal="(")
 
-    var_prime = ParseTreeEdge(next_node=end, non_terminal="var_prime")
+    var_prime = DiagramEdge(next_node=end, non_terminal="var_prime")
 
-    return ParseTreeNode(next_edges=[open_par, var_prime])
+    return DiagramNode(next_edges=[open_par, var_prime])
 
 
 def factor_diagram():
-    end = ParseTreeNode(next_edges=[])
-    close_par = ParseTreeEdge(next_node=end, terminal=")")
-    close_par_node = ParseTreeNode(next_edges=[close_par])
-    expression = ParseTreeEdge(next_node=close_par_node, non_terminal="expression")
-    expression_node = ParseTreeNode(next_edges=[expression])
-    open_par = ParseTreeEdge(next_node=expression_node, terminal="(")
+    end = DiagramNode(next_edges=[])
+    close_par = DiagramEdge(next_node=end, terminal=")")
+    close_par_node = DiagramNode(next_edges=[close_par])
+    expression = DiagramEdge(next_node=close_par_node, non_terminal="expression")
+    expression_node = DiagramNode(next_edges=[expression])
+    open_par = DiagramEdge(next_node=expression_node, terminal="(")
 
-    var_call_prime = ParseTreeEdge(next_node=end, non_terminal="var_call_prime")
-    var_call_prime_node = ParseTreeNode(next_edges=[var_call_prime])
-    id = ParseTreeEdge(next_node=var_call_prime_node, terminal="ID")
+    var_call_prime = DiagramEdge(next_node=end, non_terminal="var_call_prime")
+    var_call_prime_node = DiagramNode(next_edges=[var_call_prime])
+    id = DiagramEdge(next_node=var_call_prime_node, terminal="ID")
 
-    num = ParseTreeEdge(next_node=end, terminal="NUM")
+    num = DiagramEdge(next_node=end, terminal="NUM")
 
-    return ParseTreeNode(next_edges=[open_par, num, id])
+    return DiagramNode(next_edges=[open_par, num, id])
 
 
 def G_diagram():
-    end = ParseTreeNode(next_edges=[])
-    _G_edge = ParseTreeEdge(next_node=end, non_terminal="g")
-    _G_node = ParseTreeNode(next_edges=[_G_edge])
-    factor = ParseTreeEdge(next_node=_G_node, non_terminal="factor")
-    factor_node = ParseTreeNode(next_edges=[factor])
-    star = ParseTreeEdge(next_node=factor_node, terminal="*")
+    end = DiagramNode(next_edges=[])
+    _G_edge = DiagramEdge(next_node=end, non_terminal="g")
+    _G_node = DiagramNode(next_edges=[_G_edge])
+    factor = DiagramEdge(next_node=_G_node, non_terminal="factor")
+    factor_node = DiagramNode(next_edges=[factor])
+    star = DiagramEdge(next_node=factor_node, terminal="*")
 
-    epsilon_node = ParseTreeEdge(next_node=end, terminal="ε")
+    epsilon_node = DiagramEdge(next_node=end, terminal="ε")
 
-    return ParseTreeNode(next_edges=[star, epsilon_node])
+    return DiagramNode(next_edges=[star, epsilon_node])
 
 
 def term_zegond_diagram():
-    end = ParseTreeNode(next_edges=[])
-    _G_edge = ParseTreeEdge(next_node=end, non_terminal="g")
-    _G_node = ParseTreeNode(next_edges=[_G_edge])
-    factor_zegond = ParseTreeEdge(next_node=_G_node, non_terminal="factor_zegond")
+    end = DiagramNode(next_edges=[])
+    _G_edge = DiagramEdge(next_node=end, non_terminal="g")
+    _G_node = DiagramNode(next_edges=[_G_edge])
+    factor_zegond = DiagramEdge(next_node=_G_node, non_terminal="factor_zegond")
 
-    return ParseTreeNode(next_edges=[factor_zegond])
+    return DiagramNode(next_edges=[factor_zegond])
 
 
 def term_prime_diagram():
-    end = ParseTreeNode(next_edges=[])
-    _G_edge = ParseTreeEdge(next_node=end, non_terminal="g")
-    _G_node = ParseTreeNode(next_edges=[_G_edge])
-    factor_prime = ParseTreeEdge(next_node=_G_node, non_terminal="factor_prime")
+    end = DiagramNode(next_edges=[])
+    _G_edge = DiagramEdge(next_node=end, non_terminal="g")
+    _G_node = DiagramNode(next_edges=[_G_edge])
+    factor_prime = DiagramEdge(next_node=_G_node, non_terminal="factor_prime")
 
-    return ParseTreeNode(next_edges=[factor_prime])
+    return DiagramNode(next_edges=[factor_prime])
 
 
 def term_diagram():
-    end = ParseTreeNode(next_edges=[])
-    _G_edge = ParseTreeEdge(next_node=end, non_terminal="g")
-    _G_node = ParseTreeNode(next_edges=[_G_edge])
-    factor = ParseTreeEdge(next_node=_G_node, non_terminal="factor")
+    end = DiagramNode(next_edges=[])
+    _G_edge = DiagramEdge(next_node=end, non_terminal="g")
+    _G_node = DiagramNode(next_edges=[_G_edge])
+    factor = DiagramEdge(next_node=_G_node, non_terminal="factor")
 
-    return ParseTreeNode(next_edges=[factor])
+    return DiagramNode(next_edges=[factor])
 
 
 def addop_diagram():
-    end = ParseTreeNode(next_edges=[])
-    plus = ParseTreeEdge(next_node=end, terminal="+")
+    end = DiagramNode(next_edges=[])
+    plus = DiagramEdge(next_node=end, terminal="+")
 
-    minus = ParseTreeEdge(next_node=end, terminal="-")
+    minus = DiagramEdge(next_node=end, terminal="-")
 
-    return ParseTreeNode(next_edges=[plus, minus])
+    return DiagramNode(next_edges=[plus, minus])
 
 
 def D_diagram():
-    end = ParseTreeNode(next_edges=[])
-    _D_edge = ParseTreeEdge(next_node=end, non_terminal="d")
-    _D_node = ParseTreeNode(next_edges=[_D_edge])
-    term = ParseTreeEdge(next_node=_D_node, non_terminal="term")
-    term_node = ParseTreeNode(next_edges=[term])
-    addop = ParseTreeEdge(next_node=term_node, non_terminal="addop")
+    end = DiagramNode(next_edges=[])
+    _D_edge = DiagramEdge(next_node=end, non_terminal="d")
+    _D_node = DiagramNode(next_edges=[_D_edge])
+    term = DiagramEdge(next_node=_D_node, non_terminal="term")
+    term_node = DiagramNode(next_edges=[term])
+    addop = DiagramEdge(next_node=term_node, non_terminal="addop")
 
-    epsilon_node = ParseTreeEdge(next_node=end, terminal="ε")
+    epsilon_node = DiagramEdge(next_node=end, terminal="ε")
 
-    return ParseTreeNode(next_edges=[addop, epsilon_node])
+    return DiagramNode(next_edges=[addop, epsilon_node])
 
 
 def additive_expression_zegond_diagram():
-    end = ParseTreeNode(next_edges=[])
-    _D_edge = ParseTreeEdge(next_node=end, non_terminal="d")
-    _D_node = ParseTreeNode(next_edges=[_D_edge])
-    term_zegond = ParseTreeEdge(next_node=_D_node, non_terminal="term_zegond")
+    end = DiagramNode(next_edges=[])
+    _D_edge = DiagramEdge(next_node=end, non_terminal="d")
+    _D_node = DiagramNode(next_edges=[_D_edge])
+    term_zegond = DiagramEdge(next_node=_D_node, non_terminal="term_zegond")
 
-    return ParseTreeNode(next_edges=[term_zegond])
+    return DiagramNode(next_edges=[term_zegond])
 
 
 def additive_expression_prime_diagram():
-    end = ParseTreeNode(next_edges=[])
-    _D_edge = ParseTreeEdge(next_node=end, non_terminal="d")
-    _D_node = ParseTreeNode(next_edges=[_D_edge])
-    term_prime = ParseTreeEdge(next_node=_D_node, non_terminal="term_prime")
+    end = DiagramNode(next_edges=[])
+    _D_edge = DiagramEdge(next_node=end, non_terminal="d")
+    _D_node = DiagramNode(next_edges=[_D_edge])
+    term_prime = DiagramEdge(next_node=_D_node, non_terminal="term_prime")
 
-    return ParseTreeNode(next_edges=[term_prime])
+    return DiagramNode(next_edges=[term_prime])
 
 
 def additive_expression_diagram():
-    end = ParseTreeNode(next_edges=[])
-    _D_edge = ParseTreeEdge(next_node=end, non_terminal="d")
-    _D_node = ParseTreeNode(next_edges=[_D_edge])
-    term = ParseTreeEdge(next_node=_D_node, non_terminal="term")
+    end = DiagramNode(next_edges=[])
+    _D_edge = DiagramEdge(next_node=end, non_terminal="d")
+    _D_node = DiagramNode(next_edges=[_D_edge])
+    term = DiagramEdge(next_node=_D_node, non_terminal="term")
 
-    return ParseTreeNode(next_edges=[term])
+    return DiagramNode(next_edges=[term])
 
 
 def relop_diagram():
-    end = ParseTreeNode(next_edges=[])
-    lower = ParseTreeEdge(next_node=end, terminal="<")
+    end = DiagramNode(next_edges=[])
+    lower = DiagramEdge(next_node=end, terminal="<")
 
-    equal_1 = ParseTreeEdge(next_node=end, terminal="=")
-    equal_1_node = ParseTreeNode(next_edges=[equal_1])
-    equal_2 = ParseTreeEdge(next_node=equal_1_node, terminal="=")
+    equal_1 = DiagramEdge(next_node=end, terminal="=")
+    equal_1_node = DiagramNode(next_edges=[equal_1])
+    equal_2 = DiagramEdge(next_node=equal_1_node, terminal="=")
 
-    return ParseTreeNode(next_edges=[lower, equal_2])
+    return DiagramNode(next_edges=[lower, equal_2])
 
 
 def C_diagram():
-    end = ParseTreeNode(next_edges=[])
-    additive_expression = ParseTreeEdge(
-        next_node=end, non_terminal="additive_expression"
-    )
-    additive_expression_node = ParseTreeNode(next_edges=[additive_expression])
-    relop = ParseTreeEdge(next_node=additive_expression_node, non_terminal="relop")
+    end = DiagramNode(next_edges=[])
+    additive_expression = DiagramEdge(next_node=end, non_terminal="additive_expression")
+    additive_expression_node = DiagramNode(next_edges=[additive_expression])
+    relop = DiagramEdge(next_node=additive_expression_node, non_terminal="relop")
 
-    epsilon_node = ParseTreeEdge(next_node=end, terminal="ε")
+    epsilon_node = DiagramEdge(next_node=end, terminal="ε")
 
-    return ParseTreeNode(next_edges=[relop, epsilon_node])
+    return DiagramNode(next_edges=[relop, epsilon_node])
 
 
 def simple_expression_prime_diagram():
-    end = ParseTreeNode(next_edges=[])
-    _C_edge = ParseTreeEdge(next_node=end, non_terminal="c")
-    _C_node = ParseTreeNode(next_edges=[_C_edge])
-    additive_expression_prime = ParseTreeEdge(
+    end = DiagramNode(next_edges=[])
+    _C_edge = DiagramEdge(next_node=end, non_terminal="c")
+    _C_node = DiagramNode(next_edges=[_C_edge])
+    additive_expression_prime = DiagramEdge(
         next_node=_C_node, non_terminal="additive_expression_prime"
     )
 
-    return ParseTreeNode(next_edges=[additive_expression_prime])
+    return DiagramNode(next_edges=[additive_expression_prime])
 
 
 def simple_expression_zegond_diagram():
-    end = ParseTreeNode(next_edges=[])
-    _C_edge = ParseTreeEdge(next_node=end, non_terminal="c")
-    _C_node = ParseTreeNode(next_edges=[_C_edge])
-    additive_expression_zegond = ParseTreeEdge(
+    end = DiagramNode(next_edges=[])
+    _C_edge = DiagramEdge(next_node=end, non_terminal="c")
+    _C_node = DiagramNode(next_edges=[_C_edge])
+    additive_expression_zegond = DiagramEdge(
         next_node=_C_node, non_terminal="additive_expression_zegond"
     )
 
-    return ParseTreeNode(next_edges=[additive_expression_zegond])
+    return DiagramNode(next_edges=[additive_expression_zegond])
 
 
 def H_diagram():
-    end = ParseTreeNode(next_edges=[])
-    _C_edge = ParseTreeEdge(next_node=end, non_terminal="c")
-    _C_node = ParseTreeNode(next_edges=[_C_edge])
-    _D_edge = ParseTreeEdge(next_node=_C_node, non_terminal="d")
-    _D_node = ParseTreeNode(next_edges=[_D_edge])
-    _G_edge = ParseTreeEdge(next_node=_D_node, non_terminal="g")
+    end = DiagramNode(next_edges=[])
+    _C_edge = DiagramEdge(next_node=end, non_terminal="c")
+    _C_node = DiagramNode(next_edges=[_C_edge])
+    _D_edge = DiagramEdge(next_node=_C_node, non_terminal="d")
+    _D_node = DiagramNode(next_edges=[_D_edge])
+    _G_edge = DiagramEdge(next_node=_D_node, non_terminal="g")
 
-    expression = ParseTreeEdge(next_node=end, non_terminal="expression")
+    expression = DiagramEdge(next_node=end, non_terminal="expression")
 
-    return ParseTreeNode(next_edges=[expression, _G_edge])
+    return DiagramNode(next_edges=[expression, _G_edge])
 
 
 def B_diagram():
-    end = ParseTreeNode(next_edges=[])
+    end = DiagramNode(next_edges=[])
 
-    _H_edge = ParseTreeEdge(next_node=end, non_terminal="h")
-    _H_node = ParseTreeNode(next_edges=[_H_edge])
-    close_par = ParseTreeEdge(next_node=_H_node, terminal="]")
-    close_par_node = ParseTreeNode(next_edges=[close_par])
-    expression = ParseTreeEdge(next_node=close_par_node, non_terminal="expression")
-    expression_node = ParseTreeNode(next_edges=[expression])
-    open_par = ParseTreeEdge(next_node=expression_node, terminal="[")
+    _H_edge = DiagramEdge(next_node=end, non_terminal="h")
+    _H_node = DiagramNode(next_edges=[_H_edge])
+    close_par = DiagramEdge(next_node=_H_node, terminal="]")
+    close_par_node = DiagramNode(next_edges=[close_par])
+    expression = DiagramEdge(next_node=close_par_node, non_terminal="expression")
+    expression_node = DiagramNode(next_edges=[expression])
+    open_par = DiagramEdge(next_node=expression_node, terminal="[")
 
-    expression_2 = ParseTreeEdge(next_node=end, non_terminal="expression")
-    expression_2_node = ParseTreeNode(next_edges=[expression_2])
-    equal = ParseTreeEdge(next_node=expression_2_node, terminal="=")
+    expression_2 = DiagramEdge(next_node=end, non_terminal="expression")
+    expression_2_node = DiagramNode(next_edges=[expression_2])
+    equal = DiagramEdge(next_node=expression_2_node, terminal="=")
 
-    simple_expression_prime = ParseTreeEdge(
+    simple_expression_prime = DiagramEdge(
         next_node=end, non_terminal="simple_expression_prime"
     )
 
-    return ParseTreeNode(next_edges=[open_par, equal, simple_expression_prime])
+    return DiagramNode(next_edges=[open_par, equal, simple_expression_prime])
 
 
 def expression_diagram():
-    end = ParseTreeNode(next_edges=[])
-    _B_edge = ParseTreeEdge(next_node=end, non_terminal="b")
-    _B_node = ParseTreeNode(next_edges=[_B_edge])
-    _id = ParseTreeEdge(next_node=_B_node, terminal="ID")
+    end = DiagramNode(next_edges=[])
+    _B_edge = DiagramEdge(next_node=end, non_terminal="b")
+    _B_node = DiagramNode(next_edges=[_B_edge])
+    _id = DiagramEdge(next_node=_B_node, terminal="ID")
 
-    simple_expression_zegond = ParseTreeEdge(
+    simple_expression_zegond = DiagramEdge(
         next_node=end, non_terminal="simple_expression_zegond"
     )
 
-    return ParseTreeNode(next_edges=[simple_expression_zegond, _id])
+    return DiagramNode(next_edges=[simple_expression_zegond, _id])
 
 
 def return_stmt_prime_diagram():
-    end = ParseTreeNode(next_edges=[])
+    end = DiagramNode(next_edges=[])
 
-    semicolon_2 = ParseTreeEdge(next_node=end, terminal=";")
-    semicolon_2_node = ParseTreeNode(next_edges=[semicolon_2])
-    expression = ParseTreeEdge(next_node=semicolon_2_node, non_terminal="expression")
+    semicolon_2 = DiagramEdge(next_node=end, terminal=";")
+    semicolon_2_node = DiagramNode(next_edges=[semicolon_2])
+    expression = DiagramEdge(next_node=semicolon_2_node, non_terminal="expression")
 
-    semicolon = ParseTreeEdge(next_node=end, terminal=";")
+    semicolon = DiagramEdge(next_node=end, terminal=";")
 
-    return ParseTreeNode(next_edges=[semicolon, expression])
+    return DiagramNode(next_edges=[semicolon, expression])
 
 
 def return_stmt_diagram():
-    end = ParseTreeNode(next_edges=[])
-    return_stmt_prime = ParseTreeEdge(next_node=end, non_terminal="return_stmt_prime")
-    statement_node = ParseTreeNode(next_edges=[return_stmt_prime])
-    _return = ParseTreeEdge(next_node=statement_node, terminal="return")
+    end = DiagramNode(next_edges=[])
+    return_stmt_prime = DiagramEdge(next_node=end, non_terminal="return_stmt_prime")
+    statement_node = DiagramNode(next_edges=[return_stmt_prime])
+    _return = DiagramEdge(next_node=statement_node, terminal="return")
 
-    return ParseTreeNode(next_edges=[_return])
+    return DiagramNode(next_edges=[_return])
 
 
 def iteration_stmt_diagram():
-    end = ParseTreeNode(next_edges=[])
-    close_bracket = ParseTreeEdge(next_node=end, terminal=")")
-    close_bracket_node = ParseTreeNode(next_edges=[close_bracket])
-    expression = ParseTreeEdge(next_node=close_bracket_node, non_terminal="expression")
-    expression_node = ParseTreeNode(next_edges=[expression])
-    open_bracket = ParseTreeEdge(next_node=expression_node, terminal="(")
-    open_bracket_node = ParseTreeNode(next_edges=[open_bracket])
-    until = ParseTreeEdge(next_node=open_bracket_node, terminal="until")
-    until_node = ParseTreeNode(next_edges=[until])
-    statement = ParseTreeEdge(next_node=until_node, non_terminal="statement")
-    statement_node = ParseTreeNode(next_edges=[statement])
-    repeat = ParseTreeEdge(next_node=statement_node, terminal="repeat")
+    end = DiagramNode(next_edges=[])
+    close_bracket = DiagramEdge(next_node=end, terminal=")")
+    close_bracket_node = DiagramNode(next_edges=[close_bracket])
+    expression = DiagramEdge(next_node=close_bracket_node, non_terminal="expression")
+    expression_node = DiagramNode(next_edges=[expression])
+    open_bracket = DiagramEdge(next_node=expression_node, terminal="(")
+    open_bracket_node = DiagramNode(next_edges=[open_bracket])
+    until = DiagramEdge(next_node=open_bracket_node, terminal="until")
+    until_node = DiagramNode(next_edges=[until])
+    statement = DiagramEdge(next_node=until_node, non_terminal="statement")
+    statement_node = DiagramNode(next_edges=[statement])
+    repeat = DiagramEdge(next_node=statement_node, terminal="repeat")
 
-    return ParseTreeNode(next_edges=[repeat])
+    return DiagramNode(next_edges=[repeat])
 
 
 def else_stmt_diagram():
-    end = ParseTreeNode(next_edges=[])
-    endif = ParseTreeEdge(next_node=end, terminal="endif")
-    endif_node = ParseTreeNode(next_edges=[endif])
-    statement = ParseTreeEdge(next_node=endif_node, non_terminal="statement")
-    statement_node = ParseTreeNode(next_edges=[statement])
-    _else = ParseTreeEdge(next_node=statement_node, terminal="else")
+    end = DiagramNode(next_edges=[])
+    endif = DiagramEdge(next_node=end, terminal="endif")
+    endif_node = DiagramNode(next_edges=[endif])
+    statement = DiagramEdge(next_node=endif_node, non_terminal="statement")
+    statement_node = DiagramNode(next_edges=[statement])
+    _else = DiagramEdge(next_node=statement_node, terminal="else")
 
-    endif_2 = ParseTreeEdge(next_node=end, terminal="endif")
+    endif_2 = DiagramEdge(next_node=end, terminal="endif")
 
-    return ParseTreeNode(next_edges=[_else, endif_2])
+    return DiagramNode(next_edges=[_else, endif_2])
 
 
 def selection_stmt_diagram():
-    end = ParseTreeNode(next_edges=[])
-    else_stmt = ParseTreeEdge(next_node=end, non_terminal="else_stmt")
-    else_stmt_node = ParseTreeNode(next_edges=[else_stmt])
-    statement = ParseTreeEdge(next_node=else_stmt_node, non_terminal="statement")
-    statement_node = ParseTreeNode(next_edges=[statement])
-    close_bracket = ParseTreeEdge(next_node=statement_node, terminal=")")
-    close_bracket_node = ParseTreeNode(next_edges=[close_bracket])
-    expression = ParseTreeEdge(next_node=close_bracket_node, non_terminal="expression")
-    expression_node = ParseTreeNode(next_edges=[expression])
-    open_bracket = ParseTreeEdge(next_node=expression_node, terminal="(")
-    open_bracket_node = ParseTreeNode(next_edges=[open_bracket])
-    _if = ParseTreeEdge(next_node=open_bracket_node, terminal="if")
+    end = DiagramNode(next_edges=[])
+    else_stmt = DiagramEdge(next_node=end, non_terminal="else_stmt")
+    else_stmt_node = DiagramNode(next_edges=[else_stmt])
+    statement = DiagramEdge(next_node=else_stmt_node, non_terminal="statement")
+    statement_node = DiagramNode(next_edges=[statement])
+    close_bracket = DiagramEdge(next_node=statement_node, terminal=")")
+    close_bracket_node = DiagramNode(next_edges=[close_bracket])
+    expression = DiagramEdge(next_node=close_bracket_node, non_terminal="expression")
+    expression_node = DiagramNode(next_edges=[expression])
+    open_bracket = DiagramEdge(next_node=expression_node, terminal="(")
+    open_bracket_node = DiagramNode(next_edges=[open_bracket])
+    _if = DiagramEdge(next_node=open_bracket_node, terminal="if")
 
-    return ParseTreeNode(next_edges=[_if])
+    return DiagramNode(next_edges=[_if])
 
 
 def expression_stmt_diagram():
-    end = ParseTreeNode(next_edges=[])
+    end = DiagramNode(next_edges=[])
 
-    semicolon = ParseTreeEdge(next_node=end, terminal=";")
+    semicolon = DiagramEdge(next_node=end, terminal=";")
 
-    semicolon_2 = ParseTreeEdge(next_node=end, terminal=";")
-    semicolon_node = ParseTreeNode(next_edges=[semicolon_2])
-    _break = ParseTreeEdge(next_node=semicolon_node, terminal="break")
+    semicolon_2 = DiagramEdge(next_node=end, terminal=";")
+    semicolon_node = DiagramNode(next_edges=[semicolon_2])
+    _break = DiagramEdge(next_node=semicolon_node, terminal="break")
 
-    semicolon_3 = ParseTreeEdge(next_node=end, terminal=";")
-    semicolon_node_2 = ParseTreeNode(next_edges=[semicolon_3])
-    expression = ParseTreeEdge(next_node=semicolon_node_2, non_terminal="expression")
+    semicolon_3 = DiagramEdge(next_node=end, terminal=";")
+    semicolon_node_2 = DiagramNode(next_edges=[semicolon_3])
+    expression = DiagramEdge(next_node=semicolon_node_2, non_terminal="expression")
 
-    return ParseTreeNode(next_edges=[semicolon, _break, expression])
+    return DiagramNode(next_edges=[semicolon, _break, expression])
 
 
 def statement_diagram():
-    end = ParseTreeNode(next_edges=[])
+    end = DiagramNode(next_edges=[])
 
-    expression_stmt = ParseTreeEdge(next_node=end, non_terminal="expression_stmt")
+    expression_stmt = DiagramEdge(next_node=end, non_terminal="expression_stmt")
 
-    compound_stmt = ParseTreeEdge(next_node=end, non_terminal="compound_stmt")
+    compound_stmt = DiagramEdge(next_node=end, non_terminal="compound_stmt")
 
-    selection_stmt = ParseTreeEdge(next_node=end, non_terminal="selection_stmt")
+    selection_stmt = DiagramEdge(next_node=end, non_terminal="selection_stmt")
 
-    iteration_stmt = ParseTreeEdge(next_node=end, non_terminal="iteration_stmt")
+    iteration_stmt = DiagramEdge(next_node=end, non_terminal="iteration_stmt")
 
-    return_stmt = ParseTreeEdge(next_node=end, non_terminal="return_stmt")
+    return_stmt = DiagramEdge(next_node=end, non_terminal="return_stmt")
 
-    return ParseTreeNode(
+    return DiagramNode(
         next_edges=[
             expression_stmt,
             compound_stmt,
@@ -502,170 +497,170 @@ def statement_diagram():
 
 
 def statement_list_diagram():
-    end = ParseTreeNode(next_edges=[])
-    statement_list = ParseTreeEdge(next_node=end, non_terminal="statement_list")
-    statement_list_node = ParseTreeNode(next_edges=[statement_list])
-    statement = ParseTreeEdge(next_node=statement_list_node, non_terminal="statement")
+    end = DiagramNode(next_edges=[])
+    statement_list = DiagramEdge(next_node=end, non_terminal="statement_list")
+    statement_list_node = DiagramNode(next_edges=[statement_list])
+    statement = DiagramEdge(next_node=statement_list_node, non_terminal="statement")
 
-    epsilon_node = ParseTreeEdge(next_node=end, terminal="ε")
+    epsilon_node = DiagramEdge(next_node=end, terminal="ε")
 
-    return ParseTreeNode(next_edges=[statement, epsilon_node])
+    return DiagramNode(next_edges=[statement, epsilon_node])
 
 
 def compound_stmt():
-    end = ParseTreeNode(next_edges=[])
-    close_bracket = ParseTreeEdge(next_node=end, terminal="}")
-    close_bracket_node = ParseTreeNode(next_edges=[close_bracket])
-    statement_list = ParseTreeEdge(
+    end = DiagramNode(next_edges=[])
+    close_bracket = DiagramEdge(next_node=end, terminal="}")
+    close_bracket_node = DiagramNode(next_edges=[close_bracket])
+    statement_list = DiagramEdge(
         next_node=close_bracket_node, non_terminal="statement_list"
     )
-    statement_list_node = ParseTreeNode(next_edges=[statement_list])
-    declaration_list = ParseTreeEdge(
+    statement_list_node = DiagramNode(next_edges=[statement_list])
+    declaration_list = DiagramEdge(
         next_node=statement_list_node, non_terminal="declaration_list"
     )
-    declaration_list_node = ParseTreeNode(next_edges=[declaration_list])
-    open_bracket = ParseTreeEdge(next_node=declaration_list_node, terminal="{")
+    declaration_list_node = DiagramNode(next_edges=[declaration_list])
+    open_bracket = DiagramEdge(next_node=declaration_list_node, terminal="{")
 
-    return ParseTreeNode(next_edges=[open_bracket])
+    return DiagramNode(next_edges=[open_bracket])
 
 
 def param_prime_diagram():
-    end = ParseTreeNode(next_edges=[])
-    close_bracket = ParseTreeEdge(next_node=end, terminal="]")
-    close_bracket_node = ParseTreeNode(next_edges=[close_bracket])
-    open_bracket = ParseTreeEdge(next_node=close_bracket_node, terminal="[")
-    open_bracket_node = ParseTreeNode(next_edges=[open_bracket])
+    end = DiagramNode(next_edges=[])
+    close_bracket = DiagramEdge(next_node=end, terminal="]")
+    close_bracket_node = DiagramNode(next_edges=[close_bracket])
+    open_bracket = DiagramEdge(next_node=close_bracket_node, terminal="[")
+    open_bracket_node = DiagramNode(next_edges=[open_bracket])
 
-    epsilon_node = ParseTreeEdge(next_node=end, terminal="ε")
+    epsilon_node = DiagramEdge(next_node=end, terminal="ε")
 
-    return ParseTreeNode(next_edges=[open_bracket_node, epsilon_node])
+    return DiagramNode(next_edges=[open_bracket_node, epsilon_node])
 
 
 def param_diagram():
-    end = ParseTreeNode(next_edges=[])
-    param_prime = ParseTreeEdge(next_node=end, non_terminal="param_prime")
-    param_prime_node = ParseTreeNode(next_edges=[param_prime])
+    end = DiagramNode(next_edges=[])
+    param_prime = DiagramEdge(next_node=end, non_terminal="param_prime")
+    param_prime_node = DiagramNode(next_edges=[param_prime])
 
-    return ParseTreeNode(next_edges=[param_prime_node])
+    return DiagramNode(next_edges=[param_prime_node])
 
 
 def param_list_diagram():
-    end = ParseTreeNode(next_edges=[])
-    param_list = ParseTreeEdge(next_node=end, non_terminal="param_list")
-    param_list_node = ParseTreeNode(next_edges=[param_list])
-    param = ParseTreeEdge(next_node=param_list_node, non_terminal="param")
-    param_node = ParseTreeNode(next_edges=[param])
-    comma = ParseTreeEdge(next_node=param_node, terminal=",")
+    end = DiagramNode(next_edges=[])
+    param_list = DiagramEdge(next_node=end, non_terminal="param_list")
+    param_list_node = DiagramNode(next_edges=[param_list])
+    param = DiagramEdge(next_node=param_list_node, non_terminal="param")
+    param_node = DiagramNode(next_edges=[param])
+    comma = DiagramEdge(next_node=param_node, terminal=",")
 
-    epsilon_node = ParseTreeEdge(next_node=end, terminal="ε")
+    epsilon_node = DiagramEdge(next_node=end, terminal="ε")
 
-    return ParseTreeNode(next_edges=[comma, epsilon_node])
+    return DiagramNode(next_edges=[comma, epsilon_node])
 
 
 def params_diagram():
-    end = ParseTreeNode(next_edges=[])
-    param_list = ParseTreeEdge(next_node=end, non_terminal="param_list")
-    param_list_node = ParseTreeNode(next_edges=[param_list])
-    param_prime = ParseTreeEdge(next_node=param_list_node, non_terminal="param_prime")
-    param_prime_node = ParseTreeNode(next_edges=[param_prime])
-    _id = ParseTreeEdge(next_node=param_prime_node, terminal="ID")
-    id_node = ParseTreeNode(next_edges=[_id])
-    _int = ParseTreeEdge(next_node=id_node, terminal="int")
+    end = DiagramNode(next_edges=[])
+    param_list = DiagramEdge(next_node=end, non_terminal="param_list")
+    param_list_node = DiagramNode(next_edges=[param_list])
+    param_prime = DiagramEdge(next_node=param_list_node, non_terminal="param_prime")
+    param_prime_node = DiagramNode(next_edges=[param_prime])
+    _id = DiagramEdge(next_node=param_prime_node, terminal="ID")
+    id_node = DiagramNode(next_edges=[_id])
+    _int = DiagramEdge(next_node=id_node, terminal="int")
 
-    _void = ParseTreeEdge(next_node=end, terminal="void")
+    _void = DiagramEdge(next_node=end, terminal="void")
 
-    return ParseTreeNode(next_edges=[_int, _void])
+    return DiagramNode(next_edges=[_int, _void])
 
 
 def type_specifier_diagram():
-    end = ParseTreeNode(next_edges=[])
-    _int = ParseTreeEdge(next_node=end, terminal="int")
+    end = DiagramNode(next_edges=[])
+    _int = DiagramEdge(next_node=end, terminal="int")
 
-    _void = ParseTreeEdge(next_node=end, terminal="void")
+    _void = DiagramEdge(next_node=end, terminal="void")
 
-    return ParseTreeNode(next_edges=[_int, _void])
+    return DiagramNode(next_edges=[_int, _void])
 
 
 def fun_declaration_prime():
-    end = ParseTreeNode(next_edges=[])
-    compound_stmt = ParseTreeEdge(next_node=end, non_terminal="compound_stmt")
-    compound_stmt_node = ParseTreeNode(next_edges=[compound_stmt])
-    close_par = ParseTreeEdge(next_node=compound_stmt_node, terminal=")")
-    close_par_node = ParseTreeNode(next_edges=[close_par])
-    params = ParseTreeEdge(next_node=close_par_node, non_terminal="params")
-    params_node = ParseTreeNode(next_edges=[params])
-    open_par = ParseTreeEdge(next_node=params_node, terminal="(")
-    return ParseTreeNode(next_edges=[open_par])
+    end = DiagramNode(next_edges=[])
+    compound_stmt = DiagramEdge(next_node=end, non_terminal="compound_stmt")
+    compound_stmt_node = DiagramNode(next_edges=[compound_stmt])
+    close_par = DiagramEdge(next_node=compound_stmt_node, terminal=")")
+    close_par_node = DiagramNode(next_edges=[close_par])
+    params = DiagramEdge(next_node=close_par_node, non_terminal="params")
+    params_node = DiagramNode(next_edges=[params])
+    open_par = DiagramEdge(next_node=params_node, terminal="(")
+    return DiagramNode(next_edges=[open_par])
 
 
 def var_declaration_prime_diagram():
-    end = ParseTreeNode(next_edges=[])
+    end = DiagramNode(next_edges=[])
 
-    semicolon = ParseTreeEdge(next_node=end, terminal=";")
+    semicolon = DiagramEdge(next_node=end, terminal=";")
 
-    semicolon_2 = ParseTreeEdge(next_node=end, terminal=";")
-    semicolon_2_node = ParseTreeNode(next_edges=[semicolon_2])
-    close_t = ParseTreeEdge(next_node=semicolon_2_node, terminal="]")
-    num_node = ParseTreeNode(next_edges=[close_t])
-    num = ParseTreeEdge(next_node=num_node, terminal="NUM")
-    open_t_node = ParseTreeNode(next_edges=[num])
-    open_t = ParseTreeEdge(next_node=open_t_node, terminal="[")
+    semicolon_2 = DiagramEdge(next_node=end, terminal=";")
+    semicolon_2_node = DiagramNode(next_edges=[semicolon_2])
+    close_t = DiagramEdge(next_node=semicolon_2_node, terminal="]")
+    num_node = DiagramNode(next_edges=[close_t])
+    num = DiagramEdge(next_node=num_node, terminal="NUM")
+    open_t_node = DiagramNode(next_edges=[num])
+    open_t = DiagramEdge(next_node=open_t_node, terminal="[")
 
-    return ParseTreeNode(next_edges=[semicolon, open_t])
+    return DiagramNode(next_edges=[semicolon, open_t])
 
 
 def declaration_prime_diagram():
-    end = ParseTreeNode(next_edges=[])
-    fun_declaration_prime = ParseTreeEdge(
+    end = DiagramNode(next_edges=[])
+    fun_declaration_prime = DiagramEdge(
         next_node=end, non_terminal="fun_declaration_prime"
     )
 
-    var_declaration_prime = ParseTreeEdge(
+    var_declaration_prime = DiagramEdge(
         next_node=end, non_terminal="var_declaration_prime"
     )
 
-    return ParseTreeNode(next_edges=[fun_declaration_prime, var_declaration_prime])
+    return DiagramNode(next_edges=[fun_declaration_prime, var_declaration_prime])
 
 
 def declaration_initial_diagram():
-    end = ParseTreeNode(next_edges=[])
-    _id = ParseTreeEdge(next_node=end, terminal="ID")
-    id_node = ParseTreeNode(next_edges=[_id])
-    type_specifier = ParseTreeEdge(next_node=id_node, non_terminal="type_specifier")
-    return ParseTreeNode(next_edges=[type_specifier])
+    end = DiagramNode(next_edges=[])
+    _id = DiagramEdge(next_node=end, terminal="ID")
+    id_node = DiagramNode(next_edges=[_id])
+    type_specifier = DiagramEdge(next_node=id_node, non_terminal="type_specifier")
+    return DiagramNode(next_edges=[type_specifier])
 
 
 def declaration_diagram():
-    end = ParseTreeNode(next_edges=[])
-    declaration_prime = ParseTreeEdge(next_node=end, non_terminal="declaration_prime")
-    declaration_prime_node = ParseTreeNode(next_edges=[declaration_prime])
-    declaration_initial = ParseTreeEdge(
+    end = DiagramNode(next_edges=[])
+    declaration_prime = DiagramEdge(next_node=end, non_terminal="declaration_prime")
+    declaration_prime_node = DiagramNode(next_edges=[declaration_prime])
+    declaration_initial = DiagramEdge(
         next_node=declaration_prime_node, non_terminal="declaration_initial"
     )
-    return ParseTreeNode(next_edges=[declaration_initial])
+    return DiagramNode(next_edges=[declaration_initial])
 
 
 def declaration_list_diagram():
-    end = ParseTreeNode(next_edges=[])
-    declaration_list = ParseTreeEdge(next_node=end, non_terminal="declaration_list")
-    declaration_list_node = ParseTreeNode(next_edges=[declaration_list])
-    declaration = ParseTreeEdge(
+    end = DiagramNode(next_edges=[])
+    declaration_list = DiagramEdge(next_node=end, non_terminal="declaration_list")
+    declaration_list_node = DiagramNode(next_edges=[declaration_list])
+    declaration = DiagramEdge(
         next_node=declaration_list_node, non_terminal="declaration"
     )
 
-    epsilon_node = ParseTreeEdge(next_node=end, terminal="ε")
+    epsilon_node = DiagramEdge(next_node=end, terminal="ε")
 
-    return ParseTreeNode(next_edges=[declaration, epsilon_node])
+    return DiagramNode(next_edges=[declaration, epsilon_node])
 
 
 def program_diagram():
-    end = ParseTreeNode(next_edges=[])
-    dollar = ParseTreeEdge(next_node=end, terminal="$")
-    dollar_node = ParseTreeNode(next_edges=[dollar])
-    declaration_list = ParseTreeEdge(
+    end = DiagramNode(next_edges=[])
+    dollar = DiagramEdge(next_node=end, terminal="$")
+    dollar_node = DiagramNode(next_edges=[dollar])
+    declaration_list = DiagramEdge(
         next_node=dollar_node, non_terminal="declaration_list"
     )
-    return ParseTreeNode(next_edges=[declaration_list])
+    return DiagramNode(next_edges=[declaration_list])
 
 
 def add_firsts():
