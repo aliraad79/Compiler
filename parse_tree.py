@@ -3,6 +3,7 @@ from typing import List
 from anytree import Node
 from utils import format_non_terminal
 
+
 class DiagramEdge:
     def __init__(
         self, next_node: "DiagramNode", terminal: str = None, non_terminal: str = None
@@ -12,25 +13,28 @@ class DiagramEdge:
         self.firsts: List[str] = None
         self.non_terminal = non_terminal
 
-    def match(self, other: Token, stack: List[str], current_parse_node):
+    def match(self, other: Token, stack: List[str]):
         if self.non_terminal:
             firsts = first_dict[self.non_terminal]
-            if (other.lexeme in firsts) or ("ε" in firsts) or (other.type in firsts):
+            if (other.lexeme in firsts) or (other.type in firsts) or ("ε" in firsts):
                 stack.append(self.non_terminal)
-                return True, Node(
-                    format_non_terminal(self.non_terminal), parent=current_parse_node
-                )
+                return True
 
         elif self.terminal == "ε":
-            Node("epsilon", parent=current_parse_node)
-            return True, Node("epsilon", parent=current_parse_node)
+            return True
 
         elif self.terminal:
-            return other.lexeme == self.terminal or other.type == self.terminal, Node(
-                self.terminal, current_parse_node
-            )
+            return other.lexeme == self.terminal or other.type == self.terminal
+        
+        return False
 
-        return False, None
+    def get_node_name(self):
+        if self.non_terminal:
+            return format_non_terminal(self.non_terminal)
+        elif self.terminal == "ε":
+            return "epsilon"
+        elif self.terminal:
+            return self.terminal
 
     def __repr__(self):
         return f"Edge<{self.terminal if self.terminal else self.non_terminal}>"
@@ -40,14 +44,13 @@ class DiagramNode:
     def __init__(self, next_edges: List[DiagramEdge] = []):
         self.next_edges = next_edges
 
-    def next_parse_tree_node(self, other: Token, stack: List[str], current_parse_node):
+    def next_parse_tree_node(self, other: Token, stack: List[str]):
         for i in self.next_edges:
-            result, next_node = i.match(other, stack, current_parse_node)
-            if result:
+            if i.match(other, stack):
                 return (
                     i.next_node,
                     (i.terminal != None and i.terminal != "ε"),
-                    next_node,
+                    i.get_node_name(),
                 )
         if len(self.next_edges) == 0:
             return None, False, None
@@ -55,6 +58,7 @@ class DiagramNode:
 
     def __repr__(self):
         return f"Node<next_edges = {self.next_edges}>"
+
 
 first_dict = {}
 
@@ -204,11 +208,11 @@ def factor_diagram():
 
     var_call_prime = DiagramEdge(next_node=end, non_terminal="var_call_prime")
     var_call_prime_node = DiagramNode(next_edges=[var_call_prime])
-    id = DiagramEdge(next_node=var_call_prime_node, terminal="ID")
+    _id = DiagramEdge(next_node=var_call_prime_node, terminal="ID")
 
     num = DiagramEdge(next_node=end, terminal="NUM")
 
-    return DiagramNode(next_edges=[open_par, num, id])
+    return DiagramNode(next_edges=[open_par, num, _id])
 
 
 def G_diagram():
@@ -668,7 +672,7 @@ def program_diagram():
 
 
 def add_firsts():
-    with open("firsts.txt", "r") as file:
+    with open("../firsts.txt", "r") as file:
         all_firsts = list(map(str.split, file.readlines()))
     for line in all_firsts:
         first_dict[str(line[0]).lower()] = line[1:]
