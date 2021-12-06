@@ -17,5 +17,3 @@ for dir in ../PA1_input_output_samples/*; do
     diff -y -B -W 250 -w  --suppress-common-lines ./symbol_table.txt "${dir}/symbol_table.txt" >> log.txt
     diff -y -B -W 250 -w -q ./symbol_table.txt "${dir}/symbol_table.txt" >> brief_results.txt
 done
-
-

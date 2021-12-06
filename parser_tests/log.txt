@@ -1,0 +1,121 @@
+
+
+
+
+
+=====================================>>>>> Running Test ./T01...
+
+
+              *** syntax_errors.txt diffrences ***
+
+
+
+
+=====================================>>>>> Running Test ./T02...
+
+
+              *** syntax_errors.txt diffrences ***
+
+
+
+
+=====================================>>>>> Running Test ./T03...
+
+
+              *** syntax_errors.txt diffrences ***
+
+
+
+
+=====================================>>>>> Running Test ./T04...
+
+
+              *** syntax_errors.txt diffrences ***
+
+
+
+
+=====================================>>>>> Running Test ./T05...
+
+
+              *** syntax_errors.txt diffrences ***
+
+
+
+
+=====================================>>>>> Running Test ./T06...
+
+
+              *** syntax_errors.txt diffrences ***
+
+
+
+
+=====================================>>>>> Running Test ./T07...
+
+
+              *** syntax_errors.txt diffrences ***
+
+
+
+
+=====================================>>>>> Running Test ./T08...
+
+
+              *** syntax_errors.txt diffrences ***
+
+
+
+
+=====================================>>>>> Running Test ./T09...
+
+
+              *** syntax_errors.txt diffrences ***
+
+
+
+
+=====================================>>>>> Running Test ./T10...
+
+
+              *** syntax_errors.txt diffrences ***
+
+
+
+
+=====================================>>>>> Running Test ./brief_results.txt...
+
+
+              *** syntax_errors.txt diffrences ***
+
+
+
+
+=====================================>>>>> Running Test ./input.txt...
+
+
+              *** syntax_errors.txt diffrences ***
+
+
+
+
+=====================================>>>>> Running Test ./log.txt...
+
+
+              *** syntax_errors.txt diffrences ***
+
+
+
+
+=====================================>>>>> Running Test ./parse_tree.txt...
+
+
+              *** syntax_errors.txt diffrences ***
+
+
+
+
+=====================================>>>>> Running Test ./run_tests.sh...
+
+
+              *** syntax_errors.txt diffrences ***
