@@ -672,7 +672,7 @@ def program_diagram():
 
 
 def add_firsts():
-    with open("../firsts.txt", "r") as file:
+    with open("./firsts.txt", "r") as file:
         all_firsts = list(map(str.split, file.readlines()))
     for line in all_firsts:
         first_dict[str(line[0]).lower()] = line[1:]

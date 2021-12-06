@@ -7,3 +7,4 @@ from parser import Parser
 scanner = Scanner()
 parser = Parser(scanner)
 parser.start()
+parser.save_to_file()

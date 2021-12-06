@@ -61,9 +61,6 @@ def write_syntax_errors_to_file(errors):
             return
         file.write(errors)
 
-    with open("syntax_errors.txt", "w") as file:
-        file.write(errors)
-
 
 def write_parse_tree_to_file(parse_tree):
     with open("parse_tree.txt", "w") as file:
