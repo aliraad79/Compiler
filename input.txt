@@ -1,13 +1,7 @@
-/*sample 2*/
-void main(void){
-	int p;
+/*sample 6*/
+void main(int{
+	int prod;
 	int i;
-	p = 2 + 1;
-	i = 1;
-	repeat {
-		p = i * p;
-		i = i - 2;
-	} until (i < 8)
-	output(p);
-	return;
+		prod = 1;
+		i = 1;
 }

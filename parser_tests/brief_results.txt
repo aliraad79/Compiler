@@ -1,0 +1,54 @@
+
+
+
+=====================================>>>>> Running Test ./T01...
+
+
+=====================================>>>>> Running Test ./T02...
+
+
+=====================================>>>>> Running Test ./T03...
+
+
+=====================================>>>>> Running Test ./T04...
+
+
+=====================================>>>>> Running Test ./T05...
+
+
+=====================================>>>>> Running Test ./T06...
+Files ./parse_tree.txt and ./T06/parse_tree.txt differ
+
+
+=====================================>>>>> Running Test ./T07...
+Files ./parse_tree.txt and ./T07/parse_tree.txt differ
+
+
+=====================================>>>>> Running Test ./T08...
+Files ./parse_tree.txt and ./T08/parse_tree.txt differ
+
+
+=====================================>>>>> Running Test ./T09...
+Files ./parse_tree.txt and ./T09/parse_tree.txt differ
+
+
+=====================================>>>>> Running Test ./T10...
+Files ./parse_tree.txt and ./T10/parse_tree.txt differ
+
+
+=====================================>>>>> Running Test ./brief_results.txt...
+
+
+=====================================>>>>> Running Test ./input.txt...
+
+
+=====================================>>>>> Running Test ./log.txt...
+
+
+=====================================>>>>> Running Test ./parse_tree.txt...
+
+
+=====================================>>>>> Running Test ./run_tests.sh...
+
+
+=====================================>>>>> Running Test ./syntax_errors.txt...

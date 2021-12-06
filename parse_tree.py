@@ -537,11 +537,10 @@ def param_prime_diagram():
     close_bracket = DiagramEdge(next_node=end, terminal="]")
     close_bracket_node = DiagramNode(next_edges=[close_bracket])
     open_bracket = DiagramEdge(next_node=close_bracket_node, terminal="[")
-    open_bracket_node = DiagramNode(next_edges=[open_bracket])
 
     epsilon_node = DiagramEdge(next_node=end, terminal="ε")
 
-    return DiagramNode(next_edges=[open_bracket_node, epsilon_node])
+    return DiagramNode(next_edges=[open_bracket, epsilon_node])
 
 
 def param_diagram():
