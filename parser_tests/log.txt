@@ -7,24 +7,6 @@
 
 
               *** parse_tree.txt diffrences ***
-│   │               │   │       │   └── Simple-expression-zegond							    |	│   │               │   │       │   ├── (ID, a)																
-│   │               │   │       │       ├── Additive-expression-zegond							    |	│   │               │   │       │   └── B																
-│   │               │   │       │       │   ├── Term-zegond								    |	│   │               │   │       │       ├── (SYMBOL, =)																
-│   │               │   │       │       │   │   ├── Factor-zegond							    |	│   │               │   │       │       └── Expression																
-															    >	│   │               │   │       │           ├── (ID, b)																
-															    >	│   │               │   │       │           └── B																
-															    >	│   │               │   │       │               └── Simple-expression-prime																
-															    >	│   │               │   │       │                   ├── Additive-expression-prime																
-															    >	│   │               │   │       │                   │   ├── Term-prime																
-															    >	│   │               │   │       │                   │   │   ├── Factor-prime																
-															    >	│   │               │   │       │                   │   │   │   └── epsilon																
-															    >	│   │               │   │       │                   │   │   └── G																
-															    >	│   │               │   │       │                   │   │       └── epsilon																
-															    >	│   │               │   │       │                   │   └── D																
-															    >	│   │               │   │       │                   │       ├── Addop																
-															    >	│   │               │   │       │                   │       │   └── (SYMBOL, +)																
-															    >	│   │               │   │       │                   │       ├── Term																
-															    >	│   │               │   │       │                   │       │   ├── Factor																
 
 
 
@@ -33,35 +15,6 @@
 
 
               *** parse_tree.txt diffrences ***
-															    >	│   │               │   │       │   ├── (ID, p)																
-															    >	│   │               │   │       │   └── B																
-															    >	│   │               │   │       │       ├── (SYMBOL, =)																
-															    >	│   │               │   │       │       └── Expression																
-															    >	│   │               │           │       │       │   │       ├── Expression																
-															    >	│   │               │           │       │       │   │       │   ├── (ID, p)																
-															    >	│   │               │           │       │       │   │       │   └── B																
-															    >	│   │               │           │       │       │   │       │       ├── (SYMBOL, =)																
-															    >	│   │               │           │       │       │   │       │       └── Expression																
-															    >	│   │               │           │       │       │   │       │           ├── (ID, i)																
-															    >	│   │               │           │       │       │   │       │           └── B																
-															    >	│   │               │           │       │       │   │       │               └── Simple-expression-prime																
-															    >	│   │               │           │       │       │   │       │                   ├── Additive-expression-prime																
-															    >	│   │               │           │       │       │   │       │                   │   ├── Term-prime																
-															    >	│   │               │           │       │       │   │       │                   │   │   ├── Factor-prime																
-															    >	│   │               │           │       │       │   │       │                   │   │   │   └── epsilon																
-															    >	│   │               │           │       │       │   │       │                   │   │   └── G																
-															    >	│   │               │           │       │       │   │       │                   │   │       ├── (SYMBOL, *)																
-															    >	│   │               │           │       │       │   │       │                   │   │       ├── Factor																
-															    >	│   │               │           │       │       │   │       │                   │   │       │   ├── (ID, p)																
-															    >	│   │               │           │       │       │   │       │                   │   │       │   └── Var-call-prime																
-															    >	│   │               │           │       │       │   │       │                   │   │       │       └── Var-prime																
-															    >	│   │               │           │       │       │   │       │                   │   │       │           └── epsilon																
-															    >	│   │               │           │       │       │   │       │                   │   │       └── G																
-															    >	│   │               │           │       │       │   │       │                   │   │           └── epsilon																
-															    >	│   │               │           │       │       │   │       │                   │   └── D																
-															    >	│   │               │           │       │       │   │       │                   │       └── epsilon																
-															    >	│   │               │           │       │       │   │       │                   └── C																
-															    >	│   │               │           │       │       │   │       │                       └── epsilon																
 
 
 
@@ -70,28 +23,6 @@
 
 
               *** parse_tree.txt diffrences ***
-															    >	│   │               │   │       │   ├── (ID, b)																
-															    >	│   │               │   │       │   └── B																
-															    >	│   │               │   │       │       ├── (SYMBOL, =)																
-															    >	│   │               │   │       │       └── Expression																
-│   │               │           │       │       │   │       │   └── Simple-expression-zegond				    |	│   │               │           │       │       │   │       │   ├── (ID, b)																
-│   │               │           │       │       │   │       │       ├── Additive-expression-zegond			    |	│   │               │           │       │       │   │       │   └── B																
-│   │               │           │       │       │   │       │       │   ├── Term-zegond					    |	│   │               │           │       │       │   │       │       ├── (SYMBOL, =)																
-│   │               │           │       │       │   │       │       │   │   ├── Factor-zegond				    |	│   │               │           │       │       │   │       │       └── Expression																
-															    >	│   │               │           │       │       │   │       │           ├── (ID, b)																
-															    >	│   │               │           │       │       │   │       │           └── B																
-															    >	│   │               │           │       │       │   │       │               └── Simple-expression-prime																
-															    >	│   │               │           │       │       │   │       │                   ├── Additive-expression-prime																
-															    >	│   │               │           │       │       │   │       │                   │   ├── Term-prime																
-															    >	│   │               │           │       │       │   │       │                   │   │   ├── Factor-prime																
-															    >	│   │               │           │       │       │   │       │                   │   │   │   └── epsilon																
-															    >	│   │               │           │       │       │   │       │                   │   │   └── G																
-															    >	│   │               │           │       │       │   │       │                   │   │       └── epsilon																
-															    >	│   │               │           │       │       │   │       │                   │   └── D																
-															    >	│   │               │           │       │       │   │       │                   │       ├── Addop																
-															    >	│   │               │           │       │       │   │       │                   │       │   └── (SYMBOL, +)																
-															    >	│   │               │           │       │       │   │       │                   │       ├── Term																
-															    >	│   │               │           │       │       │   │       │                   │       │   ├── Factor																
 
 
 
@@ -100,10 +31,6 @@
 
 
               *** parse_tree.txt diffrences ***
-															    >	│   │               │   │       │   ├── (ID, a)																
-															    >	│   │               │   │       │   └── B																
-															    >	│   │               │   │       │       ├── (SYMBOL, =)																
-															    >	│   │               │   │       │       └── Expression																
 
 
 
@@ -112,35 +39,3 @@
 
 
               *** parse_tree.txt diffrences ***
-															    >	│       │               │   │       │   ├── (ID, bahram)																
-															    >	│       │               │   │       │   └── B																
-															    >	│       │               │   │       │       ├── (SYMBOL, =)																
-															    >	│       │               │   │       │       └── Expression																
-│       │               │       │       │       │   │       │   └── Simple-expression-zegond				    |	│       │               │       │       │       │   │       │   ├── (ID, ozra)																
-│       │               │       │       │       │   │       │       ├── Additive-expression-zegond			    |	│       │               │       │       │       │   │       │   └── B																
-│       │               │       │       │       │   │       │       │   ├── Term-zegond					    |	│       │               │       │       │       │   │       │       ├── (SYMBOL, =)																
-│       │               │       │       │       │   │       │       │   │   ├── Factor-zegond				    |	│       │               │       │       │       │   │       │       └── Expression																
-															    >	│       │               │       │       │       │   │       │           ├── (ID, fun)																
-															    >	│       │               │       │       │       │   │       │           └── B																
-															    >	│       │               │       │       │       │   │       │               └── Simple-expression-prime																
-															    >	│       │               │       │       │       │   │       │                   ├── Additive-expression-prime																
-															    >	│       │               │       │       │       │   │       │                   │   ├── Term-prime																
-															    >	│       │               │       │       │       │   │       │                   │   │   ├── Factor-prime																
-│       │               │       │       │       │   │       │       │   │   │   ├── Expression				    |	│       │               │       │       │       │   │       │                   │   │   │   ├── Args																
-│       │               │       │       │       │   │       │       │   │   │   │   ├── (ID, bahram)			    |	│       │               │       │       │       │   │       │                   │   │   │   │   └── Arg-list																
-│       │               │       │       │       │   │       │       │   │   │   │   └── B				    |	│       │               │       │       │       │   │       │                   │   │   │   │       ├── Expression																
-│       │               │       │       │       │   │       │       │   │   │   │       └── Simple-expression-prime	    |	│       │               │       │       │       │   │       │                   │   │   │   │       │   ├── (ID, bahram)																
-│       │               │       │       │       │   │       │       │   │   │   │           ├── Additive-expression-prime   |	│       │               │       │       │       │   │       │                   │   │   │   │       │   └── B																
-│       │               │       │       │       │   │       │       │   │   │   │           │   ├── Term-prime		    |	│       │               │       │       │       │   │       │                   │   │   │   │       │       └── Simple-exp																
-│       │               │       │       │       │   │       │       │   │   │   │           │   │   ├── Factor-prime	    |	│       │               │       │       │       │   │       │                   │   │   │   │       │           ├── Additi																
-															    >	│       │               │       │       │       │   │       │                   │   │   │   │       │           │   ├── Te																
-															    >	│       │               │       │       │       │   │       │                   │   │   │   │       │           │   │   ├─																
-															    >	│       │               │       │       │       │   │       │                   │   │   │   │       │           │   │   │ 																
-															    >	│       │               │       │       │       │   │       │                   │   │   │   │       │           │   │   └─																
-│       │               │       │       │       │   │       │       │   │   │   │           │   │   └── G		    |	│       │               │       │       │       │   │       │                   │   │   │   │       │           │   └── D																
-│       │               │       │       │       │   │       │       │   │   │   │           │   └── D			    |	│       │               │       │       │       │   │       │                   │   │   │   │       │           └── C																
-│       │               │       │       │       │   │       │       │   │   │   │           └── C			    |	│       │               │       │       │       │   │       │                   │   │   │   │       └── Arg-list-prime																
-															    >	│       │               │       │           │       │   │       │   ├── (ID, ozra)																
-															    >	│       │               │       │           │       │   │       │   └── B																
-															    >	│       │               │       │           │       │   │       │       ├── (SYMBOL, =)																
-															    >	│       │               │       │           │       │   │       │       └── Expression																

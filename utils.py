@@ -71,8 +71,8 @@ def write_parse_tree_to_file(parse_tree):
 
 def print_parser_log(current_node, curret_token, return_nodes):
     print("________________________________________________")
-    # print(f"Return Nodes => {[(i, j.name) for i,j in return_nodes]}")
-    # print(f"current Node ==> {current_node}")
+    print(f"Return Nodes => {[(i, j.name) for i,j in return_nodes]}")
+    print(f"current Node ==> {current_node}")
     print(f"Current token ==> {curret_token}")
 
 

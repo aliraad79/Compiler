@@ -2,20 +2,15 @@
 
 
 =====================================>>>>> Running Test ./T01...
-Files ./parse_tree.txt and ./T01/parse_tree.txt differ
 
 
 =====================================>>>>> Running Test ./T02...
-Files ./parse_tree.txt and ./T02/parse_tree.txt differ
 
 
 =====================================>>>>> Running Test ./T03...
-Files ./parse_tree.txt and ./T03/parse_tree.txt differ
 
 
 =====================================>>>>> Running Test ./T04...
-Files ./parse_tree.txt and ./T04/parse_tree.txt differ
 
 
 =====================================>>>>> Running Test ./T05...
-Files ./parse_tree.txt and ./T05/parse_tree.txt differ

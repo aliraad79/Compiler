@@ -58,9 +58,11 @@ class Parser:
                     continue
                 except MissingToken:
                     self.syntax_errors.append(
-                        f"#{self.scanner.line_number + 1} : syntax error, missing {self.current_token.lexeme if self.current_token.type != 'ID' else self.current_token.type}"
+                        f"#{self.scanner.line_number + 1} : syntax error, missing {current_parse_node.name}"
                     )
-                    self.get_next_token()
+                    self.current_node = self.transation_diagrams[
+                        self.nodes_buffer.pop(len(self.nodes_buffer) - 1)
+                    ]
                     continue
 
                 if next_parse_node_name:
