@@ -44,7 +44,7 @@ class DiagramNode:
     def __init__(self, next_edges: List[DiagramEdge] = []):
         self.next_edges = next_edges
 
-    def next_parse_tree_node(self, other: Token, stack: List[str]):
+    def next_diagram_tree_node(self, other: Token, stack: List[str]):
         for i in self.next_edges:
             if i.match(other, stack):
                 return (

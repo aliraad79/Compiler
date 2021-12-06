@@ -34,8 +34,8 @@ class Parser:
         print_parser_log(self.current_node, self.current_token, self.return_nodes)
 
     def start(self):
-        current_parse_node = self.parse_tree_root
         self.get_next_token()
+        current_parse_node = self.parse_tree_root
         terminal = False
         while True:
             if self.current_node:
@@ -43,7 +43,7 @@ class Parser:
                     self.current_node,
                     terminal,
                     next_parse_node_name,
-                ) = self.current_node.next_parse_tree_node(
+                ) = self.current_node.next_diagram_tree_node(
                     self.current_token, self.nodes_buffer
                 )
 
@@ -78,5 +78,6 @@ class Parser:
                 )
                 current_parse_node = current_parse_node.parent
 
-            if self.current_token.lexeme != "$":
+            if self.current_token.lexeme == "$" and len(self.return_nodes) == 0:
                 Node("$", self.parse_tree_root)
+                break
