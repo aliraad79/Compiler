@@ -11,6 +11,20 @@ class MissingToken(Exception):
     pass
 
 
+def check_if_in_list(token: Token, list, epsilon=False):
+    if epsilon:
+        if token.type in ["ID", "NUM"]:
+            return (token.type in list) or ("ε" in list)
+        return (token.lexeme in list) or ("ε" in list)
+    else:
+        if token.type in ["ID", "NUM"]:
+            return token.type in list
+        elif token.type == "SYMBOL":
+            return token.lexeme[0] in list
+        else:
+            return token.lexeme in list
+
+
 class DiagramEdge:
     def __init__(
         self, next_node: "DiagramNode", terminal: str = None, non_terminal: str = None
@@ -22,16 +36,12 @@ class DiagramEdge:
 
     def match(self, other: Token, stack: List[str], current_diagram_name):
         if self.non_terminal:
-            firsts = first_dict[self.non_terminal]
-            if (other.lexeme in firsts) or (other.type in firsts) or ("ε" in firsts):
+            if check_if_in_list(other, first_dict[self.non_terminal], epsilon=True):
                 stack.append(self.non_terminal)
                 return True
 
         elif self.terminal == "ε":
-            follows = follows_dict[current_diagram_name]
-            if other.type == "ID":
-                return other.lexeme[0] in follows
-            return (other.lexeme in follows) or (other.type in follows)
+            return check_if_in_list(other, follows_dict[current_diagram_name])
 
         elif self.terminal:
             return other.lexeme == self.terminal or other.type == self.terminal
@@ -55,7 +65,10 @@ class DiagramNode:
         self.next_edges = next_edges
 
     def next_diagram_tree_node(
-        self, other: Token, stack: List[str], current_diagram_name: str
+        self,
+        other: Token,
+        stack: List[str],
+        current_diagram_name: str,
     ):
         for i in self.next_edges:
             if i.match(other, stack, current_diagram_name):
