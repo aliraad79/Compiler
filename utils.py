@@ -1,3 +1,6 @@
+from anytree.render import RenderTree
+
+
 def add_errors_to_file(line_number, error_dict):
     with open("lexical_errors.txt", "w") as file:
         # No error
@@ -64,7 +67,8 @@ def write_syntax_errors_to_file(errors):
 
 def write_parse_tree_to_file(parse_tree):
     with open("parse_tree.txt", "w") as file:
-        file.write(parse_tree)
+        for pre, fill, node in RenderTree(parse_tree):
+            file.write(f"{pre}{node.name}\n")
 
 
 def print_parser_log(current_node, curret_token, return_nodes):
