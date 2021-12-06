@@ -1,4 +1,4 @@
-Program	┤
+Program	$
 Declaration_list	$ { break ; if repeat return ID ( NUM }
 Declaration	int void $ { break ; if repeat return ID ( NUM }
 Declaration_initial	( ; [ , )
@@ -25,21 +25,21 @@ H	; ) ] ,
 Simple_expression_zegond	; ) ] ,
 Simple_expression_prime	; ) ] ,
 C	; ) ] ,
-Relop	(IDNUM
-Additive_expression	;)],
-Additive_expression_prime	< ; ) ] ,
-Additive_expression_zegond	< ; ) ] ,
-D	< ; ) | ] ,
+Relop	( ID NUM
+Additive_expression	; ) ] ,
+Additive_expression_prime	< = ; ) ] ,
+Additive_expression_zegond	< = ; ) ] ,
+D	< = ; ) ] ,
 Addop	( ID NUM
-Term	+ -
-Term_prime	+ -
-Term_zegond	+ -
-G	+ -
-Factor	* + -
-Var_call_prime	* + -
-Var_prime	* + -
-Factor_prime	* + -
-Factor_zegond	* + -
+Term	+ - ; ) < = ] ,
+Term_prime	+ - < = ; ) ] ,
+Term_zegond	+ - < = ; ) ] ,
+G	+ - < = ; ) ] ,
+Factor	* + - ; ) < = ] ,
+Var_call_prime	* + - ; ) < = ] ,
+Var_prime	* + - ; ) < = ] ,
+Factor_prime	* + - < = ; ) ] ,
+Factor_zegond	* + - < = ; ) ] ,
 Args	)
 Arg_list	)
 Arg_list_prime	)

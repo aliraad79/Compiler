@@ -1,7 +1,6 @@
 from scanner import Token
 from typing import List
-from anytree import Node
-from utils import format_non_terminal
+from utils import format_non_terminal, return_firsts, return_follows
 
 
 class DiagramEdge:
@@ -13,7 +12,7 @@ class DiagramEdge:
         self.firsts: List[str] = None
         self.non_terminal = non_terminal
 
-    def match(self, other: Token, stack: List[str]):
+    def match(self, other: Token, stack: List[str], current_diagram_name):
         if self.non_terminal:
             firsts = first_dict[self.non_terminal]
             if (other.lexeme in firsts) or (other.type in firsts) or ("ε" in firsts):
@@ -21,7 +20,8 @@ class DiagramEdge:
                 return True
 
         elif self.terminal == "ε":
-            return True
+            follows = follows_dict[current_diagram_name]
+            return (other.lexeme[0] in follows) or (other.type in follows)
 
         elif self.terminal:
             return other.lexeme == self.terminal or other.type == self.terminal
@@ -44,9 +44,9 @@ class DiagramNode:
     def __init__(self, next_edges: List[DiagramEdge] = []):
         self.next_edges = next_edges
 
-    def next_diagram_tree_node(self, other: Token, stack: List[str]):
+    def next_diagram_tree_node(self, other: Token, stack: List[str], current_diagram_name:str):
         for i in self.next_edges:
-            if i.match(other, stack):
+            if i.match(other, stack, current_diagram_name):
                 return (
                     i.next_node,
                     (i.terminal != None and i.terminal != "ε"),
@@ -55,17 +55,18 @@ class DiagramNode:
         if len(self.next_edges) == 0:
             return None, False, None
         print("WTF", self.next_edges)
+        # handle errors here (kinda)
 
     def __repr__(self):
         return f"Node<next_edges = {self.next_edges}>"
 
 
-first_dict = {}
+first_dict = return_firsts()
+follows_dict = return_follows()
 
 
-def init_transation_diagrams():
-    add_firsts()
-    first_nodes = {
+def get_transation_diagrams():
+    return {
         "program": program_diagram(),
         "declaration_list": declaration_list_diagram(),
         "declaration": declaration_diagram(),
@@ -112,7 +113,6 @@ def init_transation_diagrams():
         "arg_list": arg_list_diagram(),
         "arg_list_prime": arg_list_prime_diagram(),
     }
-    return first_nodes
 
 
 def arg_list_prime_diagram():
@@ -670,8 +670,3 @@ def program_diagram():
     return DiagramNode(next_edges=[declaration_list])
 
 
-def add_firsts():
-    with open("./firsts.txt", "r") as file:
-        all_firsts = list(map(str.split, file.readlines()))
-    for line in all_firsts:
-        first_dict[str(line[0]).lower()] = line[1:]

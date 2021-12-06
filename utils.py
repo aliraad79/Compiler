@@ -70,7 +70,7 @@ def write_parse_tree_to_file(parse_tree):
 
 def print_parser_log(current_node, curret_token, return_nodes):
     print("________________________________________________")
-    print(f"Return Nodes => {return_nodes}")
+    print(f"Return Nodes => {[(i, j.name) for i,j in return_nodes]}")
     print(f"current Node ==> {current_node}")
     print(f"Current token ==> {curret_token}")
 
@@ -78,3 +78,20 @@ def print_parser_log(current_node, curret_token, return_nodes):
 def format_non_terminal(non_terminal: str):
     non_terminal = non_terminal.replace("_", "-")
     return str(non_terminal[0]).upper() + non_terminal[1:]
+
+
+def reverse_format_non_terminal(non_terminal: str):
+    non_terminal = non_terminal.replace("-", "_")
+    return str(non_terminal).lower()
+
+
+def return_firsts():
+    with open("./firsts.txt", "r") as file:
+        all_firsts = list(map(str.split, file.readlines()))
+    return {str(line[0]).lower(): line[1:] for line in all_firsts}
+
+
+def return_follows():
+    with open("./follows.txt", "r") as file:
+        all_follows = list(map(str.split, file.readlines()))
+    return {str(line[0]).lower(): line[1:] for line in all_follows}

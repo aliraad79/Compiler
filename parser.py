@@ -4,8 +4,9 @@ from utils import (
     write_parse_tree_to_file,
     write_syntax_errors_to_file,
     print_parser_log,
+    reverse_format_non_terminal,
 )
-from parse_tree import init_transation_diagrams, DiagramNode
+from parse_tree import get_transation_diagrams, DiagramNode
 from anytree import Node
 
 
@@ -13,7 +14,7 @@ class Parser:
     def __init__(self, scanner: Scanner):
         self.scanner = scanner
 
-        self.transation_diagrams: dict[str, DiagramNode] = init_transation_diagrams()
+        self.transation_diagrams: dict[str, DiagramNode] = get_transation_diagrams()
         self.nodes_buffer: List[str] = []
         self.return_nodes: List[Tuple[DiagramNode, DiagramNode]] = []
         self.parse_tree_root = Node("Program")
@@ -39,12 +40,15 @@ class Parser:
         terminal = False
         while True:
             if self.current_node:
+                # self.log()
                 (
                     self.current_node,
                     terminal,
                     next_parse_node_name,
                 ) = self.current_node.next_diagram_tree_node(
-                    self.current_token, self.nodes_buffer
+                    self.current_token,
+                    self.nodes_buffer,
+                    reverse_format_non_terminal(current_parse_node.name),
                 )
 
                 if next_parse_node_name:
