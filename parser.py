@@ -6,7 +6,7 @@ from utils import (
     print_parser_log,
     reverse_format_non_terminal,
 )
-from parse_tree import get_transation_diagrams, DiagramNode
+from parse_tree import get_transation_diagrams, DiagramNode, IllegalToken, MissingToken
 from anytree import Node
 
 
@@ -40,16 +40,28 @@ class Parser:
         terminal = False
         while True:
             if self.current_node:
-                # self.log()
-                (
-                    self.current_node,
-                    terminal,
-                    next_parse_node_name,
-                ) = self.current_node.next_diagram_tree_node(
-                    self.current_token,
-                    self.nodes_buffer,
-                    reverse_format_non_terminal(current_parse_node.name),
-                )
+                try:
+                    (
+                        self.current_node,
+                        terminal,
+                        next_parse_node_name,
+                    ) = self.current_node.next_diagram_tree_node(
+                        self.current_token,
+                        self.nodes_buffer,
+                        reverse_format_non_terminal(current_parse_node.name),
+                    )
+                except IllegalToken:
+                    self.syntax_errors.append(
+                        f"#{self.scanner.line_number + 1} : syntax error, illegal {self.current_token.lexeme if self.current_token.type != 'ID' else self.current_token.type}"
+                    )
+                    self.get_next_token()
+                    continue
+                except MissingToken:
+                    self.syntax_errors.append(
+                        f"#{self.scanner.line_number + 1} : syntax error, missing {self.current_token.lexeme if self.current_token.type != 'ID' else self.current_token.type}"
+                    )
+                    self.get_next_token()
+                    continue
 
                 if next_parse_node_name:
                     current_parse_node = Node(

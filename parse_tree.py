@@ -3,6 +3,14 @@ from typing import List
 from utils import format_non_terminal, return_firsts, return_follows
 
 
+class IllegalToken(Exception):
+    pass
+
+
+class MissingToken(Exception):
+    pass
+
+
 class DiagramEdge:
     def __init__(
         self, next_node: "DiagramNode", terminal: str = None, non_terminal: str = None
@@ -21,11 +29,13 @@ class DiagramEdge:
 
         elif self.terminal == "ε":
             follows = follows_dict[current_diagram_name]
-            return (other.lexeme[0] in follows) or (other.type in follows)
+            if other.type == "ID":
+                return other.lexeme[0] in follows
+            return (other.lexeme in follows) or (other.type in follows)
 
         elif self.terminal:
             return other.lexeme == self.terminal or other.type == self.terminal
-        
+
         return False
 
     def get_node_name(self):
@@ -44,7 +54,9 @@ class DiagramNode:
     def __init__(self, next_edges: List[DiagramEdge] = []):
         self.next_edges = next_edges
 
-    def next_diagram_tree_node(self, other: Token, stack: List[str], current_diagram_name:str):
+    def next_diagram_tree_node(
+        self, other: Token, stack: List[str], current_diagram_name: str
+    ):
         for i in self.next_edges:
             if i.match(other, stack, current_diagram_name):
                 return (
@@ -54,7 +66,13 @@ class DiagramNode:
                 )
         if len(self.next_edges) == 0:
             return None, False, None
-        print("WTF", self.next_edges)
+
+        # Errors
+        follows = follows_dict[current_diagram_name]
+        if (other.lexeme not in follows) and (other.type not in follows):
+            raise IllegalToken()
+        else:
+            raise MissingToken()
         # handle errors here (kinda)
 
     def __repr__(self):
@@ -668,5 +686,3 @@ def program_diagram():
         next_node=dollar_node, non_terminal="declaration_list"
     )
     return DiagramNode(next_edges=[declaration_list])
-
-
