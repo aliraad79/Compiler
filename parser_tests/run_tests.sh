@@ -9,4 +9,7 @@ for dir in ./*; do
     printf "\n\n              *** parse_tree.txt diffrences ***\n" >> log.txt
     diff -y -B -W 250 -w  --suppress-common-lines ./parse_tree.txt "${dir}/parse_tree.txt" >> log.txt
     diff -y -B -W 250 -w -q ./parse_tree.txt "${dir}/parse_tree.txt" >> brief_results.txt
+    printf "\n\n              *** syntax_errors.txt diffrences ***\n" >> log.txt
+    diff -y -B -W 250 -w  --suppress-common-lines ./syntax_errors.txt "${dir}/syntax_errors.txt" >> log.txt
+    diff -y -B -W 250 -w -q ./syntax_errors.txt "${dir}/syntax_errors.txt" >> brief_results.txt
 done

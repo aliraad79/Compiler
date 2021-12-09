@@ -39,6 +39,7 @@ class Parser:
         current_parse_node = self.parse_tree_root
         terminal = False
         while True:
+            self.log()
             try:
                 (
                     self.current_node,
