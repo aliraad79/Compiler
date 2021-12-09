@@ -39,63 +39,69 @@ class Parser:
         current_parse_node = self.parse_tree_root
         terminal = False
         while True:
-            if self.current_node:
-                try:
-                    (
-                        self.current_node,
-                        terminal,
-                        next_parse_node_name,
-                    ) = self.current_node.next_diagram_tree_node(
-                        self.current_token,
-                        self.nodes_buffer,
-                        reverse_format_non_terminal(current_parse_node.name),
-                    )
-                except IllegalToken:
+            try:
+                (
+                    self.current_node,
+                    terminal,
+                    next_parse_node_name,
+                ) = self.current_node.next_diagram_tree_node(
+                    self.current_token,
+                    self.nodes_buffer,
+                    reverse_format_non_terminal(current_parse_node.name),
+                )
+            
+            except IllegalToken:
+                if self.current_token.lexeme == "$":
                     self.syntax_errors.append(
-                        f"#{self.scanner.line_number + 1} : syntax error, illegal {self.current_token.lexeme if self.current_token.type != 'ID' else self.current_token.type}"
+                        f"#{self.scanner.line_number + 1} : syntax error, Unexpected EOF"
                     )
-                    self.get_next_token()
-                    continue
-                except MissingToken:
-                    self.syntax_errors.append(
-                        f"#{self.scanner.line_number + 1} : syntax error, missing {current_parse_node.name}"
-                    )
-                    self.current_node = self.transation_diagrams[
-                        self.nodes_buffer.pop(len(self.nodes_buffer) - 1)
-                    ]
-                    continue
+                    break
+                self.syntax_errors.append(
+                    f"#{self.scanner.line_number + 1} : syntax error, illegal {self.current_token.lexeme if self.current_token.type not in ['ID', 'NUM'] else self.current_token.type}"
+                )
+                self.get_next_token()
+                continue
 
-                if next_parse_node_name:
-                    current_parse_node = Node(
-                        next_parse_node_name if not terminal else self.current_token,
-                        current_parse_node,
-                    )
-                else:
-                    current_parse_node = current_parse_node.parent
+            except MissingToken as e:
+                self.syntax_errors.append(
+                    f"#{self.scanner.line_number + 1} : syntax error, missing {current_parse_node.name}"
+                )
+                print(e.next_node)
+                self.current_node = e.next_node
+                continue
 
-                if not self.current_node:
-                    current_parse_node = current_parse_node.parent
-
-                if len(self.nodes_buffer) != 0:
-                    if len(self.current_node.next_edges) != 0:
-                        self.return_nodes.append(
-                            (self.current_node, current_parse_node)
-                        )
-
-                    self.current_node = self.transation_diagrams[
-                        self.nodes_buffer.pop(len(self.nodes_buffer) - 1)
-                    ]
-
-                if terminal:
-                    current_parse_node = current_parse_node.parent
-                    self.get_next_token()
-                    terminal = False
+            if next_parse_node_name:
+                current_parse_node = Node(
+                    next_parse_node_name if not terminal else self.current_token,
+                    current_parse_node,
+                )
             else:
+                current_parse_node = current_parse_node.parent
+
+            if not self.current_node:
+                current_parse_node = current_parse_node.parent
+
+            if len(self.nodes_buffer) != 0:
+                if len(self.current_node.next_edges) != 0:
+                    self.return_nodes.append((self.current_node, current_parse_node))
+
+                self.current_node = self.transation_diagrams[
+                    self.nodes_buffer.pop(len(self.nodes_buffer) - 1)
+                ]
+
+            # terminal is matched
+            if terminal:
+                current_parse_node = current_parse_node.parent
+                self.get_next_token()
+                terminal = False
+            
+            # end of parse
+            if self.current_token.lexeme == "$" and len(self.return_nodes) == 0:
+                break
+                
+            # move back current_node pointer to last return node
+            if not self.current_node:
                 self.current_node, current_parse_node = self.return_nodes.pop(
                     len(self.return_nodes) - 1
                 )
                 current_parse_node = current_parse_node.parent
-
-            if self.current_token.lexeme == "$" and len(self.return_nodes) == 0:
-                Node("$", self.parse_tree_root)
-                break
