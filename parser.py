@@ -64,10 +64,9 @@ class Parser:
 
             except MissingToken as e:
                 self.syntax_errors.append(
-                    f"#{self.scanner.line_number + 1} : syntax error, missing {current_parse_node.name}"
+                    f"#{self.scanner.line_number + 1} : syntax error, missing {e.next_node.non_terminal}"
                 )
-                print(e.next_node)
-                self.current_node = e.next_node
+                self.current_node = e.next_node.next_node
                 continue
 
             if next_parse_node_name:

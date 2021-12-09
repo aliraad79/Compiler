@@ -17,7 +17,6 @@
 
 
 =====================================>>>>> Running Test ./T06...
-Files ./parse_tree.txt and ./T06/parse_tree.txt differ
 
 
 =====================================>>>>> Running Test ./T07...
@@ -25,6 +24,7 @@ Files ./parse_tree.txt and ./T07/parse_tree.txt differ
 
 
 =====================================>>>>> Running Test ./T08...
+Files ./parse_tree.txt and ./T08/parse_tree.txt differ
 
 
 =====================================>>>>> Running Test ./T09...

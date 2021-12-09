@@ -87,13 +87,14 @@ class DiagramNode:
         # Errors
         follows = follows_dict[
             non_terminal_edge.non_terminal
-            if non_terminal_edge.non_terminal
+            if non_terminal_edge and non_terminal_edge.non_terminal
             else current_diagram_name
         ]
-        if (other.lexeme not in follows) and (other.type not in follows):
+        print(current_diagram_name, non_terminal_edge)
+        if check_if_in_list(other,follows):
             raise IllegalToken()
         else:
-            raise MissingToken(non_terminal_edge.next_node)
+            raise MissingToken(non_terminal_edge)
 
     def __repr__(self):
         return f"Node<next_edges = {self.next_edges}>"
@@ -584,9 +585,8 @@ def param_prime_diagram():
 def param_diagram():
     end = DiagramNode(next_edges=[])
     param_prime = DiagramEdge(next_node=end, non_terminal="param_prime")
-    param_prime_node = DiagramNode(next_edges=[param_prime])
 
-    return DiagramNode(next_edges=[param_prime_node])
+    return DiagramNode(next_edges=[param_prime])
 
 
 def param_list_diagram():
