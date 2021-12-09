@@ -95,7 +95,8 @@ class DiagramNode:
             if non_terminal_edge and non_terminal_edge.non_terminal
             else current_diagram_name
         ]
-        print(current_diagram_name, follows, check_if_in_list(other, follows))
+        # if non_terminal_edge == None and "ε" not in self.next_edges:
+        #     raise MissingToken(self.next_edges[0])
         if check_if_in_list(other, follows):
             raise MissingToken(
                 non_terminal_edge if non_terminal_edge else self.next_edges[0]
@@ -354,9 +355,7 @@ def relop_diagram():
     end = DiagramNode(next_edges=[])
     lower = DiagramEdge(next_node=end, terminal="<")
 
-    equal_1 = DiagramEdge(next_node=end, terminal="=")
-    equal_1_node = DiagramNode(next_edges=[equal_1])
-    equal_2 = DiagramEdge(next_node=equal_1_node, terminal="=")
+    equal_2 = DiagramEdge(next_node=end, terminal="==")
 
     return DiagramNode(next_edges=[lower, equal_2])
 
