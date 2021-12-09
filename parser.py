@@ -39,7 +39,8 @@ class Parser:
         current_parse_node = self.parse_tree_root
         terminal = False
         while True:
-            self.log()
+            # self.log()
+            # print(current_parse_node.name)
             try:
                 (
                     self.current_node,
@@ -50,7 +51,7 @@ class Parser:
                     self.nodes_buffer,
                     reverse_format_non_terminal(current_parse_node.name),
                 )
-            
+
             except IllegalToken:
                 if self.current_token.lexeme == "$":
                     self.syntax_errors.append(
@@ -65,7 +66,7 @@ class Parser:
 
             except MissingToken as e:
                 self.syntax_errors.append(
-                    f"#{self.scanner.line_number + 1} : syntax error, missing {e.next_node.non_terminal}"
+                    f"#{self.scanner.line_number + 1} : syntax error, missing {e.next_node.get_node_name()}"
                 )
                 self.current_node = e.next_node.next_node
                 continue
@@ -94,11 +95,11 @@ class Parser:
                 current_parse_node = current_parse_node.parent
                 self.get_next_token()
                 terminal = False
-            
+
             # end of parse
             if self.current_token.lexeme == "$" and len(self.return_nodes) == 0:
                 break
-                
+
             # move back current_node pointer to last return node
             if not self.current_node:
                 self.current_node, current_parse_node = self.return_nodes.pop(

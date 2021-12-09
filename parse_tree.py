@@ -1,7 +1,7 @@
 from anytree.node.node import Node
 from scanner import Token
 from typing import List
-from utils import format_non_terminal, return_firsts, return_follows, reverse_format_non_terminal
+from utils import format_non_terminal, return_firsts, return_follows
 
 
 class IllegalToken(Exception):
@@ -15,9 +15,13 @@ class MissingToken(Exception):
 
 def check_if_in_list(token: Token, list, epsilon=False):
     if epsilon:
-        if token.type in ["ID", "NUM"]:
-            return (token.type in list) or ("ε" in list)
-        return (token.lexeme in list) or ("ε" in list)
+        if "ε" in list:
+            return True
+        elif token.type in ["ID", "NUM"]:
+            return token.type in list
+        elif token.type == "SYMBOL":
+            return token.lexeme[0] in list
+        return token.lexeme in list
     else:
         if token.type in ["ID", "NUM"]:
             return token.type in list
@@ -91,10 +95,13 @@ class DiagramNode:
             if non_terminal_edge and non_terminal_edge.non_terminal
             else current_diagram_name
         ]
+        print(current_diagram_name, follows, check_if_in_list(other, follows))
         if check_if_in_list(other, follows):
-            raise IllegalToken()
+            raise MissingToken(
+                non_terminal_edge if non_terminal_edge else self.next_edges[0]
+            )
         else:
-            raise MissingToken(non_terminal_edge if non_terminal_edge else self.next_edges[0])
+            raise IllegalToken()
 
     def __repr__(self):
         return f"Node<next_edges = {self.next_edges}>"
