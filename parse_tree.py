@@ -402,8 +402,10 @@ def H_diagram():
     _G_edge = DiagramEdge(next_node=_D_node, non_terminal="g")
 
     expression = DiagramEdge(next_node=end, non_terminal="expression")
+    expression_node = DiagramNode(next_edges=[expression])
+    equal = DiagramEdge(next_node=expression_node, terminal="=")
 
-    return DiagramNode(next_edges=[expression, _G_edge])
+    return DiagramNode(next_edges=[equal, _G_edge])
 
 
 def B_diagram():
@@ -591,8 +593,10 @@ def param_prime_diagram():
 def param_diagram():
     end = DiagramNode(next_edges=[])
     param_prime = DiagramEdge(next_node=end, non_terminal="param_prime")
+    decl = DiagramNode(next_edges=[param_prime])
+    decl_edge = DiagramEdge(next_node=decl, non_terminal="declaration_initial")
 
-    return DiagramNode(next_edges=[param_prime])
+    return DiagramNode(next_edges=[decl_edge])
 
 
 def param_list_diagram():
