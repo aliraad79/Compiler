@@ -39,8 +39,6 @@ class Parser:
         current_parse_node = self.parse_tree_root
         terminal = False
         while True:
-            # self.log()
-            # print(current_parse_node.name)
             try:
                 (
                     self.current_node,
@@ -57,11 +55,13 @@ class Parser:
                     self.syntax_errors.append(
                         f"#{self.scanner.line_number + 1} : syntax error, Unexpected EOF"
                     )
+                    current_parse_node.parent.children = [i for i in current_parse_node.parent.children if i != current_parse_node]
                     break
                 self.syntax_errors.append(
                     f"#{self.scanner.line_number + 1} : syntax error, illegal {self.current_token.lexeme if self.current_token.type not in ['ID', 'NUM'] else self.current_token.type}"
                 )
                 self.get_next_token()
+                next_parse_node_name = None
                 continue
 
             except MissingToken as e:
@@ -69,6 +69,7 @@ class Parser:
                     f"#{self.scanner.line_number + 1} : syntax error, missing {e.next_node.get_node_name()}"
                 )
                 self.current_node = e.next_node.next_node
+                next_parse_node_name = None
                 continue
 
             if next_parse_node_name:

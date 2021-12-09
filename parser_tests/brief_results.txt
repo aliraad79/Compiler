@@ -22,18 +22,12 @@ Files ./syntax_errors.txt and ./T06/syntax_errors.txt differ
 
 
 =====================================>>>>> Running Test ./T07...
-Files ./parse_tree.txt and ./T07/parse_tree.txt differ
-Files ./syntax_errors.txt and ./T07/syntax_errors.txt differ
 
 
 =====================================>>>>> Running Test ./T08...
-Files ./parse_tree.txt and ./T08/parse_tree.txt differ
-Files ./syntax_errors.txt and ./T08/syntax_errors.txt differ
 
 
 =====================================>>>>> Running Test ./T09...
-Files ./parse_tree.txt and ./T09/parse_tree.txt differ
-Files ./syntax_errors.txt and ./T09/syntax_errors.txt differ
 
 
 =====================================>>>>> Running Test ./T10...

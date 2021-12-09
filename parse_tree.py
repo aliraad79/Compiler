@@ -1,4 +1,3 @@
-from anytree.node.node import Node
 from scanner import Token
 from typing import List
 from utils import format_non_terminal, return_firsts, return_follows
