@@ -17,8 +17,9 @@
 
 
 =====================================>>>>> Running Test ./T06...
-Files ./parse_tree.txt and ./T06/parse_tree.txt differ
-Files ./syntax_errors.txt and ./T06/syntax_errors.txt differ
+
+
+=====================================>>>>> Running Test ./T07...
 
 
 =====================================>>>>> Running Test ./T08...

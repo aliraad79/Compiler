@@ -1,6 +1,11 @@
 from scanner import Token
 from typing import List
-from utils import format_non_terminal, return_firsts, return_follows
+from utils import (
+    format_non_terminal,
+    return_firsts,
+    return_follows,
+    reverse_format_non_terminal,
+)
 
 
 class IllegalToken(Exception):
@@ -66,8 +71,9 @@ class DiagramEdge:
 
 
 class DiagramNode:
-    def __init__(self, next_edges: List[DiagramEdge] = []):
+    def __init__(self, next_edges: List[DiagramEdge] = [], is_first: bool = False):
         self.next_edges = next_edges
+        self.is_first = is_first
 
     def next_diagram_tree_node(
         self,
@@ -94,7 +100,7 @@ class DiagramNode:
 
         # Errors
         # miss the terminal
-        if terminal_edge:
+        if terminal_edge and not self.is_first:
             raise MissingToken(terminal_edge)
 
         follows = follows_dict[
@@ -177,7 +183,7 @@ def arg_list_prime_diagram():
 
     epsilon_node = DiagramEdge(next_node=end, terminal="ε")
 
-    return DiagramNode(next_edges=[comma, epsilon_node])
+    return DiagramNode(next_edges=[comma, epsilon_node], is_first=True)
 
 
 def arg_list_diagram():
@@ -186,7 +192,7 @@ def arg_list_diagram():
     arg_list_prime_node = DiagramNode(next_edges=[arg_list_prime])
     expression = DiagramEdge(next_node=arg_list_prime_node, non_terminal="expression")
 
-    return DiagramNode(next_edges=[expression])
+    return DiagramNode(next_edges=[expression], is_first=True)
 
 
 def args_diagram():
@@ -195,7 +201,7 @@ def args_diagram():
 
     epsilon_node = DiagramEdge(next_node=end, terminal="ε")
 
-    return DiagramNode(next_edges=[arg_list, epsilon_node])
+    return DiagramNode(next_edges=[arg_list, epsilon_node], is_first=True)
 
 
 def factor_zegond_diagram():
@@ -208,7 +214,7 @@ def factor_zegond_diagram():
 
     num = DiagramEdge(next_node=end, terminal="NUM")
 
-    return DiagramNode(next_edges=[open_par, num])
+    return DiagramNode(next_edges=[open_par, num], is_first=True)
 
 
 def factor_prime_diagram():
@@ -221,7 +227,7 @@ def factor_prime_diagram():
 
     epsilon_node = DiagramEdge(next_node=end, terminal="ε")
 
-    return DiagramNode(next_edges=[open_par, epsilon_node])
+    return DiagramNode(next_edges=[open_par, epsilon_node], is_first=True)
 
 
 def var_prime_diagram():
@@ -234,7 +240,7 @@ def var_prime_diagram():
 
     epsilon_node = DiagramEdge(next_node=end, terminal="ε")
 
-    return DiagramNode(next_edges=[open_par, epsilon_node])
+    return DiagramNode(next_edges=[open_par, epsilon_node], is_first=True)
 
 
 def var_call_prime_diagram():
@@ -247,7 +253,7 @@ def var_call_prime_diagram():
 
     var_prime = DiagramEdge(next_node=end, non_terminal="var_prime")
 
-    return DiagramNode(next_edges=[open_par, var_prime])
+    return DiagramNode(next_edges=[open_par, var_prime], is_first=True)
 
 
 def factor_diagram():
@@ -264,7 +270,7 @@ def factor_diagram():
 
     num = DiagramEdge(next_node=end, terminal="NUM")
 
-    return DiagramNode(next_edges=[open_par, num, _id])
+    return DiagramNode(next_edges=[open_par, num, _id], is_first=True)
 
 
 def G_diagram():
@@ -277,7 +283,7 @@ def G_diagram():
 
     epsilon_node = DiagramEdge(next_node=end, terminal="ε")
 
-    return DiagramNode(next_edges=[star, epsilon_node])
+    return DiagramNode(next_edges=[star, epsilon_node], is_first=True)
 
 
 def term_zegond_diagram():
@@ -286,7 +292,7 @@ def term_zegond_diagram():
     _G_node = DiagramNode(next_edges=[_G_edge])
     factor_zegond = DiagramEdge(next_node=_G_node, non_terminal="factor_zegond")
 
-    return DiagramNode(next_edges=[factor_zegond])
+    return DiagramNode(next_edges=[factor_zegond], is_first=True)
 
 
 def term_prime_diagram():
@@ -295,7 +301,7 @@ def term_prime_diagram():
     _G_node = DiagramNode(next_edges=[_G_edge])
     factor_prime = DiagramEdge(next_node=_G_node, non_terminal="factor_prime")
 
-    return DiagramNode(next_edges=[factor_prime])
+    return DiagramNode(next_edges=[factor_prime], is_first=True)
 
 
 def term_diagram():
@@ -304,7 +310,7 @@ def term_diagram():
     _G_node = DiagramNode(next_edges=[_G_edge])
     factor = DiagramEdge(next_node=_G_node, non_terminal="factor")
 
-    return DiagramNode(next_edges=[factor])
+    return DiagramNode(next_edges=[factor], is_first=True)
 
 
 def addop_diagram():
@@ -313,7 +319,7 @@ def addop_diagram():
 
     minus = DiagramEdge(next_node=end, terminal="-")
 
-    return DiagramNode(next_edges=[plus, minus])
+    return DiagramNode(next_edges=[plus, minus], is_first=True)
 
 
 def D_diagram():
@@ -326,7 +332,7 @@ def D_diagram():
 
     epsilon_node = DiagramEdge(next_node=end, terminal="ε")
 
-    return DiagramNode(next_edges=[addop, epsilon_node])
+    return DiagramNode(next_edges=[addop, epsilon_node], is_first=True)
 
 
 def additive_expression_zegond_diagram():
@@ -335,7 +341,7 @@ def additive_expression_zegond_diagram():
     _D_node = DiagramNode(next_edges=[_D_edge])
     term_zegond = DiagramEdge(next_node=_D_node, non_terminal="term_zegond")
 
-    return DiagramNode(next_edges=[term_zegond])
+    return DiagramNode(next_edges=[term_zegond], is_first=True)
 
 
 def additive_expression_prime_diagram():
@@ -344,7 +350,7 @@ def additive_expression_prime_diagram():
     _D_node = DiagramNode(next_edges=[_D_edge])
     term_prime = DiagramEdge(next_node=_D_node, non_terminal="term_prime")
 
-    return DiagramNode(next_edges=[term_prime])
+    return DiagramNode(next_edges=[term_prime], is_first=True)
 
 
 def additive_expression_diagram():
@@ -353,7 +359,7 @@ def additive_expression_diagram():
     _D_node = DiagramNode(next_edges=[_D_edge])
     term = DiagramEdge(next_node=_D_node, non_terminal="term")
 
-    return DiagramNode(next_edges=[term])
+    return DiagramNode(next_edges=[term], is_first=True)
 
 
 def relop_diagram():
@@ -362,7 +368,7 @@ def relop_diagram():
 
     equal_2 = DiagramEdge(next_node=end, terminal="==")
 
-    return DiagramNode(next_edges=[lower, equal_2])
+    return DiagramNode(next_edges=[lower, equal_2], is_first=True)
 
 
 def C_diagram():
@@ -373,7 +379,7 @@ def C_diagram():
 
     epsilon_node = DiagramEdge(next_node=end, terminal="ε")
 
-    return DiagramNode(next_edges=[relop, epsilon_node])
+    return DiagramNode(next_edges=[relop, epsilon_node], is_first=True)
 
 
 def simple_expression_prime_diagram():
@@ -384,7 +390,7 @@ def simple_expression_prime_diagram():
         next_node=_C_node, non_terminal="additive_expression_prime"
     )
 
-    return DiagramNode(next_edges=[additive_expression_prime])
+    return DiagramNode(next_edges=[additive_expression_prime], is_first=True)
 
 
 def simple_expression_zegond_diagram():
@@ -395,7 +401,7 @@ def simple_expression_zegond_diagram():
         next_node=_C_node, non_terminal="additive_expression_zegond"
     )
 
-    return DiagramNode(next_edges=[additive_expression_zegond])
+    return DiagramNode(next_edges=[additive_expression_zegond], is_first=True)
 
 
 def H_diagram():
@@ -410,7 +416,7 @@ def H_diagram():
     expression_node = DiagramNode(next_edges=[expression])
     equal = DiagramEdge(next_node=expression_node, terminal="=")
 
-    return DiagramNode(next_edges=[equal, _G_edge])
+    return DiagramNode(next_edges=[equal, _G_edge], is_first=True)
 
 
 def B_diagram():
@@ -432,7 +438,9 @@ def B_diagram():
         next_node=end, non_terminal="simple_expression_prime"
     )
 
-    return DiagramNode(next_edges=[open_par, equal, simple_expression_prime])
+    return DiagramNode(
+        next_edges=[open_par, equal, simple_expression_prime], is_first=True
+    )
 
 
 def expression_diagram():
@@ -445,7 +453,7 @@ def expression_diagram():
         next_node=end, non_terminal="simple_expression_zegond"
     )
 
-    return DiagramNode(next_edges=[simple_expression_zegond, _id])
+    return DiagramNode(next_edges=[simple_expression_zegond, _id], is_first=True)
 
 
 def return_stmt_prime_diagram():
@@ -457,7 +465,7 @@ def return_stmt_prime_diagram():
 
     semicolon = DiagramEdge(next_node=end, terminal=";")
 
-    return DiagramNode(next_edges=[semicolon, expression])
+    return DiagramNode(next_edges=[semicolon, expression], is_first=True)
 
 
 def return_stmt_diagram():
@@ -466,7 +474,7 @@ def return_stmt_diagram():
     statement_node = DiagramNode(next_edges=[return_stmt_prime])
     _return = DiagramEdge(next_node=statement_node, terminal="return")
 
-    return DiagramNode(next_edges=[_return])
+    return DiagramNode(next_edges=[_return], is_first=True)
 
 
 def iteration_stmt_diagram():
@@ -483,7 +491,7 @@ def iteration_stmt_diagram():
     statement_node = DiagramNode(next_edges=[statement])
     repeat = DiagramEdge(next_node=statement_node, terminal="repeat")
 
-    return DiagramNode(next_edges=[repeat])
+    return DiagramNode(next_edges=[repeat], is_first=True)
 
 
 def else_stmt_diagram():
@@ -496,7 +504,7 @@ def else_stmt_diagram():
 
     endif_2 = DiagramEdge(next_node=end, terminal="endif")
 
-    return DiagramNode(next_edges=[_else, endif_2])
+    return DiagramNode(next_edges=[_else, endif_2], is_first=True)
 
 
 def selection_stmt_diagram():
@@ -513,7 +521,7 @@ def selection_stmt_diagram():
     open_bracket_node = DiagramNode(next_edges=[open_bracket])
     _if = DiagramEdge(next_node=open_bracket_node, terminal="if")
 
-    return DiagramNode(next_edges=[_if])
+    return DiagramNode(next_edges=[_if], is_first=True)
 
 
 def expression_stmt_diagram():
@@ -529,7 +537,7 @@ def expression_stmt_diagram():
     semicolon_node_2 = DiagramNode(next_edges=[semicolon_3])
     expression = DiagramEdge(next_node=semicolon_node_2, non_terminal="expression")
 
-    return DiagramNode(next_edges=[semicolon, _break, expression])
+    return DiagramNode(next_edges=[semicolon, _break, expression], is_first=True)
 
 
 def statement_diagram():
@@ -552,7 +560,8 @@ def statement_diagram():
             selection_stmt,
             iteration_stmt,
             return_stmt,
-        ]
+        ],
+        is_first=True,
     )
 
 
@@ -564,7 +573,7 @@ def statement_list_diagram():
 
     epsilon_node = DiagramEdge(next_node=end, terminal="ε")
 
-    return DiagramNode(next_edges=[statement, epsilon_node])
+    return DiagramNode(next_edges=[statement, epsilon_node], is_first=True)
 
 
 def compound_stmt():
@@ -581,7 +590,7 @@ def compound_stmt():
     declaration_list_node = DiagramNode(next_edges=[declaration_list])
     open_bracket = DiagramEdge(next_node=declaration_list_node, terminal="{")
 
-    return DiagramNode(next_edges=[open_bracket])
+    return DiagramNode(next_edges=[open_bracket], is_first=True)
 
 
 def param_prime_diagram():
@@ -592,7 +601,7 @@ def param_prime_diagram():
 
     epsilon_node = DiagramEdge(next_node=end, terminal="ε")
 
-    return DiagramNode(next_edges=[open_bracket, epsilon_node])
+    return DiagramNode(next_edges=[open_bracket, epsilon_node], is_first=True)
 
 
 def param_diagram():
@@ -601,7 +610,7 @@ def param_diagram():
     decl = DiagramNode(next_edges=[param_prime])
     decl_edge = DiagramEdge(next_node=decl, non_terminal="declaration_initial")
 
-    return DiagramNode(next_edges=[decl_edge])
+    return DiagramNode(next_edges=[decl_edge], is_first=True)
 
 
 def param_list_diagram():
@@ -614,7 +623,7 @@ def param_list_diagram():
 
     epsilon_node = DiagramEdge(next_node=end, terminal="ε")
 
-    return DiagramNode(next_edges=[comma, epsilon_node])
+    return DiagramNode(next_edges=[comma, epsilon_node], is_first=True)
 
 
 def params_diagram():
@@ -629,7 +638,7 @@ def params_diagram():
 
     _void = DiagramEdge(next_node=end, terminal="void")
 
-    return DiagramNode(next_edges=[_int, _void])
+    return DiagramNode(next_edges=[_int, _void], is_first=True)
 
 
 def type_specifier_diagram():
@@ -638,7 +647,7 @@ def type_specifier_diagram():
 
     _void = DiagramEdge(next_node=end, terminal="void")
 
-    return DiagramNode(next_edges=[_int, _void])
+    return DiagramNode(next_edges=[_int, _void], is_first=True)
 
 
 def fun_declaration_prime():
@@ -650,7 +659,7 @@ def fun_declaration_prime():
     params = DiagramEdge(next_node=close_par_node, non_terminal="params")
     params_node = DiagramNode(next_edges=[params])
     open_par = DiagramEdge(next_node=params_node, terminal="(")
-    return DiagramNode(next_edges=[open_par])
+    return DiagramNode(next_edges=[open_par], is_first=True)
 
 
 def var_declaration_prime_diagram():
@@ -666,7 +675,7 @@ def var_declaration_prime_diagram():
     open_t_node = DiagramNode(next_edges=[num])
     open_t = DiagramEdge(next_node=open_t_node, terminal="[")
 
-    return DiagramNode(next_edges=[semicolon, open_t])
+    return DiagramNode(next_edges=[semicolon, open_t], is_first=True)
 
 
 def declaration_prime_diagram():
@@ -679,7 +688,9 @@ def declaration_prime_diagram():
         next_node=end, non_terminal="var_declaration_prime"
     )
 
-    return DiagramNode(next_edges=[fun_declaration_prime, var_declaration_prime])
+    return DiagramNode(
+        next_edges=[fun_declaration_prime, var_declaration_prime], is_first=True
+    )
 
 
 def declaration_initial_diagram():
@@ -697,7 +708,7 @@ def declaration_diagram():
     declaration_initial = DiagramEdge(
         next_node=declaration_prime_node, non_terminal="declaration_initial"
     )
-    return DiagramNode(next_edges=[declaration_initial])
+    return DiagramNode(next_edges=[declaration_initial], is_first=True)
 
 
 def declaration_list_diagram():
@@ -710,7 +721,7 @@ def declaration_list_diagram():
 
     epsilon_node = DiagramEdge(next_node=end, terminal="ε")
 
-    return DiagramNode(next_edges=[declaration, epsilon_node])
+    return DiagramNode(next_edges=[declaration, epsilon_node], is_first=True)
 
 
 def program_diagram():
@@ -720,4 +731,4 @@ def program_diagram():
     declaration_list = DiagramEdge(
         next_node=dollar_node, non_terminal="declaration_list"
     )
-    return DiagramNode(next_edges=[declaration_list])
+    return DiagramNode(next_edges=[declaration_list], is_first=True)

@@ -56,7 +56,11 @@ class Parser:
                     self.syntax_errors.append(
                         f"#{self.scanner.line_number + 1} : syntax error, Unexpected EOF"
                     )
-                    current_parse_node.parent.children = [i for i in current_parse_node.parent.children if i != current_parse_node]
+                    current_parse_node.parent.children = [
+                        i
+                        for i in current_parse_node.parent.children
+                        if i != current_parse_node
+                    ]
                     break
                 self.syntax_errors.append(
                     f"#{self.scanner.line_number + 1} : syntax error, illegal {self.current_token.lexeme if self.current_token.type not in ['ID', 'NUM'] else self.current_token.type}"
