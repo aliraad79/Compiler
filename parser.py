@@ -39,6 +39,7 @@ class Parser:
         current_parse_node = self.parse_tree_root
         terminal = False
         while True:
+            # self.log()
             try:
                 (
                     self.current_node,
@@ -66,9 +67,9 @@ class Parser:
 
             except MissingToken as e:
                 self.syntax_errors.append(
-                    f"#{self.scanner.line_number + 1} : syntax error, missing {e.next_node.get_node_name()}"
+                    f"#{self.scanner.line_number + 1} : syntax error, missing {e.next_edge.get_node_name()}"
                 )
-                self.current_node = e.next_node.next_node
+                self.current_node = e.next_edge.next_node
                 next_parse_node_name = None
                 continue
 

@@ -8,8 +8,8 @@ class IllegalToken(Exception):
 
 
 class MissingToken(Exception):
-    def __init__(self, next_node) -> None:
-        self.next_node = next_node
+    def __init__(self, next_edge: "DiagramEdge") -> None:
+        self.next_edge = next_edge
 
 
 def check_if_in_list(token: Token, list, epsilon=False):
@@ -76,9 +76,13 @@ class DiagramNode:
         current_diagram_name: str,
     ):
         non_terminal_edge = None
+        terminal_edge = None
+
         for i in self.next_edges:
             if i.non_terminal:
                 non_terminal_edge: DiagramEdge = i
+            elif i.terminal and i.terminal != "ε":
+                terminal_edge: DiagramEdge = i
             if i.match(other, stack, current_diagram_name):
                 return (
                     i.next_node,
@@ -89,13 +93,15 @@ class DiagramNode:
             return None, False, None
 
         # Errors
+        # miss the terminal
+        if terminal_edge:
+            raise MissingToken(terminal_edge)
+
         follows = follows_dict[
             non_terminal_edge.non_terminal
             if non_terminal_edge and non_terminal_edge.non_terminal
             else current_diagram_name
         ]
-        # if non_terminal_edge == None and "ε" not in self.next_edges:
-        #     raise MissingToken(self.next_edges[0])
         if check_if_in_list(other, follows):
             raise MissingToken(
                 non_terminal_edge if non_terminal_edge else self.next_edges[0]

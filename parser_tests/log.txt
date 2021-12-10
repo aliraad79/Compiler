@@ -63,23 +63,33 @@
 
               *** parse_tree.txt diffrences ***
                     ├── (KEYWORD, int)											    /	                    └── (KEYWORD, int)
-                    └── (ID, prod)											    <
+                    ├── Param-prime											    <
+                    └── Param-list											    <
+                        ├── Param											    <
+                        │   ├── Declaration-initial									    <
+                        │   │   ├── Type-specifier									    <
+                        │   │   │   └── (KEYWORD, int)									    <
+                        │   │   └── (ID, prod)										    <
+                        │   └── Param-prime										    <
+                        └── Param-list											    <
+                            └── Param											    <
+                                ├── Declaration-initial									    <
+                                │   ├── Type-specifier									    <
+                                │   │   └── (KEYWORD, int)								    <
+                                │   └── (ID, i)										    <
+                                └── Param-prime										    <
 
 
               *** syntax_errors.txt diffrences ***
-															    >	#2 : syntax error, missing ID																
-															    >	#3 : syntax error, illegal ID																
-
-
-
-
-=====================================>>>>> Running Test ./T07...
-
-
-              *** parse_tree.txt diffrences ***
-
-
-              *** syntax_errors.txt diffrences ***
+#2 : syntax error, missing [												    <
+#2 : syntax error, missing ]												    <
+#2 : syntax error, missing ,												    <
+#3 : syntax error, missing [												    |	#3 : syntax error, illegal int																
+#3 : syntax error, missing ]												    |	#3 : syntax error, illegal ID																
+#3 : syntax error, missing ,												    <
+#4 : syntax error, missing [												    |	#4 : syntax error, illegal int																
+#4 : syntax error, missing ]												    |	#4 : syntax error, illegal ID																
+#4 : syntax error, missing ,												    <
 
 
 
@@ -110,53 +120,9 @@
 
 
               *** parse_tree.txt diffrences ***
-															    >	│           │               │       │           │       │   │           │           │       │       │           └── Expres																
-															    >	│           │               │       │           │       │   │           │           │       │       │               ├── (I																
-															    >	│           │               │       │           │       │   │           │           │       │       │               └── B																
-															    >	│           │               │       │           │       │   │           │           │       │       │                   ├─																
-│           │               │       │           │       │   │           │           │       │       │           │   ├── (I  |	│           │               │       │           │       │   │           │           │       │       │                   │ 																
-│           │               │       │           │       │   │           │           │       │       │           │       ├─  |	│           │               │       │           │       │   │           │           │       │       │                   │ 																
-│           │               │       │           │       │   │           │           │       │       │           │       ├─  |	│           │               │       │           │       │   │           │           │       │       │                   │ 																
-│           │               │       │           │       │   │           │           │       │       │           │       │   |	│           │               │       │           │       │   │           │           │       │       │                   │ 																
-│           │               │       │           │       │   │           │           │       │       │           │       │   |	│           │               │       │           │       │   │           │           │       │       │                   │ 																
-│           │               │       │           │       │   │           │           │       │       │           │       │   <
-│           │               │       │           │       │   │           │           │       │       │           │       │   <
-│           │               │       │           │       │   │           │           │       │       │           │       │   <
-│           │               │       │           │       │   │           │           │       │       │           │       │   <
-│           │               │       │           │       │   │           │           │       │       │           │       │   <
-│           │               │       │           │       │   │           │           │       │       │           │       │   <
-│           │               │       │           │       │   │           │           │       │       │           │       │   <
-│           │               │       │           │       │   │           │           │       │       │           │       │   <
-│           │               │       │           │       │   │           │           │       │       │           │       │   <
-│           │               │       │           │       │   │           │           │       │       │           │       │   <
-│           │               │       │           │       │   │           │           │       │       │           │       │   <
-│           │               │       │           │       │   │           │           │       │       │           │       │   <
-│           │               │       │           │       │   │           │           │       │       │           │       │   <
-│           │               │       │           │       │   │           │           │       │       │           │       │   <
-│           │               │       │           │       │   │           │           │       │       │           │       │   |	│           │               │       │           │       │   │           │           │       │       │                   │ 																
-│           │               │       │           │       │   │           │           │       │       │           │       │   |	│           │               │       │           │       │   │           │           │       │       │                   │ 																
-│           │               │       │           │       │   │           │           │       │       │           │       │   |	│           │               │       │           │       │   │           │           │       │       │                   │ 																
-│           │               │       │           │       │   │           │           │       │       │           │       └─  |	│           │               │       │           │       │   │           │           │       │       │                   │ 																
-│           │               │       │           │       │   │           │           │       │       │           │           |	│           │               │       │           │       │   │           │           │       │       │                   │ 																
-│           │               │       │           │       │   │           │           │       │       │           │           |	│           │               │       │           │       │   │           │           │       │       │                   │ 																
-│           │               │       │           │       │   │           │           │       │       │           │           |	│           │               │       │           │       │   │           │           │       │       │                   │ 																
-															    >	│           │               │       │           │       │   │           │           │       │       │                   │ 																
-															    >	│           │               │       │           │       │   │           │           │       │       │                   │ 																
-															    >	│           │               │       │           │       │   │           │           │       │       │                   │ 																
-															    >	│           │               │       │           │       │   │           │           │       │       │                   └─																
-															    >	│           │               │       │           │       │   │           │           │       │       │                     																
-															    >	│           │               │       │           │       │   │           │           │       │       │                     																
-															    >	│           │               │       │           │       │   │           │           │       │       │                     																
-															    >	│           │               │       │           │       │   │           │           │       │       │                     																
-															    >	│           │               │       │           │       │   │           │           │       │       │                     																
-															    >	│           │               │       │           │       │   │           │           │       │       │                     																
-															    >	│           │               │       │           │       │   │           │           │       │       └── Statement-list																
-															    >	│           │               │       │           │       │   │           │           │       │           ├── Statement																
-															    >	│           │               │       │           │       │   │           │           │       │           │   └── Expression																
 
 
               *** syntax_errors.txt diffrences ***
-															    >	#19 : syntax error, missing ;																
 
 
 
