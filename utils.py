@@ -87,12 +87,12 @@ def reverse_format_non_terminal(non_terminal: str):
 
 
 def return_firsts():
-    with open("../firsts.txt", "r") as file:
+    with open("./firsts.txt", "r") as file:
         all_firsts = list(map(str.split, file.readlines()))
     return {str(line[0]).lower(): line[1:] for line in all_firsts}
 
 
 def return_follows():
-    with open("../follows.txt", "r") as file:
+    with open("./follows.txt", "r") as file:
         all_follows = list(map(str.split, file.readlines()))
     return {str(line[0]).lower(): line[1:] for line in all_follows}
