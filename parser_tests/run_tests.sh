@@ -1,7 +1,7 @@
 #!/bin/sh
 echo "" > log.txt
 echo "" > brief_results.txt
-for dir in ./*; do
+for dir in Tests/*; do
     cp "${dir}/input.txt" ./input.txt
     python3 ../compiler.py
     printf "\n\n\n\n=====================================>>>>> Running Test ${dir}...\n" >> log.txt

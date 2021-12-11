@@ -3,7 +3,7 @@
 
 
 
-=====================================>>>>> Running Test ./T01...
+=====================================>>>>> Running Test Tests/T01...
 
 
               *** parse_tree.txt diffrences ***
@@ -14,7 +14,7 @@
 
 
 
-=====================================>>>>> Running Test ./T02...
+=====================================>>>>> Running Test Tests/T02...
 
 
               *** parse_tree.txt diffrences ***
@@ -25,7 +25,7 @@
 
 
 
-=====================================>>>>> Running Test ./T03...
+=====================================>>>>> Running Test Tests/T03...
 
 
               *** parse_tree.txt diffrences ***
@@ -36,7 +36,7 @@
 
 
 
-=====================================>>>>> Running Test ./T04...
+=====================================>>>>> Running Test Tests/T04...
 
 
               *** parse_tree.txt diffrences ***
@@ -47,7 +47,7 @@
 
 
 
-=====================================>>>>> Running Test ./T05...
+=====================================>>>>> Running Test Tests/T05...
 
 
               *** parse_tree.txt diffrences ***
@@ -58,7 +58,7 @@
 
 
 
-=====================================>>>>> Running Test ./T06...
+=====================================>>>>> Running Test Tests/T06...
 
 
               *** parse_tree.txt diffrences ***
@@ -69,7 +69,7 @@
 
 
 
-=====================================>>>>> Running Test ./T07...
+=====================================>>>>> Running Test Tests/T07...
 
 
               *** parse_tree.txt diffrences ***
@@ -80,7 +80,7 @@
 
 
 
-=====================================>>>>> Running Test ./T08...
+=====================================>>>>> Running Test Tests/T08...
 
 
               *** parse_tree.txt diffrences ***
@@ -91,7 +91,7 @@
 
 
 
-=====================================>>>>> Running Test ./T09...
+=====================================>>>>> Running Test Tests/T09...
 
 
               *** parse_tree.txt diffrences ***
@@ -102,73 +102,7 @@
 
 
 
-=====================================>>>>> Running Test ./T10...
-
-
-              *** parse_tree.txt diffrences ***
-
-
-              *** syntax_errors.txt diffrences ***
-
-
-
-
-=====================================>>>>> Running Test ./brief_results.txt...
-
-
-              *** parse_tree.txt diffrences ***
-
-
-              *** syntax_errors.txt diffrences ***
-
-
-
-
-=====================================>>>>> Running Test ./input.txt...
-
-
-              *** parse_tree.txt diffrences ***
-
-
-              *** syntax_errors.txt diffrences ***
-
-
-
-
-=====================================>>>>> Running Test ./log.txt...
-
-
-              *** parse_tree.txt diffrences ***
-
-
-              *** syntax_errors.txt diffrences ***
-
-
-
-
-=====================================>>>>> Running Test ./parse_tree.txt...
-
-
-              *** parse_tree.txt diffrences ***
-
-
-              *** syntax_errors.txt diffrences ***
-
-
-
-
-=====================================>>>>> Running Test ./run_tests.sh...
-
-
-              *** parse_tree.txt diffrences ***
-
-
-              *** syntax_errors.txt diffrences ***
-
-
-
-
-=====================================>>>>> Running Test ./syntax_errors.txt...
+=====================================>>>>> Running Test Tests/T10...
 
 
               *** parse_tree.txt diffrences ***
