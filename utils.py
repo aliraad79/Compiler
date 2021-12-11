@@ -7,13 +7,13 @@ def add_errors_to_file(line_number, error_dict):
         if not bool(error_dict):
             file.write("There is no lexical error.")
             return
-        for i in range(0, line_number + 1):
+        for i in range(1, line_number):
             _string = ""
             try:
                 for error in error_dict[i]:
                     _string += f"({error[1]}, {error[0]}) "
 
-                file.write(f"{str(i + 1)}.\t{_string}\n")
+                file.write(f"{i}.\t{_string}\n")
             except KeyError:
                 # if one line hasn't any token
                 pass
@@ -31,12 +31,12 @@ def add_symbols_to_file(symbols):
 
 def add_tokens_to_file(line_number: int, token_dict):
     with open("tokens.txt", "w") as file:
-        for i in range(0, line_number + 1):
+        for i in range(1, line_number + 1):
             _string = ""
             try:
                 for token in token_dict[i]:
                     _string += f"({token.type}, {token.lexeme}) "
-                file.write(f"{i + 1}.\t{_string}\n")
+                file.write(f"{i}.\t{_string}\n")
             except KeyError:
                 # if one line hasn't any token
                 pass

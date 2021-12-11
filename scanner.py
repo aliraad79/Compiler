@@ -59,7 +59,7 @@ class Scanner:
     def __init__(self):
         self.dfa_mother_state = create_dfa_tree()
         self.buffer = []
-        self.line_number = 0
+        self.line_number = 1
         self.char_pointer = 0
         self.char = ""
         self.next_char = ""

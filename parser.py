@@ -62,7 +62,7 @@ class Parser:
 
             except IllegalToken:
                 self.add_syntax_error(
-                    f"#{self.scanner.line_number + 1} : syntax error, {self.current_token.ilegal_token_message}"
+                    f"#{self.scanner.line_number} : syntax error, {self.current_token.ilegal_token_message}"
                 )
                 if self.current_token.lexeme == "$":
                     #remove orphan nodes
@@ -79,7 +79,7 @@ class Parser:
 
             except MissingToken as e:
                 self.syntax_errors.append(
-                    f"#{self.scanner.line_number + 1} : syntax error, missing {e.next_edge.parse_tree_name}"
+                    f"#{self.scanner.line_number} : syntax error, missing {e.next_edge.parse_tree_name}"
                 )
                 # walk forward in diagram
                 self.current_node = e.next_edge.next_node
