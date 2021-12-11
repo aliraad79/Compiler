@@ -31,6 +31,20 @@ class Token:
         self.type = _type
         self.lexeme = lexeme
 
+    @property
+    def parse_name(self):
+        if self.type in ["ID", "NUM"]:
+            return self.type
+        if self.type == "SYMBOL":
+            return self.lexeme[0]
+        return self.lexeme
+
+    @property
+    def ilegal_token_message(self):
+        if self.lexeme == "$":
+            return "Unexpected EOF"
+        return f'illegal {self.lexeme if self.type not in ["ID", "NUM"] else self.type}'
+
     def __str__(self):
         return f"({self.type}, {self.lexeme})"
 

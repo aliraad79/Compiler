@@ -6,5 +6,5 @@ from parser import Parser
 
 scanner = Scanner()
 parser = Parser(scanner)
-parser.start()
+parser.start_parsing()
 parser.save_to_file()

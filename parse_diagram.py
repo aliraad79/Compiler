@@ -1,11 +1,6 @@
 from scanner import Token
 from typing import List
-from utils import (
-    format_non_terminal,
-    return_firsts,
-    return_follows,
-    reverse_format_non_terminal,
-)
+from utils import format_non_terminal, return_firsts, return_follows
 
 
 class IllegalToken(Exception):
@@ -17,22 +12,11 @@ class MissingToken(Exception):
         self.next_edge = next_edge
 
 
-def check_if_in_list(token: Token, list, epsilon=False):
-    if epsilon:
-        if "ε" in list:
-            return True
-        elif token.type in ["ID", "NUM"]:
-            return token.type in list
-        elif token.type == "SYMBOL":
-            return token.lexeme[0] in list
-        return token.lexeme in list
+def check_if_in_list(token: Token, list, include_epsilon=False):
+    if include_epsilon and "ε" in list:
+        return True
     else:
-        if token.type in ["ID", "NUM"]:
-            return token.type in list
-        elif token.type == "SYMBOL":
-            return token.lexeme[0] in list
-        else:
-            return token.lexeme in list
+        return token.parse_name in list
 
 
 class DiagramEdge:
@@ -44,11 +28,11 @@ class DiagramEdge:
         self.firsts: List[str] = None
         self.non_terminal = non_terminal
 
-    def match(self, other: Token, stack: List[str], current_diagram_name):
+    def match(self, other: Token, current_diagram_name):
         if self.non_terminal:
-            if check_if_in_list(other, first_dict[self.non_terminal], epsilon=True):
-                stack.append(self.non_terminal)
-                return True
+            return check_if_in_list(
+                other, first_dict[self.non_terminal], include_epsilon=True
+            )
 
         elif self.terminal == "ε":
             return check_if_in_list(other, follows_dict[current_diagram_name])
@@ -58,7 +42,7 @@ class DiagramEdge:
 
         return False
 
-    def get_node_name(self):
+    def get_next_node_name(self):
         if self.non_terminal:
             return format_non_terminal(self.non_terminal)
         elif self.terminal == "ε":
@@ -75,31 +59,35 @@ class DiagramNode:
         self.next_edges = next_edges
         self.is_first = is_first
 
-    def next_diagram_tree_node(
-        self,
-        other: Token,
-        stack: List[str],
-        current_diagram_name: str,
-    ):
+    def next_diagram_tree_node(self, other: Token, current_diagram_name: str):
+
+        # save terminal and non terminal edges for error handling
         non_terminal_edge = None
         terminal_edge = None
 
+        # loop through edges
         for i in self.next_edges:
             if i.non_terminal:
                 non_terminal_edge: DiagramEdge = i
             elif i.terminal and i.terminal != "ε":
                 terminal_edge: DiagramEdge = i
-            if i.match(other, stack, current_diagram_name):
+            if i.match(other, current_diagram_name):
+                is_pure_terminal = (
+                    i.terminal != None and i.terminal != "ε" and i.terminal != "$"
+                )
+                return_node_name = i.non_terminal if i.non_terminal else None
                 return (
                     i.next_node,
-                    (i.terminal != None and i.terminal != "ε" and i.terminal != "$"),
-                    i.get_node_name(),
+                    is_pure_terminal,
+                    i.get_next_node_name(),
+                    return_node_name,
                 )
+        # End of diagram
         if len(self.next_edges) == 0:
-            return None, False, None
+            return None, False, None, None
 
         # Errors
-        # miss the terminal
+        # miss the terminal at the bigging of diagram
         if terminal_edge and not self.is_first:
             raise MissingToken(terminal_edge)
 
@@ -108,6 +96,7 @@ class DiagramNode:
             if non_terminal_edge and non_terminal_edge.non_terminal
             else current_diagram_name
         ]
+        # if in follows
         if check_if_in_list(other, follows):
             raise MissingToken(
                 non_terminal_edge if non_terminal_edge else self.next_edges[0]

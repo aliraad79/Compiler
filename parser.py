@@ -6,7 +6,12 @@ from utils import (
     print_parser_log,
     reverse_format_non_terminal,
 )
-from parse_tree import get_transation_diagrams, DiagramNode, IllegalToken, MissingToken
+from parse_diagram import (
+    get_transation_diagrams,
+    DiagramNode,
+    IllegalToken,
+    MissingToken,
+)
 from anytree import Node
 
 
@@ -15,8 +20,7 @@ class Parser:
         self.scanner = scanner
 
         self.transation_diagrams: dict[str, DiagramNode] = get_transation_diagrams()
-        self.nodes_buffer: List[str] = []
-        self.return_nodes: List[Tuple[DiagramNode, DiagramNode]] = []
+        self.past_node_stack: List[Tuple[DiagramNode, DiagramNode]] = []
         self.parse_tree_root = Node("Program")
 
         self.current_token: Token = None
@@ -32,69 +36,73 @@ class Parser:
         write_parse_tree_to_file(self.parse_tree_root)
 
     def log(self):
-        print_parser_log(self.current_node, self.current_token, self.return_nodes)
+        print_parser_log(self.current_node, self.current_token, self.past_node_stack)
 
-    def start(self):
+    def add_syntax_error(self, message):
+        self.syntax_errors.append(message)
+
+    def start_parsing(self):
         self.get_next_token()
         current_parse_node = self.parse_tree_root
         terminal = False
         while True:
             # self.log()
             try:
+                # walk through parse diagram
                 (
                     self.current_node,
                     terminal,
                     next_parse_node_name,
+                    return_node_name,
                 ) = self.current_node.next_diagram_tree_node(
                     self.current_token,
-                    self.nodes_buffer,
                     reverse_format_non_terminal(current_parse_node.name),
                 )
 
             except IllegalToken:
+                self.add_syntax_error(
+                    f"#{self.scanner.line_number + 1} : syntax error, {self.current_token.ilegal_token_message}"
+                )
                 if self.current_token.lexeme == "$":
-                    self.syntax_errors.append(
-                        f"#{self.scanner.line_number + 1} : syntax error, Unexpected EOF"
-                    )
+                    #remove orphan nodes
                     current_parse_node.parent.children = [
                         i
                         for i in current_parse_node.parent.children
                         if i != current_parse_node
                     ]
                     break
-                self.syntax_errors.append(
-                    f"#{self.scanner.line_number + 1} : syntax error, illegal {self.current_token.lexeme if self.current_token.type not in ['ID', 'NUM'] else self.current_token.type}"
-                )
+                
+                # get next token after illegal token happens
                 self.get_next_token()
-                next_parse_node_name = None
                 continue
 
             except MissingToken as e:
                 self.syntax_errors.append(
-                    f"#{self.scanner.line_number + 1} : syntax error, missing {e.next_edge.get_node_name()}"
+                    f"#{self.scanner.line_number + 1} : syntax error, missing {e.next_edge.get_next_node_name()}"
                 )
+                # walk forward in diagram
                 self.current_node = e.next_edge.next_node
-                next_parse_node_name = None
                 continue
-
+            
+            # can walk in diagram tree 
             if next_parse_node_name:
                 current_parse_node = Node(
                     next_parse_node_name if not terminal else self.current_token,
                     current_parse_node,
                 )
+            # fall back to last diagram
             else:
                 current_parse_node = current_parse_node.parent
 
             if not self.current_node:
                 current_parse_node = current_parse_node.parent
 
-            if len(self.nodes_buffer) != 0:
+            # go deep to another diagram
+            if return_node_name:
                 if len(self.current_node.next_edges) != 0:
-                    self.return_nodes.append((self.current_node, current_parse_node))
+                    self.past_node_stack.append((self.current_node, current_parse_node))
 
-                self.current_node = self.transation_diagrams[
-                    self.nodes_buffer.pop(len(self.nodes_buffer) - 1)
-                ]
+                self.current_node = self.transation_diagrams[return_node_name]
 
             # terminal is matched
             if terminal:
@@ -103,12 +111,12 @@ class Parser:
                 terminal = False
 
             # end of parse
-            if self.current_token.lexeme == "$" and len(self.return_nodes) == 0:
+            if self.current_token.lexeme == "$" and len(self.past_node_stack) == 0:
                 break
 
             # move back current_node pointer to last return node
             if not self.current_node:
-                self.current_node, current_parse_node = self.return_nodes.pop(
-                    len(self.return_nodes) - 1
+                self.current_node, current_parse_node = self.past_node_stack.pop(
+                    len(self.past_node_stack) - 1
                 )
                 current_parse_node = current_parse_node.parent
