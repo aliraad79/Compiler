@@ -154,7 +154,7 @@ class Scanner:
     def save_to_file(self):
         add_tokens_to_file(self.line_number, token_dict)
         add_symbols_to_file(symbol_list)
-        add_errors_to_file(self.line_number, error_dict)
+        add_lexical_errors_to_file(self.line_number, error_dict)
 
     def get_type_or_error(self, token):
         if token == "":

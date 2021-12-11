@@ -1,7 +1,7 @@
 from anytree.render import RenderTree
 
 
-def add_errors_to_file(line_number, error_dict):
+def add_lexical_errors_to_file(line_number, error_dict):
     with open("lexical_errors.txt", "w") as file:
         # No error
         if not bool(error_dict):
@@ -21,11 +21,18 @@ def add_errors_to_file(line_number, error_dict):
 
 def add_symbols_to_file(symbols):
     # Add all symbols to list
-    for i in ["if", "else", "void", "int", "repeat", "break", "until", "return"]:
-        if i not in symbols:
-            symbols.append(i)
+    keyword_symbols = [
+        "if",
+        "else",
+        "void",
+        "int",
+        "repeat",
+        "break",
+        "until",
+        "return",
+    ]
     with open("symbol_table.txt", "w") as file:
-        for counter, symbol in enumerate(symbols):
+        for counter, symbol in enumerate(set(symbols + keyword_symbols)):
             file.write(f"{counter + 1}.\t{symbol}\n")
 
 
@@ -95,8 +102,8 @@ def return_firsts():
 
 
 def return_follows():
-    try :
-        all_follows =  list(map(str.split, open("follows.txt", "r").readlines()))
+    try:
+        all_follows = list(map(str.split, open("follows.txt", "r").readlines()))
     except FileNotFoundError:
-        all_follows =  list(map(str.split, open("../follows.txt", "r").readlines()))
+        all_follows = list(map(str.split, open("../follows.txt", "r").readlines()))
     return {str(line[0]).lower(): line[1:] for line in all_follows}
