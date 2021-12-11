@@ -69,10 +69,10 @@ def write_parse_tree_to_file(parse_tree):
             file.write(f"{pre}{node.name}\n")
 
 
-def print_parser_log(current_node, curret_token, return_nodes):
+def print_parser_log(current_node, curret_token, past_node_stack):
     print("________________________________________________")
-    print(f"Return Nodes => {[(i, j.name) for i,j in return_nodes]}")
-    print(f"current Node ==> {current_node}")
+    print(f"Past Nodes stack => {[(i, j.name) for i,j in past_node_stack]}")
+    print(f"Current Node ==> {current_node}")
     print(f"Current token ==> {curret_token}")
 
 
@@ -89,7 +89,7 @@ def reverse_format_non_terminal(non_terminal: str):
 def return_firsts():
     try:
         all_firsts = list(map(str.split, open("firsts.txt", "r").readlines()))
-    except:
+    except FileNotFoundError:
         all_firsts = list(map(str.split, open("../firsts.txt", "r").readlines()))
     return {str(line[0]).lower(): line[1:] for line in all_firsts}
 

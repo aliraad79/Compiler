@@ -45,8 +45,9 @@ class Parser:
         self.get_next_token()
         current_parse_node = self.parse_tree_root
         terminal = False
+
+        # TODO refactore this function
         while True:
-            # self.log()
             try:
                 # walk through parse diagram
                 (
@@ -78,7 +79,7 @@ class Parser:
 
             except MissingToken as e:
                 self.syntax_errors.append(
-                    f"#{self.scanner.line_number + 1} : syntax error, missing {e.next_edge.get_next_node_name()}"
+                    f"#{self.scanner.line_number + 1} : syntax error, missing {e.next_edge.parse_tree_name}"
                 )
                 # walk forward in diagram
                 self.current_node = e.next_edge.next_node

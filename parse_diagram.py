@@ -12,11 +12,12 @@ class MissingToken(Exception):
         self.next_edge = next_edge
 
 
-def check_if_in_list(token: Token, list, include_epsilon=False):
-    if include_epsilon and "ε" in list:
-        return True
-    else:
-        return token.parse_name in list
+def check_token_in_list(token: Token, target_list, include_epsilon=False):
+    return (
+        True
+        if include_epsilon and "ε" in target_list
+        else token.parse_name in target_list
+    )
 
 
 class DiagramEdge:
@@ -29,26 +30,28 @@ class DiagramEdge:
         self.non_terminal = non_terminal
 
     def match(self, other: Token, current_diagram_name):
+        """
+        Can match token to link
+        """
+
         if self.non_terminal:
-            return check_if_in_list(
+            return check_token_in_list(
                 other, first_dict[self.non_terminal], include_epsilon=True
             )
 
         elif self.terminal == "ε":
-            return check_if_in_list(other, follows_dict[current_diagram_name])
+            return check_token_in_list(other, follows_dict[current_diagram_name])
 
         elif self.terminal:
             return other.lexeme == self.terminal or other.type == self.terminal
 
         return False
 
-    def get_next_node_name(self):
+    @property
+    def parse_tree_name(self):
         if self.non_terminal:
             return format_non_terminal(self.non_terminal)
-        elif self.terminal == "ε":
-            return "epsilon"
-        elif self.terminal:
-            return self.terminal
+        return "epsilon" if self.terminal == "ε" else self.terminal
 
     def __repr__(self):
         return f"Edge<{self.terminal if self.terminal else self.non_terminal}>"
@@ -79,7 +82,7 @@ class DiagramNode:
                 return (
                     i.next_node,
                     is_pure_terminal,
-                    i.get_next_node_name(),
+                    i.parse_tree_name,
                     return_node_name,
                 )
         # End of diagram
@@ -87,7 +90,7 @@ class DiagramNode:
             return None, False, None, None
 
         # Errors
-        # miss the terminal at the bigging of diagram
+        # miss the terminal at the beginning of diagram
         if terminal_edge and not self.is_first:
             raise MissingToken(terminal_edge)
 
@@ -97,7 +100,7 @@ class DiagramNode:
             else current_diagram_name
         ]
         # if in follows
-        if check_if_in_list(other, follows):
+        if check_token_in_list(other, follows):
             raise MissingToken(
                 non_terminal_edge if non_terminal_edge else self.next_edges[0]
             )
