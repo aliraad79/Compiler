@@ -27,6 +27,9 @@ class Parser:
         self.current_node: DiagramNode = self.transation_diagrams["program"]
 
         self.syntax_errors: List = []
+        self.parse_node: Node = self.parse_tree_root
+
+        self.get_next_token()
 
     def get_next_token(self):
         self.current_token = self.scanner.get_next_token()
@@ -42,9 +45,7 @@ class Parser:
         self.syntax_errors.append(message)
 
     def start_parsing(self):
-        self.get_next_token()
-        current_parse_node = self.parse_tree_root
-        terminal = False
+        found_terminal = False
 
         # TODO refactore this function
         while True:
@@ -52,12 +53,12 @@ class Parser:
                 # walk through parse diagram
                 (
                     self.current_node,
-                    terminal,
+                    found_terminal,
                     next_parse_node_name,
                     return_node_name,
                 ) = self.current_node.next_diagram_tree_node(
                     self.current_token,
-                    reverse_format_non_terminal(current_parse_node.name),
+                    reverse_format_non_terminal(self.parse_node.name),
                 )
 
             except IllegalToken:
@@ -65,14 +66,14 @@ class Parser:
                     f"#{self.scanner.line_number} : syntax error, {self.current_token.ilegal_token_message}"
                 )
                 if self.current_token.lexeme == "$":
-                    #remove orphan nodes
-                    current_parse_node.parent.children = [
+                    # remove orphan nodes
+                    self.parse_node.parent.children = [
                         i
-                        for i in current_parse_node.parent.children
-                        if i != current_parse_node
+                        for i in self.parse_node.parent.children
+                        if i != self.parse_node
                     ]
                     break
-                
+
                 # get next token after illegal token happens
                 self.get_next_token()
                 continue
@@ -84,34 +85,34 @@ class Parser:
                 # walk forward in diagram
                 self.current_node = e.next_edge.next_node
                 continue
-            
-            # can walk in diagram tree 
+
+            # can walk in diagram tree
             if next_parse_node_name:
-                current_parse_node = Node(
-                    next_parse_node_name if not terminal else self.current_token,
-                    current_parse_node,
+                self.parse_node = Node(
+                    next_parse_node_name if not found_terminal else self.current_token,
+                    self.parse_node,
                 )
             # fall back to last diagram
             else:
-                current_parse_node = current_parse_node.parent
+                self.parse_node = self.parse_node.parent
 
             if not self.current_node:
-                if not current_parse_node:
+                if not self.parse_node:
                     break
-                current_parse_node = current_parse_node.parent
+                self.parse_node = self.parse_node.parent
 
             # go deep to another diagram
             if return_node_name:
                 if len(self.current_node.next_edges) != 0:
-                    self.past_node_stack.append((self.current_node, current_parse_node))
+                    self.past_node_stack.append((self.current_node, self.parse_node))
 
                 self.current_node = self.transation_diagrams[return_node_name]
 
             # terminal is matched
-            if terminal:
-                current_parse_node = current_parse_node.parent
+            if found_terminal:
+                self.parse_node = self.parse_node.parent
                 self.get_next_token()
-                terminal = False
+                found_terminal = False
 
             # end of parse
             if self.current_token.lexeme == "$" and len(self.past_node_stack) == 0:
@@ -119,7 +120,7 @@ class Parser:
 
             # move back current_node pointer to last return node
             if not self.current_node:
-                self.current_node, current_parse_node = self.past_node_stack.pop(
+                self.current_node, self.parse_node = self.past_node_stack.pop(
                     len(self.past_node_stack) - 1
                 )
-                current_parse_node = current_parse_node.parent
+                self.parse_node = self.parse_node.parent
