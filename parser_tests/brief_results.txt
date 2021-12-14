@@ -29,3 +29,34 @@
 
 
 =====================================>>>>> Running Test Tests/T10...
+
+
+=====================================>>>>> Running Test Tests/T12...
+
+
+=====================================>>>>> Running Test Tests/T13...
+
+
+=====================================>>>>> Running Test Tests/T14...
+
+
+=====================================>>>>> Running Test Tests/T15...
+
+
+=====================================>>>>> Running Test Tests/T16...
+Files ./parse_tree.txt and Tests/T16/parse_tree.txt differ
+Files ./syntax_errors.txt and Tests/T16/syntax_errors.txt differ
+
+
+=====================================>>>>> Running Test Tests/T17...
+
+
+=====================================>>>>> Running Test Tests/T18...
+
+
+=====================================>>>>> Running Test Tests/T19...
+
+
+=====================================>>>>> Running Test Tests/T20...
+Files ./parse_tree.txt and Tests/T20/parse_tree.txt differ
+Files ./syntax_errors.txt and Tests/T20/syntax_errors.txt differ

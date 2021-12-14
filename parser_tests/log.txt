@@ -109,3 +109,131 @@
 
 
               *** syntax_errors.txt diffrences ***
+
+
+
+
+=====================================>>>>> Running Test Tests/T12...
+
+
+              *** parse_tree.txt diffrences ***
+
+
+              *** syntax_errors.txt diffrences ***
+
+
+
+
+=====================================>>>>> Running Test Tests/T13...
+
+
+              *** parse_tree.txt diffrences ***
+
+
+              *** syntax_errors.txt diffrences ***
+
+
+
+
+=====================================>>>>> Running Test Tests/T14...
+
+
+              *** parse_tree.txt diffrences ***
+
+
+              *** syntax_errors.txt diffrences ***
+
+
+
+
+=====================================>>>>> Running Test Tests/T15...
+
+
+              *** parse_tree.txt diffrences ***
+
+
+              *** syntax_errors.txt diffrences ***
+
+
+
+
+=====================================>>>>> Running Test Tests/T16...
+
+
+              *** parse_tree.txt diffrences ***
+│   │               │   │       │           ├── Relop									    <
+│   │               │   │       │           └── Additive-expression							    <
+│   │               │   │       │               ├── Term								    <
+│   │               │   │       │               │   ├── Factor								    <
+│   │               │   │       │               │   │   └── (NUM, 2)							    <
+│   │               │   │       │               │   └── G								    <
+│   │               │   │       │               │       └── epsilon							    <
+│   │               │   │       │               └── D									    <
+
+
+              *** syntax_errors.txt diffrences ***
+#4 : syntax error, missing <												    |	#4 : syntax error, illegal NUM																
+
+
+
+
+=====================================>>>>> Running Test Tests/T17...
+
+
+              *** parse_tree.txt diffrences ***
+
+
+              *** syntax_errors.txt diffrences ***
+
+
+
+
+=====================================>>>>> Running Test Tests/T18...
+
+
+              *** parse_tree.txt diffrences ***
+
+
+              *** syntax_errors.txt diffrences ***
+
+
+
+
+=====================================>>>>> Running Test Tests/T19...
+
+
+              *** parse_tree.txt diffrences ***
+
+
+              *** syntax_errors.txt diffrences ***
+
+
+
+
+=====================================>>>>> Running Test Tests/T20...
+
+
+              *** parse_tree.txt diffrences ***
+│   │               │       │       │                   │   │       ├── (SYMBOL, *)					    <
+│   │               │       │       │                   │   │       ├── Factor						    <
+│   │               │       │       │                   │   │       │   └── (NUM, 2)					    <
+│   │               │       │       │                   │   │       └── G						    <
+│   │               │                                       │       │       ├── (SYMBOL, =)				    |	│   │               │                                       │       │       └── (SYMBOL, =)																
+│   │               │                                       │       │       └── Expression				    <
+│   │               │                                       │       │           └── Simple-expression-zegond		    <
+│   │               │                                       │       │               ├── Additive-expression-zegond	    <
+│   │               │                                       │       │               │   ├── Term-zegond			    <
+│   │               │                                       │       │               │   │   ├── Factor-zegond		    <
+│   │               │                                       │       │               │   │   │   └── (NUM, 123)		    <
+│   │               │                                       │       │               │   │   └── G			    <
+│   │               │                                       │       │               │   │       └── epsilon		    <
+│   │               │                                       │       │               │   └── D				    <
+│   │               │                                       │       │               │       └── epsilon			    <
+│   │               │                                       │       │               └── C				    <
+│   │               │                                       │       │                   └── epsilon			    <
+
+
+              *** syntax_errors.txt diffrences ***
+#4 : syntax error, illegal NUM												    |	#1 : syntax error, illegal =																
+															    >	#5 : syntax error, illegal NUM																
+															    >	#12 : syntax error, missing Expression																
