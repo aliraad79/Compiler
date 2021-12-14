@@ -96,6 +96,8 @@ class Parser:
                 current_parse_node = current_parse_node.parent
 
             if not self.current_node:
+                if not current_parse_node:
+                    break
                 current_parse_node = current_parse_node.parent
 
             # go deep to another diagram
