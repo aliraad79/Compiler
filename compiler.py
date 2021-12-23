@@ -3,8 +3,10 @@
 
 from scanner import Scanner
 from parser import Parser
+from icg import IntermidateCodeGenerator
 
 scanner = Scanner()
-parser = Parser(scanner)
+icg = IntermidateCodeGenerator()
+parser = Parser(scanner, icg)
 parser.start_parsing()
-parser.save_to_file()
+icg.save_to_file()

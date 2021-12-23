@@ -1,4 +1,5 @@
 from typing import List, Tuple
+from icg import IntermidateCodeGenerator
 from scanner import Scanner, Token
 from utils import (
     write_parse_tree_to_file,
@@ -16,7 +17,7 @@ from anytree import Node
 
 
 class Parser:
-    def __init__(self, scanner: Scanner):
+    def __init__(self, scanner: Scanner, icg: IntermidateCodeGenerator):
         self.scanner = scanner
 
         self.transation_diagrams: dict[str, DiagramNode] = get_transation_diagrams()
@@ -28,6 +29,8 @@ class Parser:
 
         self.syntax_errors: List = []
         self.parse_node: Node = self.parse_tree_root
+
+        self.icg = icg
 
         self.get_next_token()
 

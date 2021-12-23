@@ -107,3 +107,9 @@ def return_follows():
     except FileNotFoundError:
         all_follows = list(map(str.split, open("../follows.txt", "r").readlines()))
     return {str(line[0]).lower(): line[1:] for line in all_follows}
+
+
+def write_three_address_codes_to_file(addresses):
+    with open("output.txt", "w") as file:
+        for address in addresses:
+            file.write(f"{address}\n")
