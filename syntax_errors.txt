@@ -1,5 +1,0 @@
-#2 : syntax error, illegal ID
-#2 : syntax error, missing Param
-#25 : syntax error, missing endif
-#25 : syntax error, illegal int
-#26 : syntax error, illegal int

@@ -1,47 +1,17 @@
-
-int function(int a, int b, c) {
-/* comment */
-// comment
-         if (a = b) {
-                                        c = b = a;
-                                 }
-         else
-               a == b;
-          endif
+void main ( void ) {
+    int a = 0;
+    // comment1
+    a = 2 + 2;
+    a = a - 3;
+    cde = a;
+    if (b /* comment2 */ == 3d) {
+        a = 3;
+        cd!e = 7;
+    }
+    else */
+    {
+        b = a < cde;
+        {cde = @2;
+    }}
+    return;/* comment 3
 }
-
-int anotherfunction(int a, int b, int c) {
-      if ( a = b) { c = b = a;}
-      else
-               a == b;
-      endif
-}
-
-int yetanotherfunction(int a, int b, int c) {
-	if ( a == b){
-                     c = b = a;}
-	else
-	a == b;
-	int d;
-	int ;
-	int =& 12& e;
-	int ; f ;
-	int 2 g;
-	int 3s2;
-	int == = * + - h;
-	int repeat i;
-	int if j;
-	int [ ( k;
-	int int l;
-	int { } m;
-	endif
-}
-
-int lastbutnotleast (int a, int b, int c) {
-	if (a == b)
-		c = b = a;
-	else
-		a = b;
-	endif
-}
-
