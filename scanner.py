@@ -5,6 +5,7 @@ from enum import Enum
 from typing import List, Tuple
 
 from dfa_tree import create_dfa_tree, State
+from symbol_table import SymbolTable
 from utils import *
 
 
@@ -51,12 +52,11 @@ class Token:
 
 # global vars
 token_dict: dict[int : List[Token]] = {}
-symbol_list: list[str] = []
 error_dict: dict[int:Tuple] = {}
 
 
 class Scanner:
-    def __init__(self):
+    def __init__(self, symbol_table:SymbolTable):
         self.dfa_mother_state = create_dfa_tree()
         self.buffer = []
         self.line_number = 1
@@ -65,6 +65,7 @@ class Scanner:
         self.next_char = ""
         self.last_comment_line_number = 0
         self.next_selected_state = None
+        self.symbol_table = symbol_table
 
     def get_next_token(self):
         # Fill char and next char with buffer otherwise get them from input file
@@ -139,8 +140,8 @@ class Scanner:
         if _type not in ["", TokenType.WHITESPACE, TokenType.COMMENT]:
             token_dict.setdefault(self.line_number, []).append(Token(_type.name, token))
             if _type in [TokenType.ID, TokenType.KEYWORD]:
-                if token not in symbol_list:
-                    symbol_list.append(token)
+                if not self.symbol_table.include(token):
+                    self.symbol_table.insert(token)
 
         if _type not in ["", TokenType.WHITESPACE, TokenType.COMMENT]:
             return Token(_type.name, token)
@@ -153,7 +154,7 @@ class Scanner:
 
     def save_to_file(self):
         add_tokens_to_file(self.line_number, token_dict)
-        add_symbols_to_file(symbol_list)
+        add_symbols_to_file(self.symbol_table.get_symbols())
         add_lexical_errors_to_file(self.line_number, error_dict)
 
     def get_type_or_error(self, token):
