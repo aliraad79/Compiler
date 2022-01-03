@@ -23,6 +23,8 @@ class IntermidateCodeGenerator:
             self.pid(symbol_table.get_address(current_token_lexeme))
         if action_symbol == "assign":
             self.assign()
+        if action_symbol == "pnum":
+            self.pnum(current_token_lexeme)
 
     def save_to_file(self):
         print(self.semantic_stack)
@@ -37,3 +39,6 @@ class IntermidateCodeGenerator:
         dst = self.semantic_stack.pop()
         self.three_addres_codes.append(f"(ASSIGN, {src}, {dst}, )")
         self.semantic_stack.append(dst)
+
+    def pnum(self, number_lexeme: str):
+        self.semantic_stack.append(f"#{number_lexeme}")

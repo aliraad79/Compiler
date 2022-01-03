@@ -6,7 +6,7 @@ Declaration_initial ->  Type_specifier #pid ID
 Declaration_prime ->  Fun_Declaration_prime
 Declaration_prime ->  Var_Declaration_prime
 Var_Declaration_prime ->  ;
-Var_Declaration_prime -> [ NUM ] ;
+Var_Declaration_prime -> [ #pnum NUM ] ;
 Fun_Declaration_prime ->  ( Params ) Compound_stmt
 Type_specifier ->  int
 Type_specifier ->  void
@@ -62,7 +62,7 @@ G ->  * Factor G
 G ->  ε
 Factor ->  ( Expression )
 Factor ->  #pid ID Var_call_prime
-Factor ->  NUM
+Factor ->  #pnum NUM
 Var_call_prime ->  ( Args )
 Var_call_prime ->  Var_prime
 Var_prime ->  [ Expression ]
@@ -70,7 +70,7 @@ Var_prime ->  ε
 Factor_prime ->  ( Args )
 Factor_prime ->  ε
 Factor_zegond ->  ( Expression )
-Factor_zegond ->  NUM
+Factor_zegond ->  #pnum NUM
 Args ->  Arg_list
 Args ->  ε
 Arg_list ->  Expression Arg_list_prime

@@ -210,7 +210,7 @@ def factor_zegond_diagram():
     expression_node = DiagramNode(next_edges=[expression])
     open_par = DiagramEdge(next_node=expression_node, terminal="(")
 
-    num = DiagramEdge(next_node=end, terminal="NUM")
+    num = DiagramEdge(next_node=end, terminal="NUM", action_symbol='pnum')
 
     return DiagramNode(next_edges=[open_par, num], is_first=True)
 
@@ -266,7 +266,7 @@ def factor_diagram():
     var_call_prime_node = DiagramNode(next_edges=[var_call_prime])
     _id = DiagramEdge(next_node=var_call_prime_node, terminal="ID", action_symbol="pid")
 
-    num = DiagramEdge(next_node=end, terminal="NUM")
+    num = DiagramEdge(next_node=end, terminal="NUM", action_symbol='pnum')
 
     return DiagramNode(next_edges=[open_par, num, _id], is_first=True)
 
@@ -675,7 +675,7 @@ def var_declaration_prime_diagram():
     semicolon_2_node = DiagramNode(next_edges=[semicolon_2])
     close_t = DiagramEdge(next_node=semicolon_2_node, terminal="]")
     num_node = DiagramNode(next_edges=[close_t])
-    num = DiagramEdge(next_node=num_node, terminal="NUM")
+    num = DiagramEdge(next_node=num_node, terminal="NUM", action_symbol='pnum')
     open_t_node = DiagramNode(next_edges=[num])
     open_t = DiagramEdge(next_node=open_t_node, terminal="[")
 
