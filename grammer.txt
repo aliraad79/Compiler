@@ -2,7 +2,7 @@ Program ->  Declaration_list $
 Declaration_list ->  Declaration Declaration_list
 Declaration_list ->  ε
 Declaration ->  Declaration_initial Declaration_prime
-Declaration_initial ->  Type_specifier ID
+Declaration_initial ->  Type_specifier #pid ID
 Declaration_prime ->  Fun_Declaration_prime
 Declaration_prime ->  Var_Declaration_prime
 Var_Declaration_prime ->  ;
@@ -10,7 +10,7 @@ Var_Declaration_prime -> [ NUM ] ;
 Fun_Declaration_prime ->  ( Params ) Compound_stmt
 Type_specifier ->  int
 Type_specifier ->  void
-Params ->  int ID Param_prime Param_list
+Params ->  int #pid ID Param_prime Param_list
 Params ->  void
 Param_list ->  , Param Param_list
 Param_list -> ε
@@ -36,7 +36,7 @@ Return_stmt ->  return Return_stmt_prime
 Return_stmt_prime ->  ;
 Return_stmt_prime ->  Expression ;
 Expression ->  Simple_expression_zegond
-Expression ->  ID B
+Expression ->  #pid ID B
 B ->  = Expression
 B ->  [ Expression ] H
 B ->  Simple_expression_prime
@@ -61,7 +61,7 @@ Term_zegond ->  Factor_zegond G
 G ->  * Factor G
 G ->  ε
 Factor ->  ( Expression )
-Factor ->  ID Var_call_prime
+Factor ->  #pid ID Var_call_prime
 Factor ->  NUM
 Var_call_prime ->  ( Args )
 Var_call_prime ->  Var_prime

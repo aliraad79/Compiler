@@ -56,7 +56,7 @@ error_dict: dict[int:Tuple] = {}
 
 
 class Scanner:
-    def __init__(self, symbol_table:SymbolTable):
+    def __init__(self, symbol_table: SymbolTable):
         self.dfa_mother_state = create_dfa_tree()
         self.buffer = []
         self.line_number = 1

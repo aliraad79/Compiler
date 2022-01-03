@@ -10,4 +10,3 @@ icg = IntermidateCodeGenerator()
 parser = Parser(scanner, icg)
 parser.start_parsing()
 icg.save_to_file()
-

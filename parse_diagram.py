@@ -22,12 +22,17 @@ def check_token_in_list(token: Token, target_list, include_epsilon=False):
 
 class DiagramEdge:
     def __init__(
-        self, next_node: "DiagramNode", terminal: str = None, non_terminal: str = None
+        self,
+        next_node: "DiagramNode",
+        terminal: str = None,
+        non_terminal: str = None,
+        action_symbol: str = None,
     ):
         self.next_node = next_node
         self.terminal = terminal
         self.firsts: List[str] = None
         self.non_terminal = non_terminal
+        self.action_symbol = action_symbol
 
     def match(self, other: Token, current_diagram_name):
         """
@@ -84,10 +89,11 @@ class DiagramNode:
                     is_pure_terminal,
                     i.parse_tree_name,
                     return_node_name,
+                    i.action_symbol,
                 )
         # End of diagram
         if len(self.next_edges) == 0:
-            return None, False, None, None
+            return None, False, None, None, None
 
         # Errors
         # miss the terminal at the beginning of diagram
@@ -258,7 +264,7 @@ def factor_diagram():
 
     var_call_prime = DiagramEdge(next_node=end, non_terminal="var_call_prime")
     var_call_prime_node = DiagramNode(next_edges=[var_call_prime])
-    _id = DiagramEdge(next_node=var_call_prime_node, terminal="ID")
+    _id = DiagramEdge(next_node=var_call_prime_node, terminal="ID", action_symbol="pid")
 
     num = DiagramEdge(next_node=end, terminal="NUM")
 
@@ -439,7 +445,7 @@ def expression_diagram():
     end = DiagramNode(next_edges=[])
     _B_edge = DiagramEdge(next_node=end, non_terminal="b")
     _B_node = DiagramNode(next_edges=[_B_edge])
-    _id = DiagramEdge(next_node=_B_node, terminal="ID")
+    _id = DiagramEdge(next_node=_B_node, terminal="ID", action_symbol="pid")
 
     simple_expression_zegond = DiagramEdge(
         next_node=end, non_terminal="simple_expression_zegond"
@@ -624,7 +630,7 @@ def params_diagram():
     param_list_node = DiagramNode(next_edges=[param_list])
     param_prime = DiagramEdge(next_node=param_list_node, non_terminal="param_prime")
     param_prime_node = DiagramNode(next_edges=[param_prime])
-    _id = DiagramEdge(next_node=param_prime_node, terminal="ID")
+    _id = DiagramEdge(next_node=param_prime_node, terminal="ID", action_symbol="pid")
     id_node = DiagramNode(next_edges=[_id])
     _int = DiagramEdge(next_node=id_node, terminal="int")
 
@@ -687,7 +693,7 @@ def declaration_prime_diagram():
 
 def declaration_initial_diagram():
     end = DiagramNode(next_edges=[])
-    _id = DiagramEdge(next_node=end, terminal="ID")
+    _id = DiagramEdge(next_node=end, terminal="ID", action_symbol="pid")
     id_node = DiagramNode(next_edges=[_id])
     type_specifier = DiagramEdge(next_node=id_node, non_terminal="type_specifier")
     return DiagramNode(next_edges=[type_specifier])

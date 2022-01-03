@@ -59,10 +59,19 @@ class Parser:
                     found_terminal,
                     next_parse_node_name,
                     return_node_name,
+                    action_symbol,
                 ) = self.current_node.next_diagram_tree_node(
                     self.current_token,
                     reverse_format_non_terminal(self.parse_node.name),
                 )
+
+                if action_symbol != None:
+                    self.icg.code_gen(
+                        action_symbol,
+                        input_addres=self.scanner.symbol_table.get_address(
+                            self.current_token.lexeme
+                        ),
+                    )
 
             except IllegalToken:
                 self.add_syntax_error(
