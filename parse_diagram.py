@@ -66,6 +66,7 @@ class DiagramNode:
     def __init__(self, next_edges: List[DiagramEdge] = [], is_first: bool = False):
         self.next_edges = next_edges
         self.is_first = is_first
+        # self.action_symbol = 
 
     def next_diagram_tree_node(self, other: Token, current_diagram_name: str):
 
@@ -273,7 +274,7 @@ def factor_diagram():
 
 def G_diagram():
     end = DiagramNode(next_edges=[])
-    _G_edge = DiagramEdge(next_node=end, non_terminal="g", action_symbol='op')
+    _G_edge = DiagramEdge(next_node=end, non_terminal="g", action_symbol="op")
     _G_node = DiagramNode(next_edges=[_G_edge])
     factor = DiagramEdge(next_node=_G_node, non_terminal="factor")
     factor_node = DiagramNode(next_edges=[factor])
@@ -322,7 +323,7 @@ def addop_diagram():
 
 def D_diagram():
     end = DiagramNode(next_edges=[])
-    _D_edge = DiagramEdge(next_node=end, non_terminal="d", action_symbol='op')
+    _D_edge = DiagramEdge(next_node=end, non_terminal="d", action_symbol="op")
     _D_node = DiagramNode(next_edges=[_D_edge])
     term = DiagramEdge(next_node=_D_node, non_terminal="term")
     term_node = DiagramNode(next_edges=[term])
@@ -371,7 +372,9 @@ def relop_diagram():
 
 def C_diagram():
     end = DiagramNode(next_edges=[])
-    additive_expression = DiagramEdge(next_node=end, non_terminal="additive_expression", action_symbol='op')
+    additive_expression = DiagramEdge(
+        next_node=end, non_terminal="additive_expression", action_symbol="op"
+    )
     additive_expression_node = DiagramNode(next_edges=[additive_expression])
     relop = DiagramEdge(next_node=additive_expression_node, non_terminal="relop")
 
@@ -483,7 +486,7 @@ def return_stmt_diagram():
 
 def iteration_stmt_diagram():
     end = DiagramNode(next_edges=[])
-    close_bracket = DiagramEdge(next_node=end, terminal=")")
+    close_bracket = DiagramEdge(next_node=end, terminal=")", action_symbol="until")
     close_bracket_node = DiagramNode(next_edges=[close_bracket])
     expression = DiagramEdge(next_node=close_bracket_node, non_terminal="expression")
     expression_node = DiagramNode(next_edges=[expression])
@@ -491,7 +494,9 @@ def iteration_stmt_diagram():
     open_bracket_node = DiagramNode(next_edges=[open_bracket])
     until = DiagramEdge(next_node=open_bracket_node, terminal="until")
     until_node = DiagramNode(next_edges=[until])
-    statement = DiagramEdge(next_node=until_node, non_terminal="statement")
+    statement = DiagramEdge(
+        next_node=until_node, non_terminal="statement", action_symbol="label"
+    )
     statement_node = DiagramNode(next_edges=[statement])
     repeat = DiagramEdge(next_node=statement_node, terminal="repeat")
 

@@ -29,12 +29,17 @@ class IntermidateCodeGenerator:
             self.add_op(current_token_lexeme)
         if action_symbol == "op":
             self.op()
+        if action_symbol == "label":
+            self.label()
+        if action_symbol == "until":
+            self.until()
 
     def save_to_file(self):
         print(self.semantic_stack)
         print(self.three_addres_codes)
         write_three_address_codes_to_file(self.three_addres_codes)
 
+    # Actions
     def pid(self, addres):
         self.semantic_stack.append(addres)
 
@@ -52,7 +57,7 @@ class IntermidateCodeGenerator:
 
     def op(self):
         operand_map = {"+": "ADD", "-": "SUB", "*": "MULT", "<": "LT", "==": "EQ"}
-        print(self.semantic_stack)
+        # print(self.semantic_stack)
 
         second_operand = self.semantic_stack.pop()
         operand = operand_map[self.semantic_stack.pop()]
@@ -64,3 +69,11 @@ class IntermidateCodeGenerator:
             f"({operand}, {first_operand}, {second_operand}, {tmp_address})"
         )
         self.semantic_stack.append(tmp_address)
+
+    def label(self):
+        self.semantic_stack.append(len(self.three_addres_codes))
+
+    def until(self):
+        condition = self.semantic_stack.pop()
+        target = self.semantic_stack.pop()
+        self.three_addres_codes.append(f"(JPF, {condition}, {target}, )")
