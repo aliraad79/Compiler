@@ -68,9 +68,8 @@ class Parser:
                 if action_symbol != None:
                     self.icg.code_gen(
                         action_symbol,
-                        input_addres=self.scanner.symbol_table.get_address(
-                            self.current_token.lexeme
-                        ),
+                        self.current_token.lexeme,
+                        self.scanner.symbol_table,
                     )
 
             except IllegalToken:

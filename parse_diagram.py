@@ -410,7 +410,9 @@ def H_diagram():
     _D_node = DiagramNode(next_edges=[_D_edge])
     _G_edge = DiagramEdge(next_node=_D_node, non_terminal="g")
 
-    expression = DiagramEdge(next_node=end, non_terminal="expression")
+    expression = DiagramEdge(
+        next_node=end, non_terminal="expression", action_symbol="assign"
+    )
     expression_node = DiagramNode(next_edges=[expression])
     equal = DiagramEdge(next_node=expression_node, terminal="=")
 
@@ -428,7 +430,9 @@ def B_diagram():
     expression_node = DiagramNode(next_edges=[expression])
     open_par = DiagramEdge(next_node=expression_node, terminal="[")
 
-    expression_2 = DiagramEdge(next_node=end, non_terminal="expression")
+    expression_2 = DiagramEdge(
+        next_node=end, non_terminal="expression", action_symbol="assign"
+    )
     expression_2_node = DiagramNode(next_edges=[expression_2])
     equal = DiagramEdge(next_node=expression_2_node, terminal="=")
 
@@ -459,7 +463,9 @@ def return_stmt_prime_diagram():
 
     semicolon_2 = DiagramEdge(next_node=end, terminal=";")
     semicolon_2_node = DiagramNode(next_edges=[semicolon_2])
-    expression = DiagramEdge(next_node=semicolon_2_node, non_terminal="expression")
+    expression = DiagramEdge(
+        next_node=semicolon_2_node, non_terminal="expression", action_symbol="assign"
+    )
 
     semicolon = DiagramEdge(next_node=end, terminal=";")
 

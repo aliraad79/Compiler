@@ -5,8 +5,10 @@ from parser import Parser
 from icg import IntermidateCodeGenerator
 from symbol_table import SymbolTable
 
-scanner = Scanner(SymbolTable())
+symbol_table = SymbolTable()
+scanner = Scanner(symbol_table)
 icg = IntermidateCodeGenerator()
 parser = Parser(scanner, icg)
 parser.start_parsing()
 icg.save_to_file()
+print(symbol_table.table)

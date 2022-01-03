@@ -34,13 +34,13 @@ Else_stmt ->  else Statement endif
 Iteration_stmt ->  repeat Statement until ( Expression )
 Return_stmt ->  return Return_stmt_prime
 Return_stmt_prime ->  ;
-Return_stmt_prime ->  Expression ;
+Return_stmt_prime ->  Expression #assign ;
 Expression ->  Simple_expression_zegond
 Expression ->  #pid ID B
-B ->  = Expression
+B ->  = Expression #assign
 B ->  [ Expression ] H
 B ->  Simple_expression_prime
-H ->  = Expression
+H ->  = Expression #assign
 H ->  G D C
 Simple_expression_zegond ->  Additive_expression_zegond C
 Simple_expression_prime ->  Additive_expression_prime C
