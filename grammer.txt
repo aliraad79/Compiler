@@ -44,21 +44,21 @@ H ->  = Expression #assign
 H ->  G D C
 Simple_expression_zegond ->  Additive_expression_zegond C
 Simple_expression_prime ->  Additive_expression_prime C
-C ->  Relop Additive_expression
+C ->  Relop Additive_expression #op
 C ->  ε
-Relop ->  <
-Relop -> = =
+Relop -> #add_op <
+Relop -> #add_op = =
 Additive_expression ->  Term D
 Additive_expression_prime ->  Term_prime D
 Additive_expression_zegond ->  Term_zegond D
-D ->  Addop Term D
+D ->  Addop Term #op D
 D -> ε
-Addop ->  +
-Addop ->  -
+Addop ->  #add_op +
+Addop ->  #add_op -
 Term ->  Factor G
 Term_prime ->  Factor_prime G
 Term_zegond ->  Factor_zegond G
-G ->  * Factor G
+G ->  #add_op * Factor #op G
 G ->  ε
 Factor ->  ( Expression )
 Factor ->  #pid ID Var_call_prime

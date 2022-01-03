@@ -25,6 +25,10 @@ class IntermidateCodeGenerator:
             self.assign()
         if action_symbol == "pnum":
             self.pnum(current_token_lexeme)
+        if action_symbol == "add_op":
+            self.add_op(current_token_lexeme)
+        if action_symbol == "op":
+            self.op()
 
     def save_to_file(self):
         print(self.semantic_stack)
@@ -42,3 +46,21 @@ class IntermidateCodeGenerator:
 
     def pnum(self, number_lexeme: str):
         self.semantic_stack.append(f"#{number_lexeme}")
+
+    def add_op(self, operand_lexeme: str):
+        self.semantic_stack.append(operand_lexeme)
+
+    def op(self):
+        operand_map = {"+": "ADD", "-": "SUB", "*": "MULT", "<": "LT", "==": "EQ"}
+        print(self.semantic_stack)
+
+        second_operand = self.semantic_stack.pop()
+        operand = operand_map[self.semantic_stack.pop()]
+        first_operand = self.semantic_stack.pop()
+
+        tmp_address = self.get_temp()
+
+        self.three_addres_codes.append(
+            f"({operand}, {first_operand}, {second_operand}, {tmp_address})"
+        )
+        self.semantic_stack.append(tmp_address)
