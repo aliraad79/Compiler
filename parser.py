@@ -55,18 +55,20 @@ class Parser:
             try:
                 # walk through parse diagram
                 (
-                    self.current_node,
+                    next_edge,
                     found_terminal,
-                    next_parse_node_name,
                     return_node_name,
-                    action_symbol,
                 ) = self.current_node.next_diagram_tree_node(
                     self.current_token,
                     reverse_format_non_terminal(self.parse_node.name),
                 )
 
-                if action_symbol != None:
-                    self.icg.code_gen(action_symbol, self.current_token.lexeme)
+                if next_edge != None:
+                    self.current_node = next_edge.next_node
+                    next_parse_node_name = next_edge.parse_tree_name
+                    action_symbol = next_edge.action_symbol
+                else:
+                    self.current_node = next_parse_node_name = action_symbol = None
 
             except IllegalToken:
                 self.add_syntax_error(
@@ -92,6 +94,10 @@ class Parser:
                 # walk forward in diagram
                 self.current_node = e.next_edge.next_node
                 continue
+
+            # call code gen when reach action symbol
+            if action_symbol != None:
+                self.icg.code_gen(action_symbol, self.current_token.lexeme)
 
             # can walk in diagram tree
             if next_parse_node_name:

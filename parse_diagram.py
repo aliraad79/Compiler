@@ -76,25 +76,21 @@ class DiagramNode:
 
         # loop through edges
         for i in self.next_edges:
+            # set terminal and non-terminal edges for further error handling
             if i.non_terminal:
                 non_terminal_edge: DiagramEdge = i
             elif i.terminal and i.terminal != "ε":
                 terminal_edge: DiagramEdge = i
+
             if i.match(other, current_diagram_name):
                 is_pure_terminal = (
                     i.terminal != None and i.terminal != "ε" and i.terminal != "$"
                 )
                 return_node_name = i.non_terminal if i.non_terminal else None
-                return (
-                    i.next_node,
-                    is_pure_terminal,
-                    i.parse_tree_name,
-                    return_node_name,
-                    i.action_symbol,
-                )
+                return i, is_pure_terminal, return_node_name
         # End of diagram
         if len(self.next_edges) == 0:
-            return None, False, None, None, None
+            return None, False, None
 
         # Errors
         # miss the terminal at the beginning of diagram
