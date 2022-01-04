@@ -43,7 +43,6 @@ class IntermidateCodeGenerator:
         src = self.semantic_stack.pop()
         dst = self.semantic_stack.pop()
         self.three_addres_codes.append(f"(ASSIGN, {src}, {dst}, )")
-        self.semantic_stack.append(dst)
 
     def pnum(self, number_lexeme: str):
         self.semantic_stack.append(f"#{number_lexeme}")
@@ -67,7 +66,7 @@ class IntermidateCodeGenerator:
         self.semantic_stack.append(tmp_address)
 
     def label(self):
-        self.semantic_stack.append(len(self.three_addres_codes))
+        self.semantic_stack.append(len(self.three_addres_codes) + 1)
 
     def until(self):
         condition = self.semantic_stack.pop()
