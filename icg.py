@@ -36,7 +36,6 @@ class IntermidateCodeGenerator:
 
     def save_to_file(self):
         print(self.semantic_stack)
-        print(self.three_addres_codes)
         write_three_address_codes_to_file(self.three_addres_codes)
 
     # Actions

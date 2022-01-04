@@ -66,7 +66,7 @@ class DiagramNode:
     def __init__(self, next_edges: List[DiagramEdge] = [], is_first: bool = False):
         self.next_edges = next_edges
         self.is_first = is_first
-        # self.action_symbol = 
+        # self.action_symbol =
 
     def next_diagram_tree_node(self, other: Token, current_diagram_name: str):
 
@@ -372,8 +372,11 @@ def relop_diagram():
 
 def C_diagram():
     end = DiagramNode(next_edges=[])
+
+    dummy_edge = DiagramEdge(next_node=end, terminal="ε", action_symbol="op")
+    dummy_node = DiagramNode(next_edges=[dummy_edge])
     additive_expression = DiagramEdge(
-        next_node=end, non_terminal="additive_expression", action_symbol="op"
+        next_node=dummy_node, non_terminal="additive_expression"
     )
     additive_expression_node = DiagramNode(next_edges=[additive_expression])
     relop = DiagramEdge(next_node=additive_expression_node, non_terminal="relop")
@@ -413,9 +416,9 @@ def H_diagram():
     _D_node = DiagramNode(next_edges=[_D_edge])
     _G_edge = DiagramEdge(next_node=_D_node, non_terminal="g")
 
-    expression = DiagramEdge(
-        next_node=end, non_terminal="expression", action_symbol="assign"
-    )
+    dummy_edge = DiagramEdge(next_node=end, terminal="ε", action_symbol="assign")
+    dummy_node = DiagramNode(next_edges=[dummy_edge])
+    expression = DiagramEdge(next_node=dummy_node, non_terminal="expression")
     expression_node = DiagramNode(next_edges=[expression])
     equal = DiagramEdge(next_node=expression_node, terminal="=")
 
@@ -433,11 +436,11 @@ def B_diagram():
     expression_node = DiagramNode(next_edges=[expression])
     open_par = DiagramEdge(next_node=expression_node, terminal="[")
 
-    expression_2 = DiagramEdge(
-        next_node=end, non_terminal="expression", action_symbol="assign"
-    )
-    expression_2_node = DiagramNode(next_edges=[expression_2])
-    equal = DiagramEdge(next_node=expression_2_node, terminal="=")
+    dummy_edge = DiagramEdge(next_node=end, terminal="ε", action_symbol="assign")
+    dummy_node = DiagramNode(next_edges=[dummy_edge])
+    expression = DiagramEdge(next_node=dummy_node, non_terminal="expression")
+    expression_node = DiagramNode(next_edges=[expression])
+    equal = DiagramEdge(next_node=expression_node, terminal="=")
 
     simple_expression_prime = DiagramEdge(
         next_node=end, non_terminal="simple_expression_prime"
