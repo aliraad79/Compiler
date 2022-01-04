@@ -1,4 +1,5 @@
 from typing import Dict, List
+from utils import add_symbols_to_file
 
 
 class SymbolTable:
@@ -18,3 +19,6 @@ class SymbolTable:
 
     def get_symbols(self) -> List[str]:
         return list(self.table.keys())
+
+    def save_to_file(self) -> None:
+        add_symbols_to_file(self.get_symbols())

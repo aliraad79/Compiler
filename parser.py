@@ -66,11 +66,7 @@ class Parser:
                 )
 
                 if action_symbol != None:
-                    self.icg.code_gen(
-                        action_symbol,
-                        self.current_token.lexeme,
-                        self.scanner.symbol_table,
-                    )
+                    self.icg.code_gen(action_symbol, self.current_token.lexeme)
 
             except IllegalToken:
                 self.add_syntax_error(

@@ -3,24 +3,21 @@ from utils import write_three_address_codes_to_file
 
 
 class IntermidateCodeGenerator:
-    def __init__(self) -> None:
+    def __init__(self, symbol_table: SymbolTable) -> None:
         self.semantic_stack = []
         self.three_addres_codes = []
         self.current_temp_memory_address = 500
+
+        self.symbol_table = symbol_table
 
     def get_temp(self):
         t = self.current_temp_memory_address
         self.current_temp_memory_address += 4
         return t
 
-    def code_gen(
-        self,
-        action_symbol,
-        current_token_lexeme: str,
-        symbol_table: SymbolTable,
-    ):
+    def code_gen(self, action_symbol, current_token_lexeme: str):
         if action_symbol == "pid":
-            self.pid(symbol_table.get_address(current_token_lexeme))
+            self.pid(self.symbol_table.get_address(current_token_lexeme))
         if action_symbol == "assign":
             self.assign()
         if action_symbol == "pnum":

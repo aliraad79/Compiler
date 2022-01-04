@@ -7,7 +7,7 @@ from symbol_table import SymbolTable
 
 symbol_table = SymbolTable()
 scanner = Scanner(symbol_table)
-icg = IntermidateCodeGenerator()
+icg = IntermidateCodeGenerator(symbol_table)
 parser = Parser(scanner, icg)
 parser.start_parsing()
 icg.save_to_file()
