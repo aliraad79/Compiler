@@ -1,3 +1,4 @@
+from scanner import Token, TokenType
 from symbol_table import SymbolTable
 from utils import write_three_address_codes_to_file
 
@@ -10,15 +11,14 @@ class IntermidateCodeGenerator:
 
         self.symbol_table = symbol_table
 
-    def code_gen(self, action_symbol, current_token_lexeme: str):
-        if action_symbol == "pid":
-            self.pid(current_token_lexeme)
+    def code_gen(self, action_symbol, current_token: Token):
+        print("BEFORE: ", self.semantic_stack, action_symbol, current_token.lexeme)
+
+        if action_symbol == "padd":
+            self.padd(current_token)
+
         if action_symbol == "assign":
             self.assign()
-        if action_symbol == "pnum":
-            self.pnum(current_token_lexeme)
-        if action_symbol == "add_op":
-            self.add_op(current_token_lexeme)
         if action_symbol == "op":
             self.op()
         if action_symbol == "label":
@@ -34,31 +34,31 @@ class IntermidateCodeGenerator:
         if action_symbol == "save":
             self.save()
         if action_symbol == "declare_id":
-            self.declare_id(current_token_lexeme)
-        if action_symbol == "parray":
-            self.parray()
+            self.declare_id(current_token.lexeme)
+        if action_symbol == "end":
+            self.end()
 
     def save_to_file(self):
         print(self.semantic_stack)
         write_three_address_codes_to_file(self.three_addres_codes)
 
     # Actions
-    def pid(self, lexeme):
-        if lexeme not in self.symbol_table.declared_symbols:
-            print(f"Semantic error! not declared symbol : {lexeme}")
-        self.semantic_stack.append(self.symbol_table.get_address(lexeme))
+    def padd(self, token: Token):
+        if token.type == TokenType.ID.name:
+            if token.lexeme not in self.symbol_table.declared_symbols:
+                print(f"Semantic error! not declared symbol : {token.lexeme}")
+            self.semantic_stack.append(self.symbol_table.get_address(token.lexeme))
+
+        if token.type == TokenType.NUM.name:
+            self.semantic_stack.append(f"#{token.lexeme}")
+        if token.type == TokenType.SYMBOL.name:
+            self.semantic_stack.append(token.lexeme)
 
     def assign(self):
         src = self.semantic_stack.pop()
         dst = self.semantic_stack.pop()
         self.three_addres_codes[self.i] = f"(ASSIGN, {src}, {dst}, )"
         self.i += 1
-
-    def pnum(self, number_lexeme: str):
-        self.semantic_stack.append(f"#{number_lexeme}")
-
-    def add_op(self, operand_lexeme: str):
-        self.semantic_stack.append(operand_lexeme)
 
     def op(self):
         operand_map = {"+": "ADD", "-": "SUB", "*": "MULT", "<": "LT", "==": "EQ"}
@@ -116,5 +116,5 @@ class IntermidateCodeGenerator:
         ] = f"(ASSIGN, #0, {self.symbol_table.get_address(lexeme)}, )"
         self.i += 1
 
-    def parray(self):
-        ...
+    def end(self):
+        self.semantic_stack.pop()

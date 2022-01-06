@@ -98,7 +98,7 @@ class Parser:
             # call code gen when reach action symbol
             if action_symbol != None:
                 for action in action_symbol:
-                    self.icg.code_gen(action, self.current_token.lexeme)
+                    self.icg.code_gen(action, self.current_token)
 
             # can walk in diagram tree
             if next_parse_node_name:

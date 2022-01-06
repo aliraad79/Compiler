@@ -112,5 +112,5 @@ def return_follows():
 
 def write_three_address_codes_to_file(addresses: Dict[int, str]):
     with open("output.txt", "w") as file:
-        for i in sorted(addresses):
-            file.write(f"{i}. {addresses[i]}\n")
+        for i, j in addresses.items():
+            file.write(f"{i}. {j}\n")
