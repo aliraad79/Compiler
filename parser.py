@@ -66,7 +66,7 @@ class Parser:
                 if next_edge != None:
                     self.current_node = next_edge.next_node
                     next_parse_node_name = next_edge.parse_tree_name
-                    action_symbol = next_edge.action_symbol
+                    action_symbol = next_edge.action_symbols
                 else:
                     self.current_node = next_parse_node_name = action_symbol = None
 
@@ -97,7 +97,8 @@ class Parser:
 
             # call code gen when reach action symbol
             if action_symbol != None:
-                self.icg.code_gen(action_symbol, self.current_token.lexeme)
+                for action in action_symbol:
+                    self.icg.code_gen(action, self.current_token.lexeme)
 
             # can walk in diagram tree
             if next_parse_node_name:
