@@ -504,13 +504,15 @@ def iteration_stmt_diagram():
 
 def else_stmt_diagram():
     end = DiagramNode(next_edges=[])
-    endif = DiagramEdge(next_node=end, terminal="endif")
+    endif = DiagramEdge(next_node=end, terminal="endif", action_symbol="jp")
     endif_node = DiagramNode(next_edges=[endif])
     statement = DiagramEdge(next_node=endif_node, non_terminal="statement")
     statement_node = DiagramNode(next_edges=[statement])
-    _else = DiagramEdge(next_node=statement_node, terminal="else")
+    _else = DiagramEdge(
+        next_node=statement_node, terminal="else", action_symbol="jpf_save"
+    )
 
-    endif_2 = DiagramEdge(next_node=end, terminal="endif")
+    endif_2 = DiagramEdge(next_node=end, terminal="endif", action_symbol="jpf")
 
     return DiagramNode(next_edges=[_else, endif_2], is_first=True)
 
@@ -521,7 +523,9 @@ def selection_stmt_diagram():
     else_stmt_node = DiagramNode(next_edges=[else_stmt])
     statement = DiagramEdge(next_node=else_stmt_node, non_terminal="statement")
     statement_node = DiagramNode(next_edges=[statement])
-    close_bracket = DiagramEdge(next_node=statement_node, terminal=")")
+    close_bracket = DiagramEdge(
+        next_node=statement_node, terminal=")", action_symbol="save"
+    )
     close_bracket_node = DiagramNode(next_edges=[close_bracket])
     expression = DiagramEdge(next_node=close_bracket_node, non_terminal="expression")
     expression_node = DiagramNode(next_edges=[expression])

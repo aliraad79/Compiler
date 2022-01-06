@@ -1,3 +1,4 @@
+from typing import Dict
 from anytree.render import RenderTree
 
 
@@ -109,7 +110,7 @@ def return_follows():
     return {str(line[0]).lower(): line[1:] for line in all_follows}
 
 
-def write_three_address_codes_to_file(addresses):
+def write_three_address_codes_to_file(addresses: Dict[int, str]):
     with open("output.txt", "w") as file:
-        for address in addresses:
-            file.write(f"{address}\n")
+        for number, command in addresses.items():
+            file.write(f"{number}. {command}\n")
