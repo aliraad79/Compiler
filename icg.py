@@ -8,6 +8,7 @@ class IntermidateCodeGenerator:
         self.semantic_stack = []
         self.three_addres_codes = {}
         self.i = 1
+        self.debug = True
 
         self.symbol_table = symbol_table
 
@@ -30,7 +31,8 @@ class IntermidateCodeGenerator:
         # self.memory.program_block.append(f"(PRINT, {self.semantic_stack.pop()}, , )")
 
     def code_gen(self, action_symbol, current_token: Token):
-        print(self.semantic_stack, action_symbol, current_token.lexeme)
+        if self.debug:
+            print(self.semantic_stack, action_symbol, current_token.lexeme)
 
         if action_symbol == "padd":
             self.padd(current_token)
@@ -71,7 +73,9 @@ class IntermidateCodeGenerator:
             self.call_function()
 
     def save_to_file(self):
-        print(self.semantic_stack)
+        if self.debug:
+            print("ss stack at the end : ", self.semantic_stack)
+            print("Symbol table : ", self.symbol_table.table)
         write_three_address_codes_to_file(self.three_addres_codes)
 
     def add_three_address_code(
@@ -203,7 +207,12 @@ class IntermidateCodeGenerator:
         )
 
         # jump to function body
-        self.add_three_address_code(f"(JP, {self.semantic_stack.pop()}, , )")
+        function_address = self.semantic_stack.pop()
+        function_name = self.symbol_table.reverse_address(function_address)
+        if function_name == "output":
+            print("magic")
+
+        self.add_three_address_code(f"(JP, {function_address}, , )")
 
         self.add_three_address_code(
             f"(ASSIGN, {self.last_func_stack_pointer}, {self.stack_pointer})"
