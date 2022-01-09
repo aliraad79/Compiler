@@ -11,10 +11,23 @@ class IntermidateCodeGenerator:
 
         self.symbol_table = symbol_table
 
-        self.return_value = self.symbol_table.get_temp()
-        self.return_address = self.symbol_table.get_temp()
+        self.init_icg_variables()
+        self.add_output_function()
 
+    def init_icg_variables(self) -> None:
+        self.return_value = self.symbol_table.get_temp()
+        self.add_three_address_code(f"(ASSIGN, #0, {self.return_value}, )")
+        self.return_address = self.symbol_table.get_temp()
+        self.add_three_address_code(f"(ASSIGN, #0, {self.return_address}, )")
         self.stack_pointer = self.symbol_table.get_temp()
+        self.add_three_address_code(f"(ASSIGN, #0, {self.stack_pointer}, )")
+        self.last_func_stack_pointer = 456789
+        self.arg_pointer = []
+        self.arg_pass_number = 0
+
+    def add_output_function(self) -> None:
+        self.symbol_table.add_declared_symbols("output")
+        # self.memory.program_block.append(f"(PRINT, {self.semantic_stack.pop()}, , )")
 
     def code_gen(self, action_symbol, current_token: Token):
         print(self.semantic_stack, action_symbol, current_token.lexeme)
@@ -50,6 +63,14 @@ class IntermidateCodeGenerator:
             self.push_return_value()
         if action_symbol == "set_return_jump":
             self.set_return_jump()
+        if action_symbol == "call_function":
+            self.call_function()
+        if action_symbol == "arg_pass":
+            self.arg_pass()
+        if action_symbol == "arg_pass_finish":
+            self.arg_pass_finish()
+        if action_symbol == "call_function":
+            self.call_function()
 
     def save_to_file(self):
         print(self.semantic_stack)
@@ -163,3 +184,42 @@ class IntermidateCodeGenerator:
         self.add_three_address_code(
             f"(ADD, #{4 * array_size}, {self.stack_pointer}, {self.stack_pointer})"
         )
+
+    def call_function(self, token):
+        # self.save_load_variables(True)
+
+        self.add_three_address_code(
+            f"(ASSIGN, {self.stack_pointer}, {self.last_func_stack_pointer})"
+        )
+
+        for _ in range(self.assembler.arg_pointer.pop(), len(self.semantic_stack)):
+            self.add_three_address_code(
+                f"(ASSIGN, {self.semantic_stack.pop()}, @{self.stack_pointer}, )"
+            )
+            self.add_three_address_code(
+                f"(ADD, #4, {self.stack_pointer}, {self.stack_pointer})"
+            )
+
+        self.add_three_address_code(
+            f"(ASSIGN, #{len(self.three_addres_codes.keys()) + 3}, {self.return_address}, )"
+        )
+
+        # jump to function body
+        self.add_three_address_code(f"(JP, {self.semantic_stack.pop()}, , )")
+
+        self.add_three_address_code(
+            f"(ASSIGN, {self.last_func_stack_pointer}, {self.stack_pointer})"
+        )
+
+        # self.save_load_variables(False)
+        return_value = self.symbol_table.get_temp()
+
+        self.add_three_address_code(f"(ASSIGN, {self.return_value}, {return_value}, )")
+        self.semantic_stack.append(return_value)
+
+    def arg_pass(self):
+        self.arg_pointer.append(len(self.semantic_stack))
+        self.arg_pass_number = 0
+
+    def arg_pass_finish(self):
+        self.arg_pass_number = -1
