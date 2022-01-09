@@ -63,8 +63,6 @@ class IntermidateCodeGenerator:
             self.push_return_value()
         if action_symbol == "set_return_jump":
             self.set_return_jump()
-        if action_symbol == "call_function":
-            self.call_function()
         if action_symbol == "arg_pass":
             self.arg_pass()
         if action_symbol == "arg_pass_finish":
@@ -185,14 +183,14 @@ class IntermidateCodeGenerator:
             f"(ADD, #{4 * array_size}, {self.stack_pointer}, {self.stack_pointer})"
         )
 
-    def call_function(self, token):
+    def call_function(self):
         # self.save_load_variables(True)
 
         self.add_three_address_code(
             f"(ASSIGN, {self.stack_pointer}, {self.last_func_stack_pointer})"
         )
 
-        for _ in range(self.assembler.arg_pointer.pop(), len(self.semantic_stack)):
+        for _ in range(self.arg_pointer.pop(), len(self.semantic_stack)):
             self.add_three_address_code(
                 f"(ASSIGN, {self.semantic_stack.pop()}, @{self.stack_pointer}, )"
             )

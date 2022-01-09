@@ -214,9 +214,15 @@ def factor_zegond_diagram():
 
 def factor_prime_diagram():
     end = DiagramNode(next_edges=[])
-    close_par = DiagramEdge(next_node=end, terminal=")")
+    close_par = DiagramEdge(
+        next_node=end, terminal=")", action_symbols=["arg_pass_finish", "call_function"]
+    )
     close_par_node = DiagramNode(next_edges=[close_par])
-    args = DiagramEdge(next_node=close_par_node, non_terminal="args")
+    args = DiagramEdge(
+        next_node=close_par_node,
+        non_terminal="args",
+        action_symbols=["arg_pass"],
+    )
     args_node = DiagramNode(next_edges=[args])
     open_par = DiagramEdge(next_node=args_node, terminal="(")
 
@@ -241,7 +247,7 @@ def var_prime_diagram():
 def var_call_prime_diagram():
     end = DiagramNode(next_edges=[])
     close_par = DiagramEdge(
-        next_node=end, terminal=")", action_symbols=["arg_pass_finish", "function_call"]
+        next_node=end, terminal=")", action_symbols=["arg_pass_finish", "call_function"]
     )
     close_par_node = DiagramNode(next_edges=[close_par])
     args = DiagramEdge(

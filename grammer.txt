@@ -63,11 +63,11 @@ G ->  ε
 Factor ->  ( Expression )
 Factor ->  #padd ID Var_call_prime
 Factor ->  #padd NUM
-Var_call_prime ->  ( #arg_pass Args #arg_pass_finish #function_call )
+Var_call_prime ->  ( #arg_pass Args #arg_pass_finish #call_function )
 Var_call_prime ->  Var_prime
 Var_prime ->  [ Expression ] #parray
 Var_prime ->  ε
-Factor_prime ->  ( #arg_pass Args #arg_pass_finish #function_call )
+Factor_prime ->  ( #arg_pass Args #arg_pass_finish #call_function )
 Factor_prime ->  ε
 Factor_zegond ->  ( Expression )
 Factor_zegond ->  #padd NUM
