@@ -6,8 +6,8 @@ Declaration_initial ->  Type_specifier #declare_id #padd ID
 Declaration_prime ->  Fun_Declaration_prime
 Declaration_prime ->  Var_Declaration_prime
 Var_Declaration_prime ->  ;
-Var_Declaration_prime -> [ #padd NUM ] ;
-Fun_Declaration_prime ->  ( Params ) Compound_stmt
+Var_Declaration_prime -> [ #padd NUM ] #declare_arr ;
+Fun_Declaration_prime ->  ( Params ) Compound_stmt #set_return_jump
 Type_specifier ->  int
 Type_specifier ->  void
 Params ->  int #declare_id #padd ID Param_prime #end Param_list
@@ -34,7 +34,7 @@ Else_stmt ->  else #jpf_save Statement #jp endif
 Iteration_stmt ->  repeat #label Statement until ( Expression ) #until
 Return_stmt ->  return Return_stmt_prime
 Return_stmt_prime ->  ;
-Return_stmt_prime ->  Expression #assign #end ;
+Return_stmt_prime ->  #push_return_value Expression #assign #end ;
 Expression ->  Simple_expression_zegond
 Expression ->  #padd ID B
 B ->  = Expression #assign
@@ -44,17 +44,17 @@ H ->  = Expression #assign
 H ->  G D C
 Simple_expression_zegond ->  Additive_expression_zegond C
 Simple_expression_prime ->  Additive_expression_prime C
-C ->  Relop Additive_expression #op
+C ->  #padd Relop Additive_expression #op
 C ->  ε
-Relop -> #padd <
-Relop -> #padd = =
+Relop -> <
+Relop -> ==
 Additive_expression ->  Term D
 Additive_expression_prime ->  Term_prime D
 Additive_expression_zegond ->  Term_zegond D
-D ->  Addop Term #op D
+D ->  #padd Addop Term #op D
 D -> ε
-Addop ->  #padd +
-Addop ->  #padd -
+Addop -> +
+Addop -> -
 Term ->  Factor G
 Term_prime ->  Factor_prime G
 Term_zegond ->  Factor_zegond G

@@ -227,7 +227,7 @@ def factor_prime_diagram():
 
 def var_prime_diagram():
     end = DiagramNode(next_edges=[])
-    close_par = DiagramEdge(next_node=end, terminal="]")
+    close_par = DiagramEdge(next_node=end, terminal="]", action_symbols=["parray"])
     close_par_node = DiagramNode(next_edges=[close_par])
     expression = DiagramEdge(next_node=close_par_node, non_terminal="expression")
     expression_node = DiagramNode(next_edges=[expression])
@@ -312,9 +312,9 @@ def term_diagram():
 
 def addop_diagram():
     end = DiagramNode(next_edges=[])
-    plus = DiagramEdge(next_node=end, terminal="+", action_symbols=["padd"])
+    plus = DiagramEdge(next_node=end, terminal="+")
 
-    minus = DiagramEdge(next_node=end, terminal="-", action_symbols=["padd"])
+    minus = DiagramEdge(next_node=end, terminal="-")
 
     return DiagramNode(next_edges=[plus, minus], is_first=True)
 
@@ -325,7 +325,9 @@ def D_diagram():
     _D_node = DiagramNode(next_edges=[_D_edge])
     term = DiagramEdge(next_node=_D_node, non_terminal="term")
     term_node = DiagramNode(next_edges=[term])
-    addop = DiagramEdge(next_node=term_node, non_terminal="addop")
+    addop = DiagramEdge(
+        next_node=term_node, non_terminal="addop", action_symbols=["padd"]
+    )
 
     epsilon_node = DiagramEdge(next_node=end, terminal="ε")
 
@@ -361,9 +363,9 @@ def additive_expression_diagram():
 
 def relop_diagram():
     end = DiagramNode(next_edges=[])
-    lower = DiagramEdge(next_node=end, terminal="<", action_symbols=["padd"])
+    lower = DiagramEdge(next_node=end, terminal="<")
 
-    equal_2 = DiagramEdge(next_node=end, terminal="==", action_symbols=["padd"])
+    equal_2 = DiagramEdge(next_node=end, terminal="==")
 
     return DiagramNode(next_edges=[lower, equal_2], is_first=True)
 
@@ -377,7 +379,11 @@ def C_diagram():
         next_node=dummy_node, non_terminal="additive_expression"
     )
     additive_expression_node = DiagramNode(next_edges=[additive_expression])
-    relop = DiagramEdge(next_node=additive_expression_node, non_terminal="relop")
+    relop = DiagramEdge(
+        next_node=additive_expression_node,
+        non_terminal="relop",
+        action_symbols=["padd"],
+    )
 
     epsilon_node = DiagramEdge(next_node=end, terminal="ε")
 
@@ -426,7 +432,7 @@ def H_diagram():
 def B_diagram():
     end = DiagramNode(next_edges=[])
 
-    _H_edge = DiagramEdge(next_node=end, non_terminal="h") 
+    _H_edge = DiagramEdge(next_node=end, non_terminal="h", action_symbols=["parray"])
     _H_node = DiagramNode(next_edges=[_H_edge])
     close_par = DiagramEdge(next_node=_H_node, terminal="]")
     close_par_node = DiagramNode(next_edges=[close_par])
@@ -469,7 +475,11 @@ def return_stmt_prime_diagram():
         next_node=end, terminal=";", action_symbols=["assign", "end"]
     )
     semicolon_2_node = DiagramNode(next_edges=[semicolon_2])
-    expression = DiagramEdge(next_node=semicolon_2_node, non_terminal="expression")
+    expression = DiagramEdge(
+        next_node=semicolon_2_node,
+        non_terminal="expression",
+        action_symbols=["push_return_value"],
+    )
 
     semicolon = DiagramEdge(next_node=end, terminal=";")
 
@@ -672,7 +682,12 @@ def type_specifier_diagram():
 
 def fun_declaration_prime():
     end = DiagramNode(next_edges=[])
-    compound_stmt = DiagramEdge(next_node=end, non_terminal="compound_stmt")
+
+    dummy_edge = DiagramEdge(
+        next_node=end, terminal="ε", action_symbols=["set_return_jump"]
+    )
+    dummy_node = DiagramNode(next_edges=[dummy_edge])
+    compound_stmt = DiagramEdge(next_node=dummy_node, non_terminal="compound_stmt")
     compound_stmt_node = DiagramNode(next_edges=[compound_stmt])
     close_par = DiagramEdge(next_node=compound_stmt_node, terminal=")")
     close_par_node = DiagramNode(next_edges=[close_par])
@@ -689,7 +704,7 @@ def var_declaration_prime_diagram():
 
     semicolon_2 = DiagramEdge(next_node=end, terminal=";")
     semicolon_2_node = DiagramNode(next_edges=[semicolon_2])
-    close_t = DiagramEdge(next_node=semicolon_2_node, terminal="]")
+    close_t = DiagramEdge(next_node=semicolon_2_node, terminal="]", action_symbols=["declare_arr"])
     num_node = DiagramNode(next_edges=[close_t])
     num = DiagramEdge(next_node=num_node, terminal="NUM", action_symbols=["padd"])
     open_t_node = DiagramNode(next_edges=[num])
