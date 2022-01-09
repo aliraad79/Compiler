@@ -31,3 +31,8 @@ class SymbolTable:
 
     def add_declared_symbols(self, lexeme) -> None:
         self.declared_symbols.append(lexeme)
+
+    def reverse_address(self, address: int) -> str:
+        for i, j in self.table.items():
+            if j == address:
+                return i
