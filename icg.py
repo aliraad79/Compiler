@@ -27,7 +27,7 @@ class IntermidateCodeGenerator:
         self.arg_pass_number = 0
 
     def add_output_function(self) -> None:
-        self.symbol_table.add_declared_symbols("output")
+        self.symbol_table.insert("output", is_declred=True)
         # self.memory.program_block.append(f"(PRINT, {self.semantic_stack.pop()}, , )")
 
     def code_gen(self, action_symbol, current_token: Token):
@@ -87,7 +87,7 @@ class IntermidateCodeGenerator:
     # Actions
     def padd(self, token: Token):
         if token.type == TokenType.ID.name:
-            if token.lexeme not in self.symbol_table.declared_symbols:
+            if token.lexeme not in self.symbol_table.get_declared_symbols():
                 print(f"Semantic error! not declared symbol : {token.lexeme}")
             self.semantic_stack.append(self.symbol_table.get_address(token.lexeme))
 
@@ -155,7 +155,7 @@ class IntermidateCodeGenerator:
         self.i += 1
 
     def declare_id(self, lexeme):
-        self.symbol_table.add_declared_symbols(lexeme)
+        self.symbol_table.get_symbol_record(lexeme).make_declared()
         self.add_three_address_code(
             f"(ASSIGN, #0, {self.symbol_table.get_address(lexeme)}, )"
         )
