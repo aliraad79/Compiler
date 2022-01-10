@@ -22,7 +22,7 @@ class IntermidateCodeGenerator:
         self.add_three_address_code(f"(ASSIGN, #0, {self.return_address}, )")
         self.stack_pointer = self.symbol_table.get_temp()
         self.add_three_address_code(f"(ASSIGN, #0, {self.stack_pointer}, )")
-        self.last_func_stack_pointer = 456789
+        self.last_func_stack_pointer = 1000
         self.arg_pointer = []
         self.arg_pass_number = 0
 
@@ -71,6 +71,8 @@ class IntermidateCodeGenerator:
             self.arg_pass_finish()
         if action_symbol == "call_function":
             self.call_function()
+        if action_symbol == "function_arg_counter":
+            self.function_arg_counter()
 
     def save_to_file(self):
         if self.debug:
@@ -230,3 +232,7 @@ class IntermidateCodeGenerator:
 
     def arg_pass_finish(self):
         self.arg_pass_number = -1
+
+    def function_arg_counter(self):
+        if self.arg_pass_number != -1:
+            self.arg_pass_number += 1

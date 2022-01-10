@@ -73,6 +73,6 @@ Factor_zegond ->  ( Expression )
 Factor_zegond ->  #padd NUM
 Args ->  Arg_list
 Args ->  ε
-Arg_list ->  Expression Arg_list_prime
-Arg_list_prime ->  , Expression Arg_list_prime
+Arg_list -> #function_arg_counter Expression Arg_list_prime
+Arg_list_prime ->  , #function_arg_counter Expression Arg_list_prime
 Arg_list_prime ->  ε
