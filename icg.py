@@ -1,3 +1,4 @@
+import os
 from scanner import Token, TokenType
 from symbol_table import SymbolTable
 from utils import write_three_address_codes_to_file
@@ -88,6 +89,9 @@ class IntermidateCodeGenerator:
             print("ss stack at the end : ", self.semantic_stack)
             print("Symbol table : ", self.symbol_table.table)
         write_three_address_codes_to_file(self.three_addres_codes)
+
+    def run_output(self):
+        os.system("./tester_Linux.out")
 
     def add_three_address_code(
         self, text: str, index: int = None, increase_i: bool = True
@@ -247,6 +251,7 @@ class IntermidateCodeGenerator:
             self.arg_pass_number += 1
 
     def func_arg_declare_finish(self):
+        return
         func_record = self.symbol_table.get_symbol_record(self.last_id_name)
 
         func_record.param_types = self.func_param_types
