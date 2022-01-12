@@ -31,6 +31,10 @@ class SymbolTableRow:
         self.address = address
         self.func_or_var = func_or_var
 
+        self.param_types: List[str] = []
+        self.param_is_array: List[bool] = []
+        self.param_number: int = 0
+
     def make_declared(self):
         self.is_declred = True
 

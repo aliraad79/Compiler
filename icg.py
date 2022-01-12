@@ -26,6 +26,11 @@ class IntermidateCodeGenerator:
         self.arg_pointer = []
         self.arg_pass_number = 0
 
+        self.func_param_types = []
+        self.func_param_is_array = []
+        self.func_param_number = 0
+        self.in_function_declaration = False
+
     def add_output_function(self) -> None:
         self.symbol_table.insert("output", is_declred=True)
         # self.memory.program_block.append(f"(PRINT, {self.semantic_stack.pop()}, , )")
@@ -73,6 +78,10 @@ class IntermidateCodeGenerator:
             self.call_function()
         if action_symbol == "function_arg_counter":
             self.function_arg_counter()
+        if action_symbol == "func_arg_declare_start":
+            self.func_arg_declare_start()
+        if action_symbol == "func_arg_declare_finish":
+            self.func_arg_declare_finish()
 
     def save_to_file(self):
         if self.debug:
@@ -236,3 +245,19 @@ class IntermidateCodeGenerator:
     def function_arg_counter(self):
         if self.arg_pass_number != -1:
             self.arg_pass_number += 1
+
+    def func_arg_declare_finish(self):
+        func_record = self.symbol_table.get_symbol_record(self.last_id_name)
+
+        func_record.param_types = self.func_param_types
+        func_record.param_is_array = self.func_param_is_array
+        func_record.param_number = self.func_param_number
+
+        self.func_param_types = []
+        self.func_param_is_array = []
+        self.func_param_number = 0
+
+        self.in_function_declaration = False
+
+    def func_arg_declare_start(self):
+        self.in_function_declaration = True

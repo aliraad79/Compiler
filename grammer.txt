@@ -7,7 +7,7 @@ Declaration_prime ->  Fun_Declaration_prime
 Declaration_prime ->  Var_Declaration_prime
 Var_Declaration_prime ->  ;
 Var_Declaration_prime -> [ #padd NUM ] #declare_arr ;
-Fun_Declaration_prime ->  ( Params ) Compound_stmt #set_return_jump
+Fun_Declaration_prime ->  ( #func_arg_declare_start Params #func_arg_declare_finish ) Compound_stmt #set_return_jump
 Type_specifier ->  int
 Type_specifier ->  void
 Params ->  int #declare_id #padd ID Param_prime #end Param_list
