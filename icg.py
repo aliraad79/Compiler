@@ -8,7 +8,7 @@ class IntermidateCodeGenerator:
     def __init__(self, symbol_table: SymbolTable) -> None:
         self.semantic_stack = []
         self.three_addres_codes = {}
-        self.i = 1
+        self.i = 0
         self.debug = True
 
         self.symbol_table = symbol_table
@@ -23,14 +23,9 @@ class IntermidateCodeGenerator:
         self.add_three_address_code(f"(ASSIGN, #0, {self.return_address}, )")
         self.stack_pointer = self.symbol_table.get_temp()
         self.add_three_address_code(f"(ASSIGN, #0, {self.stack_pointer}, )")
-        self.last_func_stack_pointer = 1000
         self.arg_pointer = []
         self.arg_pass_number = 0
 
-        self.func_param_types = []
-        self.func_param_is_array = []
-        self.func_param_number = 0
-        self.in_function_declaration = False
 
     def add_output_function(self) -> None:
         self.symbol_table.insert("output", is_declred=True)
@@ -39,50 +34,7 @@ class IntermidateCodeGenerator:
     def code_gen(self, action_symbol, current_token: Token):
         if self.debug:
             print(self.semantic_stack, action_symbol, current_token.lexeme)
-
-        if action_symbol == "padd":
-            self.padd(current_token)
-        if action_symbol == "assign":
-            self.assign()
-        if action_symbol == "op":
-            self.op()
-        if action_symbol == "label":
-            self.label()
-        if action_symbol == "until":
-            self.until()
-        if action_symbol == "jp":
-            self.jp()
-        if action_symbol == "jpf_save":
-            self.jpf_save()
-        if action_symbol == "jpf":
-            self.jpf()
-        if action_symbol == "save":
-            self.save()
-        if action_symbol == "declare_id":
-            self.declare_id(current_token.lexeme)
-        if action_symbol == "end":
-            self.end()
-        if action_symbol == "parray":
-            self.parray()
-        if action_symbol == "declare_arr":
-            self.declare_arr()
-
-        if action_symbol == "push_return_value":
-            self.push_return_value()
-        if action_symbol == "set_return_jump":
-            self.set_return_jump()
-        if action_symbol == "arg_pass":
-            self.arg_pass()
-        if action_symbol == "arg_pass_finish":
-            self.arg_pass_finish()
-        if action_symbol == "call_function":
-            self.call_function()
-        if action_symbol == "function_arg_counter":
-            self.function_arg_counter()
-        if action_symbol == "func_arg_declare_start":
-            self.func_arg_declare_start()
-        if action_symbol == "func_arg_declare_finish":
-            self.func_arg_declare_finish()
+        getattr(self, action_symbol)(current_token)
 
     def save_to_file(self):
         if self.debug:
@@ -111,12 +63,12 @@ class IntermidateCodeGenerator:
         elif token.type == TokenType.SYMBOL.name:
             self.semantic_stack.append(token.lexeme)
 
-    def assign(self):
+    def assign(self, current_token:Token):
         src = self.semantic_stack.pop()
         dst = self.semantic_stack[-1]
         self.add_three_address_code(f"(ASSIGN, {src}, {dst}, )")
 
-    def op(self):
+    def op(self, current_token:Token):
         operand_map = {"+": "ADD", "-": "SUB", "*": "MULT", "<": "LT", "==": "EQ"}
 
         second_operand = self.semantic_stack.pop()
@@ -131,20 +83,20 @@ class IntermidateCodeGenerator:
 
         self.semantic_stack.append(tmp_address)
 
-    def label(self):
+    def label(self, current_token:Token):
         self.semantic_stack.append(self.i)
 
-    def until(self):
+    def until(self, current_token:Token):
         condition = self.semantic_stack.pop()
         target = self.semantic_stack.pop()
         self.add_three_address_code(f"(JPF, {condition}, {target}, )")
 
-    def jp(self):
+    def jp(self, current_token:Token):
         self.add_three_address_code(
             f"(JP, {self.i}, , )", index=self.semantic_stack.pop(), increase_i=False
         )
 
-    def jpf_save(self):
+    def jpf_save(self, current_token:Token):
         pb_empty_place = self.semantic_stack.pop()
         condition = self.semantic_stack.pop()
         self.add_three_address_code(
@@ -156,7 +108,7 @@ class IntermidateCodeGenerator:
         self.semantic_stack.append(self.i)
         self.i += 1
 
-    def jpf(self):
+    def jpf(self, current_token:Token):
         pb_empty_place = self.semantic_stack.pop()
         condition = self.semantic_stack.pop()
         self.add_three_address_code(
@@ -165,26 +117,26 @@ class IntermidateCodeGenerator:
             increase_i=False,
         )
 
-    def save(self):
+    def save(self, current_token:Token):
         self.semantic_stack.append(self.i)
         self.i += 1
 
-    def declare_id(self, lexeme):
-        self.symbol_table.get_symbol_record(lexeme).make_declared()
+    def declare_id(self, current_token:Token):
+        self.symbol_table.get_symbol_record(current_token.lexeme).make_declared()
         self.add_three_address_code(
-            f"(ASSIGN, #0, {self.symbol_table.get_address(lexeme)}, )"
+            f"(ASSIGN, #0, {self.symbol_table.get_address(current_token.lexeme)}, )"
         )
 
-    def end(self):
+    def end(self, current_token:Token):
         self.semantic_stack.pop()
 
-    def push_return_value(self):
+    def push_return_value(self, current_token:Token):
         self.semantic_stack.append(self.return_value)
 
-    def set_return_jump(self):
+    def set_return_jump(self, current_token:Token):
         self.add_three_address_code(f"(JP, @{self.return_address}, , )")
 
-    def parray(self):
+    def parray(self, current_token:Token):
         array_index = self.semantic_stack.pop()
         temp = self.symbol_table.get_temp()
         self.add_three_address_code(f"(MULT, #4, {array_index}, {temp})")
@@ -193,7 +145,7 @@ class IntermidateCodeGenerator:
         )
         self.semantic_stack.append(f"@{temp}")
 
-    def declare_arr(self):
+    def declare_arr(self, current_token:Token):
         self.add_three_address_code(
             f"(ASSIGN, {self.stack_pointer}, {self.semantic_stack[-2]}, )"
         )
@@ -201,68 +153,3 @@ class IntermidateCodeGenerator:
         self.add_three_address_code(
             f"(ADD, #{4 * array_size}, {self.stack_pointer}, {self.stack_pointer})"
         )
-
-    def call_function(self):
-        # self.save_load_variables(True)
-
-        self.add_three_address_code(
-            f"(ASSIGN, {self.stack_pointer}, {self.last_func_stack_pointer})"
-        )
-
-        for _ in range(self.arg_pointer.pop(), len(self.semantic_stack)):
-            self.add_three_address_code(
-                f"(ASSIGN, {self.semantic_stack.pop()}, @{self.stack_pointer}, )"
-            )
-            self.add_three_address_code(
-                f"(ADD, #4, {self.stack_pointer}, {self.stack_pointer})"
-            )
-
-        self.add_three_address_code(
-            f"(ASSIGN, #{len(self.three_addres_codes.keys()) + 3}, {self.return_address}, )"
-        )
-
-        # jump to function body
-        function_address = self.semantic_stack.pop()
-        function_name = self.symbol_table.reverse_address(function_address)
-        if function_name == "output":
-            print("magic")
-
-        self.add_three_address_code(f"(JP, {function_address}, , )")
-
-        self.add_three_address_code(
-            f"(ASSIGN, {self.last_func_stack_pointer}, {self.stack_pointer})"
-        )
-
-        # self.save_load_variables(False)
-        return_value = self.symbol_table.get_temp()
-
-        self.add_three_address_code(f"(ASSIGN, {self.return_value}, {return_value}, )")
-        self.semantic_stack.append(return_value)
-
-    def arg_pass(self):
-        self.arg_pointer.append(len(self.semantic_stack))
-        self.arg_pass_number = 0
-
-    def arg_pass_finish(self):
-        self.arg_pass_number = -1
-
-    def function_arg_counter(self):
-        if self.arg_pass_number != -1:
-            self.arg_pass_number += 1
-
-    def func_arg_declare_finish(self):
-        return
-        func_record = self.symbol_table.get_symbol_record(self.last_id_name)
-
-        func_record.param_types = self.func_param_types
-        func_record.param_is_array = self.func_param_is_array
-        func_record.param_number = self.func_param_number
-
-        self.func_param_types = []
-        self.func_param_is_array = []
-        self.func_param_number = 0
-
-        self.in_function_declaration = False
-
-    def func_arg_declare_start(self):
-        self.in_function_declaration = True

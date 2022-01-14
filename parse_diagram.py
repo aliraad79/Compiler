@@ -172,11 +172,7 @@ def arg_list_prime_diagram():
     end = DiagramNode(next_edges=[])
     arg_list_prime = DiagramEdge(next_node=end, non_terminal="arg_list_prime")
     arg_list_prime_node = DiagramNode(next_edges=[arg_list_prime])
-    expression = DiagramEdge(
-        next_node=arg_list_prime_node,
-        non_terminal="expression",
-        action_symbols=["function_arg_counter"],
-    )
+    expression = DiagramEdge(next_node=arg_list_prime_node, non_terminal="expression")
     expression_node = DiagramNode(next_edges=[expression])
     comma = DiagramEdge(next_node=expression_node, terminal=",")
 
@@ -189,11 +185,7 @@ def arg_list_diagram():
     end = DiagramNode(next_edges=[])
     arg_list_prime = DiagramEdge(next_node=end, non_terminal="arg_list_prime")
     arg_list_prime_node = DiagramNode(next_edges=[arg_list_prime])
-    expression = DiagramEdge(
-        next_node=arg_list_prime_node,
-        non_terminal="expression",
-        action_symbols=["function_arg_counter"],
-    )
+    expression = DiagramEdge(next_node=arg_list_prime_node, non_terminal="expression")
 
     return DiagramNode(next_edges=[expression], is_first=True)
 
@@ -222,15 +214,9 @@ def factor_zegond_diagram():
 
 def factor_prime_diagram():
     end = DiagramNode(next_edges=[])
-    close_par = DiagramEdge(
-        next_node=end, terminal=")", action_symbols=["arg_pass_finish", "call_function"]
-    )
+    close_par = DiagramEdge(next_node=end, terminal=")")
     close_par_node = DiagramNode(next_edges=[close_par])
-    args = DiagramEdge(
-        next_node=close_par_node,
-        non_terminal="args",
-        action_symbols=["arg_pass"],
-    )
+    args = DiagramEdge(next_node=close_par_node, non_terminal="args")
     args_node = DiagramNode(next_edges=[args])
     open_par = DiagramEdge(next_node=args_node, terminal="(")
 
@@ -254,13 +240,9 @@ def var_prime_diagram():
 
 def var_call_prime_diagram():
     end = DiagramNode(next_edges=[])
-    close_par = DiagramEdge(
-        next_node=end, terminal=")", action_symbols=["arg_pass_finish", "call_function"]
-    )
+    close_par = DiagramEdge(next_node=end, terminal=")")
     close_par_node = DiagramNode(next_edges=[close_par])
-    args = DiagramEdge(
-        next_node=close_par_node, non_terminal="args", action_symbols=["arg_pass"]
-    )
+    args = DiagramEdge(next_node=close_par_node, non_terminal="args")
     args_node = DiagramNode(next_edges=[args])
     open_par = DiagramEdge(next_node=args_node, terminal="(")
 
@@ -707,17 +689,9 @@ def fun_declaration_prime():
     dummy_node = DiagramNode(next_edges=[dummy_edge])
     compound_stmt = DiagramEdge(next_node=dummy_node, non_terminal="compound_stmt")
     compound_stmt_node = DiagramNode(next_edges=[compound_stmt])
-    close_par = DiagramEdge(
-        next_node=compound_stmt_node,
-        terminal=")",
-        action_symbols=["func_arg_declare_finish"],
-    )
+    close_par = DiagramEdge(next_node=compound_stmt_node, terminal=")")
     close_par_node = DiagramNode(next_edges=[close_par])
-    params = DiagramEdge(
-        next_node=close_par_node,
-        non_terminal="params",
-        action_symbols=["func_arg_declare_start"],
-    )
+    params = DiagramEdge(next_node=close_par_node, non_terminal="params")
     params_node = DiagramNode(next_edges=[params])
     open_par = DiagramEdge(next_node=params_node, terminal="(")
     return DiagramNode(next_edges=[open_par], is_first=True)

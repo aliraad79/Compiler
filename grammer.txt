@@ -7,7 +7,7 @@ Declaration_prime ->  Fun_Declaration_prime
 Declaration_prime ->  Var_Declaration_prime
 Var_Declaration_prime ->  ;
 Var_Declaration_prime -> [ #padd NUM ] #declare_arr ;
-Fun_Declaration_prime ->  ( #func_arg_declare_start Params #func_arg_declare_finish ) Compound_stmt #set_return_jump
+Fun_Declaration_prime ->  ( Params ) Compound_stmt #set_return_jump
 Type_specifier ->  int
 Type_specifier ->  void
 Params ->  int #declare_id #padd ID Param_prime #end Param_list
@@ -63,16 +63,16 @@ G ->  ε
 Factor ->  ( Expression )
 Factor ->  #padd ID Var_call_prime
 Factor ->  #padd NUM
-Var_call_prime ->  ( #arg_pass Args #arg_pass_finish #call_function )
+Var_call_prime ->  ( Args )
 Var_call_prime ->  Var_prime
 Var_prime ->  [ Expression ] #parray
 Var_prime ->  ε
-Factor_prime ->  ( #arg_pass Args #arg_pass_finish #call_function )
+Factor_prime ->  ( Args )
 Factor_prime ->  ε
 Factor_zegond ->  ( Expression )
 Factor_zegond ->  #padd NUM
 Args ->  Arg_list
 Args ->  ε
-Arg_list -> #function_arg_counter Expression Arg_list_prime
-Arg_list_prime ->  , #function_arg_counter Expression Arg_list_prime
+Arg_list -> Expression Arg_list_prime
+Arg_list_prime ->  , Expression Arg_list_prime
 Arg_list_prime ->  ε
