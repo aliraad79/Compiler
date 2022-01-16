@@ -683,9 +683,7 @@ def type_specifier_diagram():
 def fun_declaration_prime():
     end = DiagramNode(next_edges=[])
 
-    dummy_edge = DiagramEdge(
-        next_node=end, terminal="ε", action_symbols=["set_return_jump"]
-    )
+    dummy_edge = DiagramEdge(next_node=end, terminal="ε")
     dummy_node = DiagramNode(next_edges=[dummy_edge])
     compound_stmt = DiagramEdge(next_node=dummy_node, non_terminal="compound_stmt")
     compound_stmt_node = DiagramNode(next_edges=[compound_stmt])

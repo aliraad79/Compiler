@@ -26,7 +26,6 @@ class IntermidateCodeGenerator:
         self.arg_pointer = []
         self.arg_pass_number = 0
 
-
     def add_output_function(self) -> None:
         self.symbol_table.insert("output", is_declred=True)
         # self.memory.program_block.append(f"(PRINT, {self.semantic_stack.pop()}, , )")
@@ -63,12 +62,12 @@ class IntermidateCodeGenerator:
         elif token.type == TokenType.SYMBOL.name:
             self.semantic_stack.append(token.lexeme)
 
-    def assign(self, current_token:Token):
+    def assign(self, current_token: Token):
         src = self.semantic_stack.pop()
         dst = self.semantic_stack[-1]
         self.add_three_address_code(f"(ASSIGN, {src}, {dst}, )")
 
-    def op(self, current_token:Token):
+    def op(self, current_token: Token):
         operand_map = {"+": "ADD", "-": "SUB", "*": "MULT", "<": "LT", "==": "EQ"}
 
         second_operand = self.semantic_stack.pop()
@@ -83,20 +82,20 @@ class IntermidateCodeGenerator:
 
         self.semantic_stack.append(tmp_address)
 
-    def label(self, current_token:Token):
+    def label(self, current_token: Token):
         self.semantic_stack.append(self.i)
 
-    def until(self, current_token:Token):
+    def until(self, current_token: Token):
         condition = self.semantic_stack.pop()
         target = self.semantic_stack.pop()
         self.add_three_address_code(f"(JPF, {condition}, {target}, )")
 
-    def jp(self, current_token:Token):
+    def jp(self, current_token: Token):
         self.add_three_address_code(
             f"(JP, {self.i}, , )", index=self.semantic_stack.pop(), increase_i=False
         )
 
-    def jpf_save(self, current_token:Token):
+    def jpf_save(self, current_token: Token):
         pb_empty_place = self.semantic_stack.pop()
         condition = self.semantic_stack.pop()
         self.add_three_address_code(
@@ -108,7 +107,7 @@ class IntermidateCodeGenerator:
         self.semantic_stack.append(self.i)
         self.i += 1
 
-    def jpf(self, current_token:Token):
+    def jpf(self, current_token: Token):
         pb_empty_place = self.semantic_stack.pop()
         condition = self.semantic_stack.pop()
         self.add_three_address_code(
@@ -117,26 +116,23 @@ class IntermidateCodeGenerator:
             increase_i=False,
         )
 
-    def save(self, current_token:Token):
+    def save(self, current_token: Token):
         self.semantic_stack.append(self.i)
         self.i += 1
 
-    def declare_id(self, current_token:Token):
+    def declare_id(self, current_token: Token):
         self.symbol_table.get_symbol_record(current_token.lexeme).make_declared()
         self.add_three_address_code(
             f"(ASSIGN, #0, {self.symbol_table.get_address(current_token.lexeme)}, )"
         )
 
-    def end(self, current_token:Token):
+    def end(self, current_token: Token):
         self.semantic_stack.pop()
 
-    def push_return_value(self, current_token:Token):
+    def push_return_value(self, current_token: Token):
         self.semantic_stack.append(self.return_value)
 
-    def set_return_jump(self, current_token:Token):
-        self.add_three_address_code(f"(JP, @{self.return_address}, , )")
-
-    def parray(self, current_token:Token):
+    def parray(self, current_token: Token):
         array_index = self.semantic_stack.pop()
         temp = self.symbol_table.get_temp()
         self.add_three_address_code(f"(MULT, #4, {array_index}, {temp})")
@@ -145,7 +141,7 @@ class IntermidateCodeGenerator:
         )
         self.semantic_stack.append(f"@{temp}")
 
-    def declare_arr(self, current_token:Token):
+    def declare_arr(self, current_token: Token):
         self.add_three_address_code(
             f"(ASSIGN, {self.stack_pointer}, {self.semantic_stack[-2]}, )"
         )
