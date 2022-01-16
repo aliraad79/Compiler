@@ -684,7 +684,10 @@ def params_diagram():
     id_node = DiagramNode(next_edges=[_id])
     _int = DiagramEdge(next_node=id_node, terminal="int")
 
-    _void = DiagramEdge(next_node=end, terminal="void", action_symbols=["push_void"])
+    _void = DiagramEdge(
+        next_node=end,
+        terminal="void",
+    )
 
     return DiagramNode(next_edges=[_int, _void], is_first=True)
 
@@ -722,9 +725,7 @@ def fun_declaration_prime():
 def var_declaration_prime_diagram():
     end = DiagramNode(next_edges=[])
 
-    semicolon = DiagramEdge(
-        next_node=end, terminal=";", action_symbols=["declare_global_var"]
-    )
+    semicolon = DiagramEdge(next_node=end, terminal=";", action_symbols=["var"])
 
     semicolon_2 = DiagramEdge(
         next_node=end, terminal=";", action_symbols=["declare_global_arr"]

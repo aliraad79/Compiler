@@ -11,7 +11,7 @@ Fun_Declaration_prime ->  ( #declare_function Params ) Compound_stmt #end_functi
 Type_specifier ->  #push_int int
 Type_specifier ->  #push_void void
 Params ->  int #declare_id #push_int #padd ID Param_prime Param_list
-Params ->  #push_void void
+Params ->  void
 Param_list ->  , Param Param_list
 Param_list -> ε
 Param ->  Declaration_initial Param_prime

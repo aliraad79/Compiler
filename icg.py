@@ -17,15 +17,14 @@ class IntermidateCodeGenerator:
 
         self.symbol_table = symbol_table
 
-        self.init_icg_variables()
-        self.init_program()
-        self.add_output_function()
-
-    def init_icg_variables(self) -> None:
-        self.add_three_address_code("", index=1, increase_i=True)
-
-        self.main_added = False
         self.retrun_temp = self.symbol_table.get_temp()
+
+        self.init_program()
+        self.init_icg_variables()
+
+    # init functions
+    def init_icg_variables(self) -> None:
+        self.main_added = False
         self.current_function_address = None
         self.arg_counter = -1
         self.func_call_stack = []
@@ -34,8 +33,8 @@ class IntermidateCodeGenerator:
         self.break_bool = False
 
     def init_program(self):
-        self.i += 1
         self.add_three_address_code(f"(ASSIGN, #0, {self.retrun_temp}, )")
+        self.add_three_address_code("", increase_i=True)
         self.add_output_function()
 
     def add_output_function(self) -> None:
@@ -47,13 +46,23 @@ class IntermidateCodeGenerator:
             output_address, "a", "int", output_input_param, False
         )
         self.function_table.funcs[output_address]["start_address"] = self.i
+        print(self.three_addres_codes, self.i)
         self.add_three_address_code(f"(PRINT, {output_input_param}, ,)")
         self.add_three_address_code(f"(JP, @{self.retrun_temp}, , )")
+        print(self.three_addres_codes, self.i)
 
+
+    # functions
     def code_gen(self, action_symbol, current_token: Token):
         if self.debug:
             print(self.semantic_stack, action_symbol, current_token.lexeme)
         getattr(self, action_symbol)(current_token)
+
+    def add_three_address_code(
+        self, text: str, index: int = None, increase_i: bool = True
+    ) -> None:
+        self.three_addres_codes[index if index else self.i] = text
+        self.i += 1 if increase_i else 0
 
     def save_to_file(self):
         if self.debug:
@@ -63,14 +72,6 @@ class IntermidateCodeGenerator:
 
     def run_output(self):
         os.system("./tester_Linux.out")
-
-    def add_three_address_code(
-        self, text: str, index: int = None, increase_i: bool = True
-    ) -> None:
-        if "PRINT" in text:
-            print(text)
-        self.three_addres_codes[index if index else self.i] = text
-        self.i += 1 if increase_i else 0
 
     # Actions
     def padd(self, token: Token):
@@ -166,7 +167,7 @@ class IntermidateCodeGenerator:
         self.current_function_address = function_address
         self.func_call_stack.append(function_address)
 
-    def declare_global_var(self, current_token: Token):
+    def var(self, current_token: Token):
         var = self.semantic_stack.pop()
         var_type = self.semantic_stack.pop()
         self.add_three_address_code(f"(ASSIGN, #0, {var},)")
