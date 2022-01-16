@@ -1,4 +1,4 @@
-from typing import Dict
+from typing import Dict, List
 from anytree.render import RenderTree
 
 
@@ -114,3 +114,11 @@ def write_three_address_codes_to_file(addresses: Dict[int, str]):
     with open("output.txt", "w") as file:
         for i in sorted(addresses.keys()):
             file.write(f"{i}\t{addresses[i]}\n")
+
+
+def write_semantic_errors(errors: List[str]):
+    with open("semantic_errors.txt", "w") as file:
+        if len(errors) == 0:
+            errors = ["The input program is semantically correct."]
+        for i in errors:
+            file.write(f"{i}\n")

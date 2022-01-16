@@ -1,7 +1,7 @@
 import os
 from scanner import Token, TokenType
 from symbol_table import SymbolTable
-from utils import write_three_address_codes_to_file
+from utils import write_three_address_codes_to_file, write_semantic_errors
 from function_table import FunctionTable
 
 
@@ -10,39 +10,37 @@ class IntermidateCodeGenerator:
         self, symbol_table: SymbolTable, function_table: FunctionTable
     ) -> None:
         self.semantic_stack = []
+        self.semantic_errors = []
         self.three_addres_codes = {}
         self.i = 0
         self.debug = False
-        self.function_table: FunctionTable = function_table
 
-        self.symbol_table = symbol_table
+        self.function_table: FunctionTable = function_table
+        self.symbol_table: SymbolTable = symbol_table
+
+        self.current_function_address = None
+        self.arg_counter = -1
+        self.func_call_stack = []
+        self.main_added = False
 
         self.retrun_temp = self.symbol_table.get_temp()
 
         self.scope_stack = []
 
-        self.init_program()
-        self.init_icg_variables()
-
-    # init functions
-    def init_icg_variables(self) -> None:
-        self.main_added = False
-        self.current_function_address = None
-        self.arg_counter = -1
-        self.func_call_stack = []
-
         self.inside_if = False
-        self.break_bool = False
+
+        self.init_program()
 
     def init_program(self):
         self.add_three_address_code(f"(ASSIGN, #0, {self.retrun_temp}, )")
-        self.add_three_address_code("", increase_i=True)
+        self.add_three_address_code("", increase_i=True)  # for later jp to main
         self.add_output_function()
 
     def add_output_function(self) -> None:
         self.symbol_table.insert("output", is_declred=True)
         output_address = self.symbol_table.get_address("output")
         output_input_param = self.symbol_table.get_temp()
+
         self.function_table.func_declare("output", output_address, "void")
         self.function_table.add_param(
             output_address, "a", "int", output_input_param, False
@@ -67,6 +65,7 @@ class IntermidateCodeGenerator:
         print("ss stack at the end : ", self.semantic_stack)
         print("Symbol table : ", self.symbol_table.table)
         write_three_address_codes_to_file(self.three_addres_codes)
+        write_semantic_errors(self.semantic_errors)
 
     def run_output(self):
         os.system("./tester_Linux.out")
@@ -74,8 +73,6 @@ class IntermidateCodeGenerator:
     # Actions
     def padd(self, current_token: Token):
         if current_token.type == TokenType.ID.name:
-            # if current_token.lexeme not in self.symbol_table.get_declared_symbols():
-            #     print(f"Semantic error! not declared symbol : {current_token.lexeme}")
             self.semantic_stack.append(
                 self.symbol_table.get_address(current_token.lexeme)
             )
@@ -97,13 +94,13 @@ class IntermidateCodeGenerator:
         operand = operand_map[self.semantic_stack.pop()]
         first_operand = self.semantic_stack.pop()
 
-        tmp_address = self.symbol_table.get_temp()
+        op_result = self.symbol_table.get_temp()
 
         self.add_three_address_code(
-            f"({operand}, {first_operand}, {second_operand}, {tmp_address})"
+            f"({operand}, {first_operand}, {second_operand}, {op_result})"
         )
 
-        self.semantic_stack.append(tmp_address)
+        self.semantic_stack.append(op_result)
 
     def label(self, current_token: Token):
         self.semantic_stack.append(self.i)
@@ -121,14 +118,11 @@ class IntermidateCodeGenerator:
     def jpf_save(self, current_token: Token):
         pb_empty_place = self.semantic_stack.pop()
         condition = self.semantic_stack.pop()
-        self.add_three_address_code(
-            text=f"(JPF, {condition}, {self.i + 1}, )",
-            index=pb_empty_place,
-            increase_i=False,
-        )
-
         self.semantic_stack.append(self.i)
-        self.i += 1
+
+        self.add_three_address_code(
+            text=f"(JPF, {condition}, {self.i + 1}, )", index=pb_empty_place
+        )
 
     def jpf(self, current_token: Token):
         pb_empty_place = self.semantic_stack.pop()
@@ -156,7 +150,7 @@ class IntermidateCodeGenerator:
 
         self.function_table.func_declare(
             function_name, function_address, self.semantic_stack[-2]
-        )  # it is void or int
+        )
 
         self.current_function_address = function_address
 
@@ -201,17 +195,11 @@ class IntermidateCodeGenerator:
         self.semantic_stack.pop()
 
     def _break(self, current_token: Token):
-        if self.break_bool:
-            if self.inside_if:
-                self.add_three_address_code(f"(JP, @{self.semantic_stack[-7]}, , )")
-                self.inside_if = False
-            else:
-                self.add_three_address_code(f"(JP, @{self.semantic_stack[-5]}, , )")
-            self.break_bool = False
+        if self.inside_if:
+            self.add_three_address_code(f"(JP, @{self.semantic_stack[-7]}, , )")
+            self.inside_if = False
         else:
-            print("semantic error No 'while' or 'switch'")
-            pass
-            ### todo (#lineno: Semantic Error! No 'while' or 'switch' found for 'break')
+            self.add_three_address_code(f"(JP, @{self.semantic_stack[-5]}, , )")
 
     def assign_to_func(self, current_token: Token):
         if not self.main_added:
