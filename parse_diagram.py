@@ -278,7 +278,7 @@ def factor_diagram():
     var_call_prime = DiagramEdge(next_node=end, non_terminal="var_call_prime")
     var_call_prime_node = DiagramNode(next_edges=[var_call_prime])
     _id = DiagramEdge(
-        next_node=var_call_prime_node, terminal="ID", action_symbols=["pid"]
+        next_node=var_call_prime_node, terminal="ID", action_symbols=["padd"]
     )
 
     num = DiagramEdge(next_node=end, terminal="NUM", action_symbols=["padd"])

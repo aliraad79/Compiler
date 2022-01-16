@@ -5,7 +5,7 @@ Declaration ->  Declaration_initial Declaration_prime
 Declaration_initial ->  Type_specifier #padd ID
 Declaration_prime ->  Fun_Declaration_prime
 Declaration_prime ->  Var_Declaration_prime
-Var_Declaration_prime ->  #declare_global_var ;
+Var_Declaration_prime ->  #var ;
 Var_Declaration_prime -> [ #padd NUM ] #declare_global_arr ;
 Fun_Declaration_prime ->  ( #declare_function #new_scope Params ) #set_func_start Compound_stmt #return #end_scope #end_function
 Type_specifier ->  #push_int int
