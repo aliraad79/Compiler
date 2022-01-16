@@ -2,33 +2,53 @@ import os
 from scanner import Token, TokenType
 from symbol_table import SymbolTable
 from utils import write_three_address_codes_to_file
+from function_table import FunctionTable
 
 
 class IntermidateCodeGenerator:
-    def __init__(self, symbol_table: SymbolTable) -> None:
+    def __init__(
+        self, symbol_table: SymbolTable, function_table: FunctionTable
+    ) -> None:
         self.semantic_stack = []
         self.three_addres_codes = {}
         self.i = 0
         self.debug = True
+        self.function_table: FunctionTable = function_table
 
         self.symbol_table = symbol_table
 
         self.init_icg_variables()
+        self.init_program()
         self.add_output_function()
 
     def init_icg_variables(self) -> None:
-        self.return_value = self.symbol_table.get_temp()
-        self.add_three_address_code(f"(ASSIGN, #0, {self.return_value}, )")
-        self.return_address = self.symbol_table.get_temp()
-        self.add_three_address_code(f"(ASSIGN, #0, {self.return_address}, )")
-        self.stack_pointer = self.symbol_table.get_temp()
-        self.add_three_address_code(f"(ASSIGN, #0, {self.stack_pointer}, )")
-        self.arg_pointer = []
-        self.arg_pass_number = 0
+        print(self.three_addres_codes)
+        self.add_three_address_code("", index=1, increase_i=True)
+
+        self.main_added = False
+        self.retrun_temp = self.symbol_table.get_temp()
+        self.current_function_address = None
+        self.arg_counter = -1
+        self.func_call_stack = []
+
+        self.inside_if = False
+        self.break_bool = False
+
+    def init_program(self):
+        self.semantic_stack.append(self.i)
+        self.add_three_address_code(f"(ASSIGN, #0, {self.retrun_temp}, )")
+        self.add_output_function()
 
     def add_output_function(self) -> None:
         self.symbol_table.insert("output", is_declred=True)
-        # self.memory.program_block.append(f"(PRINT, {self.semantic_stack.pop()}, , )")
+        output_address = self.symbol_table.get_address("output")
+        self.function_table.func_declare("output", output_address, "void")
+        self.function_table.add_param(
+            output_address, "a", "int", output_address + 4, False
+        )
+        self.function_table.funcs[output_address]["start_address"] = self.i
+        self.add_three_address_code(f"(PRINT, {output_address + 4}, ,)")
+        self.add_three_address_code(f"(JP, @{self.retrun_temp}, , )")
 
     def code_gen(self, action_symbol, current_token: Token):
         if self.debug:
@@ -129,9 +149,6 @@ class IntermidateCodeGenerator:
     def end(self, current_token: Token):
         self.semantic_stack.pop()
 
-    def push_return_value(self, current_token: Token):
-        self.semantic_stack.append(self.return_value)
-
     def parray(self, current_token: Token):
         array_index = self.semantic_stack.pop()
         temp = self.symbol_table.get_temp()
@@ -141,11 +158,128 @@ class IntermidateCodeGenerator:
         )
         self.semantic_stack.append(f"@{temp}")
 
-    def declare_arr(self, current_token: Token):
-        self.add_three_address_code(
-            f"(ASSIGN, {self.stack_pointer}, {self.semantic_stack[-2]}, )"
+    def declare_function(self, current_token: Token):
+        name = current_token.lexeme
+        function_address = self.semantic_stack[-1]
+        print("function_address : ", function_address)
+
+        self.function_table.func_declare(name, function_address, "void")
+        if name == "main":
+            self.add_three_address_code(
+                f"(JP, {self.i}, , )", index=1, increase_i=False
+            )
+            self.main_added = True
+
+        self.function_table.func_declare(
+            name, function_address, self.semantic_stack[-2]
+        )  # it is void or int
+
+        self.current_function_address = function_address
+        self.func_call_stack.append(function_address)
+
+    def declare_global_var(self, current_token: Token):
+        self.add_three_address_code(f"(ASSIGN, #0, {self.semantic_stack.pop()},)")
+        print(self.semantic_stack)
+        var = self.semantic_stack.pop()
+        var_type = self.semantic_stack.pop()
+        print("found global var ", var, " with type", var_type)
+
+    def declare_global_arr(self, current_token: Token):
+        size = int(self.semantic_stack[-1][1:])  # remove # from int
+        for i in range(size):
+            self.add_three_address_code(
+                f"(ASSIGN, #0, {self.semantic_stack[-2] + i * 4})"
+            )
+        self.symbol_table.increase_data_address((size - 1) * 4)
+
+    def push_int(self, current_token: Token):
+        self.semantic_stack.append("int")
+
+    def push_void(self, current_token: Token):
+        self.semantic_stack.append("void")
+
+    def param_added(self, current_token: Token):
+        func = self.semantic_stack[-3]
+        is_array = current_token.lexeme == "]"
+        param_name = None
+        for i in self.symbol_table.get_rows():
+            if i.address == self.semantic_stack[-1]:
+                param_name = i.lexeme
+                break
+        self.function_table.add_param(
+            func,
+            param_name,
+            self.semantic_stack[-2],
+            self.semantic_stack[-1],
+            is_array,
         )
-        array_size = int(self.semantic_stack.pop()[1:])  # convert #NUM to NUM
+        self.semantic_stack.pop()
+        self.semantic_stack.pop()
+
+    def pop(self, current_token: Token):
+        self.semantic_stack.pop()
+
+    def _break(self, current_token: Token):
+        if self.break_bool:
+            if self.inside_if:
+                self.add_three_address_code(f"(JP, @{self.semantic_stack[-7]}, , )")
+                self.inside_if = False
+            else:
+                self.add_three_address_code(f"(JP, @{self.semantic_stack[-5]}, , )")
+            self.break_bool = False
+        else:
+            print("semantic error No 'while' or 'switch'")
+            pass
+            ### todo (#lineno: Semantic Error! No 'while' or 'switch' found for 'break')
+
+    def assign_to_func(self, current_token: Token):
+        if not self.main_added:
+            self.add_three_address_code(
+                f"(ASSIGN, {self.semantic_stack[-1]}, {self.current_function_address}, )"
+            )
+            self.semantic_stack.pop()
+
+    def set_array_address(self, current_token: Token):
+        temp = self.symbol_table.get_temp()
+        offset = self.semantic_stack.pop()
+        base = self.semantic_stack.pop()
+
+        self.add_three_address_code(f"(MULT, #4, {offset}, {temp})")
+        self.add_three_address_code(f"(ADD, #{base}, @{temp}, {temp})")
+        self.semantic_stack.append(f"@{temp}")
+
+    def func_call_started(self, current_token: Token):
+        func_name = self.semantic_stack[-1]
+        print("FUNC CALL STARTED")
+        print(self.semantic_stack)
+        print(func_name)
+        print(self.function_table.funcs)
+        print(self.function_table.funcs.keys())
+        self.save_to_file()
+        self.func_number_of_args = len(self.function_table.funcs[func_name]["params"])
+        self.arg_counter = 0
+        self.func_call_stack.append(func_name)
+
+    def func_call_ended(self, current_token: Token):
+        stack_temp = self.symbol_table.get_next_stack_address()
+        self.add_three_address_code(f"(ASSIGN, #0, {self.func_call_stack[-1]}, )")
+        self.add_three_address_code(f"(ASSIGN, #0, {stack_temp}, )")
+        self.add_three_address_code(f"(ASSIGN, {self.retrun_temp}, {stack_temp}, )")
         self.add_three_address_code(
-            f"(ADD, #{4 * array_size}, {self.stack_pointer}, {self.stack_pointer})"
+            f"(ASSIGN, #{self.i + 2}, {self.retrun_temp}, )"
         )
+        print(self.function_table.funcs[self.func_call_stack[-1]])
+        self.add_three_address_code(
+            f"(JP, #{self.function_table.funcs[self.func_call_stack[-1]]['address']}, , )"
+        )
+        self.add_three_address_code(f"(ASSIGN, {stack_temp}, {self.retrun_temp},  )")
+
+    def push_arg(self, current_token: Token):
+        self.semantic_stack.append(
+            self.function_table.funcs[self.func_call_stack[-1]]["params_address"][
+                self.arg_counter
+            ]
+        )
+
+    def if_start(self, current_token: Token):
+        self.inside_if = True

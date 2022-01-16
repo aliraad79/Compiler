@@ -1,22 +1,22 @@
 Program ->  Declaration_list $
 Declaration_list ->  Declaration Declaration_list
 Declaration_list ->  ε
-Declaration ->  Declaration_initial Declaration_prime #end
+Declaration ->  Declaration_initial Declaration_prime
 Declaration_initial ->  Type_specifier #declare_id #padd ID
-Declaration_prime ->  Fun_Declaration_prime
+Declaration_prime ->  #declare_function Fun_Declaration_prime
 Declaration_prime ->  Var_Declaration_prime
-Var_Declaration_prime ->  ;
-Var_Declaration_prime -> [ #padd NUM ] #declare_arr ;
+Var_Declaration_prime ->  #declare_global_var ;
+Var_Declaration_prime -> [ #padd NUM ] #declare_global_arr ;
 Fun_Declaration_prime ->  ( Params ) Compound_stmt
-Type_specifier ->  int
-Type_specifier ->  void
-Params ->  int #declare_id #padd ID Param_prime #end Param_list
-Params ->  void
+Type_specifier ->  #push_int int
+Type_specifier ->  #push_void void
+Params ->  int #declare_id #push_int #padd ID Param_prime Param_list
+Params ->  #push_void void
 Param_list ->  , Param Param_list
 Param_list -> ε
-Param ->  Declaration_initial Param_prime #end
-Param_prime ->  [ ]
-Param_prime ->  ε
+Param ->  Declaration_initial Param_prime
+Param_prime ->  [ #param_added ]
+Param_prime ->  #param_added ε
 Compound_stmt ->  { Declaration_list Statement_list }
 Statement_list ->  Statement Statement_list
 Statement_list ->  ε
@@ -25,20 +25,20 @@ Statement ->  Compound_stmt
 Statement ->  Selection_stmt
 Statement ->  Iteration_stmt
 Statement ->  Return_stmt
-Expression_stmt ->  Expression #end ;
-Expression_stmt ->  break ;
+Expression_stmt ->  Expression #pop ;
+Expression_stmt ->  break #break ;
 Expression_stmt ->  ;
-Selection_stmt ->  if ( Expression ) #save Statement Else_stmt
+Selection_stmt ->  if #if_start ( Expression ) #save Statement Else_stmt
 Else_stmt ->  #jpf endif
 Else_stmt ->  else #jpf_save Statement #jp endif
 Iteration_stmt ->  repeat #label Statement until ( Expression ) #until
 Return_stmt ->  return Return_stmt_prime
 Return_stmt_prime ->  ;
-Return_stmt_prime ->  #push_return_value Expression #assign #end ;
+Return_stmt_prime -> Expression #assign_to_func ;
 Expression ->  Simple_expression_zegond
 Expression ->  #padd ID B
 B ->  = Expression #assign
-B ->  [ Expression ] #parray H
+B ->  [ Expression ] #set_array_address H
 B ->  Simple_expression_prime
 H ->  = Expression #assign
 H ->  G D C
@@ -63,16 +63,16 @@ G ->  ε
 Factor ->  ( Expression )
 Factor ->  #padd ID Var_call_prime
 Factor ->  #padd NUM
-Var_call_prime ->  ( Args )
+Var_call_prime ->  #func_call_started ( Args ) #func_call_ended
 Var_call_prime ->  Var_prime
-Var_prime ->  [ Expression ] #parray
+Var_prime ->  [ Expression #set_array_address ]
 Var_prime ->  ε
-Factor_prime ->  ( Args )
+Factor_prime ->  #func_call_started ( Args ) #func_call_ended
 Factor_prime ->  ε
 Factor_zegond ->  ( Expression )
 Factor_zegond ->  #padd NUM
 Args ->  Arg_list
 Args ->  ε
-Arg_list -> Expression Arg_list_prime
+Arg_list -> #push_arg Expression #assign #pop Arg_list_prime
 Arg_list_prime ->  , Expression Arg_list_prime
 Arg_list_prime ->  ε

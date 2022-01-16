@@ -55,6 +55,9 @@ class SymbolTable:
         self.scope_stack = [0]
         self.current_scope = 0
 
+        self.data_address = 1000
+        self.stack_address = 2000
+
     def insert(self, lexeme: str, is_declred: bool = False) -> None:
         self.table.append(
             SymbolTableRow(
@@ -73,6 +76,9 @@ class SymbolTable:
 
     def get_symbols(self) -> List[str]:
         return [i.lexeme for i in self.table]
+
+    def get_rows(self) -> List[SymbolTableRow]:
+        return [i for i in self.table]
 
     def get_declared_symbols(self) -> List[str]:
         return [i.lexeme for i in self.table if i.is_declred == True]
@@ -94,3 +100,10 @@ class SymbolTable:
         for i in self.table[::-1]:
             if i.address == address:
                 return i
+
+    def increase_data_address(self, num) -> None:
+        self.data_address += num
+
+    def get_next_stack_address(self) -> int:
+        self.stack_address += 4
+        return self.stack_address
