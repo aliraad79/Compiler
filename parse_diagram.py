@@ -679,7 +679,7 @@ def params_diagram():
     _id = DiagramEdge(
         next_node=param_prime_node,
         terminal="ID",
-        action_symbols=["declare_id", "push_int", "padd"],
+        action_symbols=["push_int", "padd"],
     )
     id_node = DiagramNode(next_edges=[_id])
     _int = DiagramEdge(next_node=id_node, terminal="int")
@@ -708,7 +708,7 @@ def fun_declaration_prime():
         next_node=end, terminal="ε", action_symbols=["end_function"]
     )
     dummy_node = DiagramNode(next_edges=[dummy_edge])
-    compound_stmt = DiagramEdge(next_node=dummy_node, non_terminal="compound_stmt")
+    compound_stmt = DiagramEdge(next_node=dummy_node, non_terminal="compound_stmt", action_symbols=['set_func_start'])
     compound_stmt_node = DiagramNode(next_edges=[compound_stmt])
     close_par = DiagramEdge(next_node=compound_stmt_node, terminal=")")
     close_par_node = DiagramNode(next_edges=[close_par])
@@ -757,9 +757,7 @@ def declaration_prime_diagram():
 
 def declaration_initial_diagram():
     end = DiagramNode(next_edges=[])
-    _id = DiagramEdge(
-        next_node=end, terminal="ID", action_symbols=["declare_id", "padd"]
-    )
+    _id = DiagramEdge(next_node=end, terminal="ID", action_symbols=["padd"])
     id_node = DiagramNode(next_edges=[_id])
     type_specifier = DiagramEdge(next_node=id_node, non_terminal="type_specifier")
     return DiagramNode(next_edges=[type_specifier])

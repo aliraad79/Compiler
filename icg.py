@@ -72,8 +72,8 @@ class IntermidateCodeGenerator:
     # Actions
     def padd(self, current_token: Token):
         if current_token.type == TokenType.ID.name:
-            if current_token.lexeme not in self.symbol_table.get_declared_symbols():
-                print(f"Semantic error! not declared symbol : {current_token.lexeme}")
+            # if current_token.lexeme not in self.symbol_table.get_declared_symbols():
+            #     print(f"Semantic error! not declared symbol : {current_token.lexeme}")
             self.semantic_stack.append(
                 self.symbol_table.get_address(current_token.lexeme)
             )
@@ -141,12 +141,6 @@ class IntermidateCodeGenerator:
         self.semantic_stack.append(self.i)
         self.i += 1
 
-    def declare_id(self, current_token: Token):
-        self.symbol_table.get_symbol_record(current_token.lexeme).make_declared()
-        self.add_three_address_code(
-            f"(ASSIGN, #0, {self.symbol_table.get_address(current_token.lexeme)}, )"
-        )
-
     def declare_function(self, current_token: Token):
         function_address = self.semantic_stack[-1]
         function_name = self.symbol_table.reverse_address(function_address)
@@ -167,7 +161,7 @@ class IntermidateCodeGenerator:
     def var(self, current_token: Token):
         var = self.semantic_stack.pop()
         var_type = self.semantic_stack.pop()
-        self.add_three_address_code(f"(ASSIGN, #0, {var},)")
+        self.add_three_address_code(f"(ASSIGN, #0, {var}, )")
 
     def declare_global_arr(self, current_token: Token):
         size = int(self.semantic_stack.pop()[1:])  # remove # from int
@@ -247,7 +241,7 @@ class IntermidateCodeGenerator:
         self.add_three_address_code(f"(ASSIGN, {self.retrun_temp}, {temp}, )")
         self.add_three_address_code(f"(ASSIGN, #{self.i + 2}, {self.retrun_temp}, )")
         self.add_three_address_code(
-            f"(JP, @{self.function_table.funcs[function_address]['address']}, , )"
+            f"(JP, {self.function_table.funcs[function_address]['start_address']}, , )"
         )
         self.add_three_address_code(f"(ASSIGN, {temp}, {self.retrun_temp},  )")
 
@@ -265,3 +259,9 @@ class IntermidateCodeGenerator:
         function_address = self.semantic_stack.pop()
         function_type = self.semantic_stack.pop()
         # maybe we should do something here
+
+    def set_func_start(self, current_token: Token):
+        if self.main_added:
+            print("holy cow we have an error")
+            return
+        self.function_table.funcs[self.semantic_stack[-1]]['start_address'] = self.i
