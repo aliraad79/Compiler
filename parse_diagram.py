@@ -705,17 +705,23 @@ def fun_declaration_prime():
     end = DiagramNode(next_edges=[])
 
     dummy_edge = DiagramEdge(
-        next_node=end, terminal="ε", action_symbols=["end_function"]
+        next_node=end,
+        terminal="ε",
+        action_symbols=["_return", "end_scope", "end_function"],
     )
     dummy_node = DiagramNode(next_edges=[dummy_edge])
-    compound_stmt = DiagramEdge(next_node=dummy_node, non_terminal="compound_stmt", action_symbols=['set_func_start'])
+    compound_stmt = DiagramEdge(
+        next_node=dummy_node,
+        non_terminal="compound_stmt",
+        action_symbols=["set_func_start"],
+    )
     compound_stmt_node = DiagramNode(next_edges=[compound_stmt])
     close_par = DiagramEdge(next_node=compound_stmt_node, terminal=")")
     close_par_node = DiagramNode(next_edges=[close_par])
     params = DiagramEdge(
         next_node=close_par_node,
         non_terminal="params",
-        action_symbols=["declare_function"],
+        action_symbols=["declare_function", "new_scope"],
     )
     params_node = DiagramNode(next_edges=[params])
     open_par = DiagramEdge(next_node=params_node, terminal="(")

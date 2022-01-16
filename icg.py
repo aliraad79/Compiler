@@ -19,6 +19,8 @@ class IntermidateCodeGenerator:
 
         self.retrun_temp = self.symbol_table.get_temp()
 
+        self.scope_stack = []
+
         self.init_program()
         self.init_icg_variables()
 
@@ -264,4 +266,17 @@ class IntermidateCodeGenerator:
         if self.main_added:
             print("holy cow we have an error")
             return
-        self.function_table.funcs[self.semantic_stack[-1]]['start_address'] = self.i
+        self.function_table.funcs[self.semantic_stack[-1]]["start_address"] = self.i
+
+    def new_scope(self, current_token: Token):
+        self.scope_stack.append("#50")
+
+    def end_scope(self, current_token: Token):
+        self.scope_stack.pop()
+
+    def _return(self, current_token: Token):
+        if self.main_added:
+            print("Holy coooooooo")
+            return
+        self.current_function_address = self.semantic_stack[-1]
+        self.add_three_address_code(f"(JP, @{self.retrun_temp}, , )")
