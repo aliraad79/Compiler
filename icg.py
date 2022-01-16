@@ -46,11 +46,8 @@ class IntermidateCodeGenerator:
             output_address, "a", "int", output_input_param, False
         )
         self.function_table.funcs[output_address]["start_address"] = self.i
-        print(self.three_addres_codes, self.i)
         self.add_three_address_code(f"(PRINT, {output_input_param}, ,)")
         self.add_three_address_code(f"(JP, @{self.retrun_temp}, , )")
-        print(self.three_addres_codes, self.i)
-
 
     # functions
     def code_gen(self, action_symbol, current_token: Token):
@@ -65,25 +62,26 @@ class IntermidateCodeGenerator:
         self.i += 1 if increase_i else 0
 
     def save_to_file(self):
-        if self.debug:
-            print("ss stack at the end : ", self.semantic_stack)
-            print("Symbol table : ", self.symbol_table.table)
+        print("ss stack at the end : ", self.semantic_stack)
+        print("Symbol table : ", self.symbol_table.table)
         write_three_address_codes_to_file(self.three_addres_codes)
 
     def run_output(self):
         os.system("./tester_Linux.out")
 
     # Actions
-    def padd(self, token: Token):
-        if token.type == TokenType.ID.name:
-            if token.lexeme not in self.symbol_table.get_declared_symbols():
-                print(f"Semantic error! not declared symbol : {token.lexeme}")
-            self.semantic_stack.append(self.symbol_table.get_address(token.lexeme))
+    def padd(self, current_token: Token):
+        if current_token.type == TokenType.ID.name:
+            if current_token.lexeme not in self.symbol_table.get_declared_symbols():
+                print(f"Semantic error! not declared symbol : {current_token.lexeme}")
+            self.semantic_stack.append(
+                self.symbol_table.get_address(current_token.lexeme)
+            )
 
-        elif token.type == TokenType.NUM.name:
-            self.semantic_stack.append(f"#{token.lexeme}")
-        elif token.type == TokenType.SYMBOL.name:
-            self.semantic_stack.append(token.lexeme)
+        elif current_token.type == TokenType.NUM.name:
+            self.semantic_stack.append(f"#{current_token.lexeme}")
+        elif current_token.type == TokenType.SYMBOL.name:
+            self.semantic_stack.append(current_token.lexeme)
 
     def assign(self, current_token: Token):
         src = self.semantic_stack.pop()
@@ -165,7 +163,6 @@ class IntermidateCodeGenerator:
         )  # it is void or int
 
         self.current_function_address = function_address
-        self.func_call_stack.append(function_address)
 
     def var(self, current_token: Token):
         var = self.semantic_stack.pop()
@@ -179,7 +176,6 @@ class IntermidateCodeGenerator:
 
         for i in range(size):
             self.add_three_address_code(f"(ASSIGN, #0, {var + i * 4})")
-        self.symbol_table.increase_data_address((size - 1) * 4)
 
     def push_int(self, current_token: Token):
         self.semantic_stack.append("int")
@@ -239,25 +235,21 @@ class IntermidateCodeGenerator:
 
     def func_call_started(self, current_token: Token):
         func_name = self.semantic_stack[-1]
-        # print("FUNC CALL STARTED")
-        # print(self.semantic_stack)
-        # print(func_name)
-        # print(self.function_table.funcs)
-        # print(self.function_table.funcs.keys())
         self.func_number_of_args = len(self.function_table.funcs[func_name]["params"])
         self.arg_counter = 0
         self.func_call_stack.append(func_name)
 
     def func_call_ended(self, current_token: Token):
-        stack_temp = self.symbol_table.get_next_stack_address()
-        self.add_three_address_code(f"(ASSIGN, #0, {self.func_call_stack[-1]}, )")
-        self.add_three_address_code(f"(ASSIGN, #0, {stack_temp}, )")
-        self.add_three_address_code(f"(ASSIGN, {self.retrun_temp}, {stack_temp}, )")
+        function_address = self.func_call_stack.pop()
+        temp = self.symbol_table.get_temp()
+        self.add_three_address_code(f"(ASSIGN, #0, {function_address}, )")
+        self.add_three_address_code(f"(ASSIGN, #0, {temp}, )")
+        self.add_three_address_code(f"(ASSIGN, {self.retrun_temp}, {temp}, )")
         self.add_three_address_code(f"(ASSIGN, #{self.i + 2}, {self.retrun_temp}, )")
         self.add_three_address_code(
-            f"(JP, #{self.function_table.funcs[self.func_call_stack[-1]]['address']}, , )"
+            f"(JP, @{self.function_table.funcs[function_address]['address']}, , )"
         )
-        self.add_three_address_code(f"(ASSIGN, {stack_temp}, {self.retrun_temp},  )")
+        self.add_three_address_code(f"(ASSIGN, {temp}, {self.retrun_temp},  )")
 
     def push_arg(self, current_token: Token):
         self.semantic_stack.append(
