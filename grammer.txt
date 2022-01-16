@@ -3,11 +3,11 @@ Declaration_list ->  Declaration Declaration_list
 Declaration_list ->  ε
 Declaration ->  Declaration_initial Declaration_prime
 Declaration_initial ->  Type_specifier #declare_id #padd ID
-Declaration_prime ->  #declare_function Fun_Declaration_prime
+Declaration_prime ->  Fun_Declaration_prime
 Declaration_prime ->  Var_Declaration_prime
 Var_Declaration_prime ->  #declare_global_var ;
 Var_Declaration_prime -> [ #padd NUM ] #declare_global_arr ;
-Fun_Declaration_prime ->  ( Params ) Compound_stmt
+Fun_Declaration_prime ->  ( #declare_function Params ) Compound_stmt #end_function
 Type_specifier ->  #push_int int
 Type_specifier ->  #push_void void
 Params ->  int #declare_id #push_int #padd ID Param_prime Param_list
