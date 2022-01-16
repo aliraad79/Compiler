@@ -146,22 +146,9 @@ class IntermidateCodeGenerator:
             f"(ASSIGN, #0, {self.symbol_table.get_address(current_token.lexeme)}, )"
         )
 
-    def end(self, current_token: Token):
-        self.semantic_stack.pop()
-
-    def parray(self, current_token: Token):
-        array_index = self.semantic_stack.pop()
-        temp = self.symbol_table.get_temp()
-        self.add_three_address_code(f"(MULT, #4, {array_index}, {temp})")
-        self.add_three_address_code(
-            f"(ADD, {self.semantic_stack.pop()}, {temp}, {temp})"
-        )
-        self.semantic_stack.append(f"@{temp}")
-
     def declare_function(self, current_token: Token):
         name = current_token.lexeme
         function_address = self.semantic_stack[-1]
-        print("function_address : ", function_address)
 
         self.function_table.func_declare(name, function_address, "void")
         if name == "main":
@@ -178,18 +165,18 @@ class IntermidateCodeGenerator:
         self.func_call_stack.append(function_address)
 
     def declare_global_var(self, current_token: Token):
-        self.add_three_address_code(f"(ASSIGN, #0, {self.semantic_stack.pop()},)")
-        print(self.semantic_stack)
         var = self.semantic_stack.pop()
         var_type = self.semantic_stack.pop()
         print("found global var ", var, " with type", var_type)
+        self.add_three_address_code(f"(ASSIGN, #0, {var},)")
 
     def declare_global_arr(self, current_token: Token):
-        size = int(self.semantic_stack[-1][1:])  # remove # from int
+        size = int(self.semantic_stack.pop()[1:])  # remove # from int
+        var = self.semantic_stack.pop()
+        var_type = self.semantic_stack.pop()
+        print("found global array ", var, " with type", var_type, " with size", size)
         for i in range(size):
-            self.add_three_address_code(
-                f"(ASSIGN, #0, {self.semantic_stack[-2] + i * 4})"
-            )
+            self.add_three_address_code(f"(ASSIGN, #0, {var + i * 4})")
         self.symbol_table.increase_data_address((size - 1) * 4)
 
     def push_int(self, current_token: Token):
@@ -265,9 +252,7 @@ class IntermidateCodeGenerator:
         self.add_three_address_code(f"(ASSIGN, #0, {self.func_call_stack[-1]}, )")
         self.add_three_address_code(f"(ASSIGN, #0, {stack_temp}, )")
         self.add_three_address_code(f"(ASSIGN, {self.retrun_temp}, {stack_temp}, )")
-        self.add_three_address_code(
-            f"(ASSIGN, #{self.i + 2}, {self.retrun_temp}, )"
-        )
+        self.add_three_address_code(f"(ASSIGN, #{self.i + 2}, {self.retrun_temp}, )")
         print(self.function_table.funcs[self.func_call_stack[-1]])
         self.add_three_address_code(
             f"(JP, #{self.function_table.funcs[self.func_call_stack[-1]]['address']}, , )"

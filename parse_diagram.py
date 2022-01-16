@@ -555,7 +555,9 @@ def selection_stmt_diagram():
     close_bracket_node = DiagramNode(next_edges=[close_bracket])
     expression = DiagramEdge(next_node=close_bracket_node, non_terminal="expression")
     expression_node = DiagramNode(next_edges=[expression])
-    open_bracket = DiagramEdge(next_node=expression_node, terminal="(", action_symbols=["if_start"])
+    open_bracket = DiagramEdge(
+        next_node=expression_node, terminal="(", action_symbols=["if_start"]
+    )
     open_bracket_node = DiagramNode(next_edges=[open_bracket])
     _if = DiagramEdge(next_node=open_bracket_node, terminal="if")
 
@@ -648,9 +650,7 @@ def param_prime_diagram():
 
 def param_diagram():
     end = DiagramNode(next_edges=[])
-    dummy_edge = DiagramEdge(next_node=end, terminal="ε")
-    dummy_node = DiagramNode(next_edges=[dummy_edge])
-    param_prime = DiagramEdge(next_node=dummy_node, non_terminal="param_prime")
+    param_prime = DiagramEdge(next_node=end, non_terminal="param_prime")
     decl = DiagramNode(next_edges=[param_prime])
     decl_edge = DiagramEdge(next_node=decl, non_terminal="declaration_initial")
 
@@ -701,9 +701,7 @@ def type_specifier_diagram():
 def fun_declaration_prime():
     end = DiagramNode(next_edges=[])
 
-    dummy_edge = DiagramEdge(next_node=end, terminal="ε")
-    dummy_node = DiagramNode(next_edges=[dummy_edge])
-    compound_stmt = DiagramEdge(next_node=dummy_node, non_terminal="compound_stmt")
+    compound_stmt = DiagramEdge(next_node=end, non_terminal="compound_stmt")
     compound_stmt_node = DiagramNode(next_edges=[compound_stmt])
     close_par = DiagramEdge(next_node=compound_stmt_node, terminal=")")
     close_par_node = DiagramNode(next_edges=[close_par])
@@ -762,11 +760,7 @@ def declaration_initial_diagram():
 
 def declaration_diagram():
     end = DiagramNode(next_edges=[])
-    dummy_edge = DiagramEdge(next_node=end, terminal="ε")
-    dummy_node = DiagramNode(next_edges=[dummy_edge])
-    declaration_prime = DiagramEdge(
-        next_node=dummy_node, non_terminal="declaration_prime"
-    )
+    declaration_prime = DiagramEdge(next_node=end, non_terminal="declaration_prime")
     declaration_prime_node = DiagramNode(next_edges=[declaration_prime])
     declaration_initial = DiagramEdge(
         next_node=declaration_prime_node, non_terminal="declaration_initial"
