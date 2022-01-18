@@ -74,5 +74,5 @@ Factor_zegond ->  #padd NUM
 Args ->  Arg_list
 Args ->  ε
 Arg_list -> #push_arg Expression #assign #pop Arg_list_prime
-Arg_list_prime ->  , Expression Arg_list_prime
+Arg_list_prime ->  , #push_arg Expression #assign #pop Arg_list_prime
 Arg_list_prime ->  ε

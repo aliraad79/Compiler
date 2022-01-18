@@ -170,9 +170,9 @@ def get_transation_diagrams():
 
 def arg_list_prime_diagram():
     end = DiagramNode(next_edges=[])
-    arg_list_prime = DiagramEdge(next_node=end, non_terminal="arg_list_prime")
+    arg_list_prime = DiagramEdge(next_node=end, non_terminal="arg_list_prime", action_symbols=["assign", "pop"])
     arg_list_prime_node = DiagramNode(next_edges=[arg_list_prime])
-    expression = DiagramEdge(next_node=arg_list_prime_node, non_terminal="expression")
+    expression = DiagramEdge(next_node=arg_list_prime_node, non_terminal="expression", action_symbols=['push_arg'])
     expression_node = DiagramNode(next_edges=[expression])
     comma = DiagramEdge(next_node=expression_node, terminal=",")
 
