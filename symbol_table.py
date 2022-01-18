@@ -53,12 +53,11 @@ class SymbolTable:
         self.table: List[SymbolTableRow] = []
         self.addres_pointer = 500
         self.scope_stack = [0]
-        self.current_scope = 0
 
     def insert(self, lexeme: str, is_declred: bool = False) -> None:
         self.table.append(
             SymbolTableRow(
-                lexeme, self.current_scope, self.addres_pointer, is_declred=is_declred
+                lexeme, self.scope_stack[-1], self.addres_pointer, is_declred=is_declred
             )
         )
         self.addres_pointer += 4
@@ -71,29 +70,18 @@ class SymbolTable:
             if i.lexeme == lexeme:
                 return i.address
 
-    def get_symbols(self) -> List[str]:
-        return [i.lexeme for i in self.table]
-
     def get_rows(self) -> List[SymbolTableRow]:
         return [i for i in self.table]
-
-    def get_declared_symbols(self) -> List[str]:
-        return [i.lexeme for i in self.table if i.is_declred == True]
-
-    def save_to_file(self) -> None:
-        add_symbols_to_file(self.get_symbols())
 
     def get_temp(self) -> int:
         t = self.addres_pointer
         self.addres_pointer += 4
         return t
 
-    def get_symbol_record(self, lexeme) -> SymbolTableRow:
-        for i in self.table[::-1]:
-            if i.lexeme == lexeme:
-                return i
-
     def reverse_address(self, address: int) -> str:
         for i in self.table[::-1]:
             if i.address == address:
                 return i
+
+    def save_to_file(self) -> None:
+        add_symbols_to_file([i.lexeme for i in self.table])
