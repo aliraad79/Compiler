@@ -165,7 +165,8 @@ class IntermidateCodeGenerator:
         var_type = self.semantic_stack.pop()
 
         for i in range(size):
-            self.add_three_address_code(f"(ASSIGN, #0, {var + i * 4})")
+            self.add_three_address_code(f"(ASSIGN, #0, {var + i * 4}, )")
+            self.symbol_table.get_temp()
 
     def push_int(self, current_token: Token):
         self.semantic_stack.append("int")
@@ -214,7 +215,7 @@ class IntermidateCodeGenerator:
         base = self.semantic_stack.pop()
 
         self.add_three_address_code(f"(MULT, #4, {offset}, {temp})")
-        self.add_three_address_code(f"(ADD, #{base}, @{temp}, {temp})")
+        self.add_three_address_code(f"(ADD, #{base}, {temp}, {temp})")
         self.semantic_stack.append(f"@{temp}")
 
     def func_call_started(self, current_token: Token):
@@ -251,9 +252,6 @@ class IntermidateCodeGenerator:
         # maybe we should do something here
 
     def set_func_start(self, current_token: Token):
-        if self.main_added:
-            print("holy cow we have an error")
-            return
         self.function_table.funcs[self.semantic_stack[-1]]["start_address"] = self.i
 
     def new_scope(self, current_token: Token):
@@ -263,8 +261,7 @@ class IntermidateCodeGenerator:
         self.scope_stack.pop()
 
     def _return(self, current_token: Token):
-        if self.main_added:
-            print("Holy coooooooo")
-            return
         self.current_function_address = self.semantic_stack[-1]
-        self.add_three_address_code(f"(JP, @{self.retrun_temp}, , )")
+        function_name = self.symbol_table.reverse_address(self.current_function_address)
+        if function_name.lexeme != "main":
+            self.add_three_address_code(f"(JP, @{self.retrun_temp}, , )")
