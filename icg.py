@@ -13,7 +13,7 @@ class IntermidateCodeGenerator:
         self.semantic_errors = []
         self.three_addres_codes = {}
         self.i = 0
-        self.debug = True
+        self.debug = False
 
         self.function_table: FunctionTable = function_table
         self.symbol_table: SymbolTable = symbol_table
@@ -21,6 +21,7 @@ class IntermidateCodeGenerator:
         self.current_function_address = None
         self.arg_counter = -1
         self.func_call_stack = []
+        self.retrun_stack = []
         self.main_added = False
 
         self.retrun_temp = self.symbol_table.get_temp()
@@ -69,6 +70,14 @@ class IntermidateCodeGenerator:
 
     def run_output(self):
         os.system("./tester_Linux.out")
+
+    def func_arg_is_array(self, arg_address):
+        current_func_info = self.function_table.funcs[self.current_function_address]
+        if arg_address not in current_func_info["params_address"]:
+            return False
+        arg_index = current_func_info["params_address"].index(arg_address)
+        is_arg_array = current_func_info["params_array"][arg_index]
+        return is_arg_array
 
     # Actions
     def padd(self, current_token: Token):
@@ -205,9 +214,8 @@ class IntermidateCodeGenerator:
     def assign_to_func(self, current_token: Token):
         if not self.main_added:
             self.add_three_address_code(
-                f"(ASSIGN, {self.semantic_stack[-1]}, {self.current_function_address}, )"
+                f"(ASSIGN, {self.semantic_stack.pop()}, {self.current_function_address}, )"
             )
-            self.semantic_stack.pop()
 
     def set_array_address(self, current_token: Token):
         temp = self.symbol_table.get_temp()
@@ -215,7 +223,11 @@ class IntermidateCodeGenerator:
         base = self.semantic_stack.pop()
 
         self.add_three_address_code(f"(MULT, #4, {offset}, {temp})")
-        self.add_three_address_code(f"(ADD, #{base}, {temp}, {temp})")
+
+        if self.func_arg_is_array(base):
+            self.add_three_address_code(f"(ADD, {base}, {temp}, {temp})")
+        else:
+            self.add_three_address_code(f"(ADD, #{base}, {temp}, {temp})")
         self.semantic_stack.append(f"@{temp}")
 
     def func_call_started(self, current_token: Token):
@@ -236,12 +248,15 @@ class IntermidateCodeGenerator:
         )
         self.add_three_address_code(f"(ASSIGN, {temp}, {self.retrun_temp},  )")
 
+        self.arg_counter = 0
+
     def push_arg(self, current_token: Token):
         self.semantic_stack.append(
             self.function_table.funcs[self.func_call_stack[-1]]["params_address"][
                 self.arg_counter
             ]
         )
+        self.arg_counter += 1
 
     def if_start(self, current_token: Token):
         self.inside_if = True
@@ -265,3 +280,15 @@ class IntermidateCodeGenerator:
         function_name = self.symbol_table.reverse_address(self.current_function_address)
         if function_name.lexeme != "main":
             self.add_three_address_code(f"(JP, @{self.retrun_temp}, , )")
+
+    def assign_arg(self, current_token: Token):
+        src = self.semantic_stack.pop()
+        dst = self.semantic_stack.pop()
+        current_arg_is_array = self.function_table.funcs[self.func_call_stack[-1]][
+            "params_array"
+        ][self.arg_counter - 1]
+
+        if current_arg_is_array:
+            self.add_three_address_code(f"(ASSIGN, #{src}, {dst}, )")
+        else:
+            self.add_three_address_code(f"(ASSIGN, {src}, {dst}, )")

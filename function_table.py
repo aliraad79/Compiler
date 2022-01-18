@@ -13,7 +13,6 @@ class FunctionEntry:
 class FunctionTable:
     def __init__(self, scanner):
         self.funcs = {}
-        self.params = {}
         self.scanner: Scanner = scanner
 
     def func_declare(self, name, address, return_type):
@@ -44,7 +43,3 @@ class FunctionTable:
         for ad, value in self.funcs.items():
             if name == value["name"]:
                 return ad
-        print("Error")
-
-    def get_parameter(self, func_name, param_name):
-        return self.params.get(func_name + "_" + param_name)
