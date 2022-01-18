@@ -276,7 +276,6 @@ class IntermidateCodeGenerator:
         self.scope_stack.pop()
 
     def _return(self, current_token: Token):
-        self.current_function_address = self.semantic_stack[-1]
         function_name = self.symbol_table.reverse_address(self.current_function_address)
         if function_name.lexeme != "main":
             self.add_three_address_code(f"(JP, @{self.retrun_temp}, , )")

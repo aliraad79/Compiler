@@ -490,12 +490,12 @@ def return_stmt_prime_diagram():
     end = DiagramNode(next_edges=[])
 
     semicolon_2 = DiagramEdge(
-        next_node=end, terminal=";", action_symbols=["assign_to_func"]
+        next_node=end, terminal=";", action_symbols=["assign_to_func", "_return"]
     )
     semicolon_2_node = DiagramNode(next_edges=[semicolon_2])
     expression = DiagramEdge(next_node=semicolon_2_node, non_terminal="expression")
 
-    semicolon = DiagramEdge(next_node=end, terminal=";")
+    semicolon = DiagramEdge(next_node=end, terminal=";", action_symbols=['_return'])
 
     return DiagramNode(next_edges=[semicolon, expression], is_first=True)
 

@@ -33,8 +33,8 @@ Else_stmt ->  #jpf endif
 Else_stmt ->  else #jpf_save Statement #jp endif
 Iteration_stmt ->  repeat #label Statement until ( Expression ) #until
 Return_stmt ->  return Return_stmt_prime
-Return_stmt_prime ->  ;
-Return_stmt_prime -> Expression #assign_to_func ;
+Return_stmt_prime ->  #return ;
+Return_stmt_prime -> Expression #assign_to_func #return ;
 Expression ->  Simple_expression_zegond
 Expression ->  #padd ID B
 B ->  = Expression #assign
