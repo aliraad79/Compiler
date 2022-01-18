@@ -13,7 +13,7 @@ class IntermidateCodeGenerator:
         self.semantic_errors = []
         self.three_addres_codes = {}
         self.i = 0
-        self.debug = False
+        self.debug = True
 
         self.function_table: FunctionTable = function_table
         self.symbol_table: SymbolTable = symbol_table
