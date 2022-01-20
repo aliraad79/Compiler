@@ -23,6 +23,7 @@ class IntermidateCodeGenerator:
         self.func_call_stack = []
         self.main_added = False
         self.is_inside_function_declaration = False
+        self.is_recursive = False
 
         self.retrun_temp = self.symbol_table.get_temp()
 
@@ -69,7 +70,7 @@ class IntermidateCodeGenerator:
     def save_to_file(self):
         print("ss stack at the end : ", self.semantic_stack)
         print("Symbol table : ", self.symbol_table.table)
-        if len(self.semantic_errors) != 0:
+        if len(self.semantic_errors) != 0 or self.is_recursive:
             self.three_addres_codes = {}
         write_three_address_codes_to_file(self.three_addres_codes)
         write_semantic_errors(self.semantic_errors)
@@ -254,6 +255,8 @@ class IntermidateCodeGenerator:
         self.arg_counter = 0
         self.func_call_stack.append(func_name)
 
+        self.check_recursive_call(func_name)
+
     def func_call_ended(self, current_token: Token):
         function_address = self.func_call_stack.pop()
         temp = self.symbol_table.get_temp()
@@ -381,3 +384,10 @@ class IntermidateCodeGenerator:
         if not row.is_declred:
             self.add_error(f"Semantic Error! '{row.lexeme}' is not defined.")
             row.type = SymbolTableRowType.int
+
+    def check_recursive_call(self, func_called_name):
+        current_func = self.symbol_table.reverse_address(self.current_function_address)
+        called_func = self.symbol_table.reverse_address(func_called_name)
+
+        if current_func == called_func:
+            self.is_recursive = True
