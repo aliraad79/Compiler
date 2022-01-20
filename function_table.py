@@ -1,3 +1,4 @@
+from symbol_table import SymbolTable
 from typing import List
 from scanner import Scanner
 
@@ -11,17 +12,17 @@ class FunctionEntry:
 
 
 class FunctionTable:
-    def __init__(self, scanner):
+    def __init__(self, scanner, symbol_table: SymbolTable):
         self.funcs = {}
         self.scanner: Scanner = scanner
+        self.symbol_table: SymbolTable = symbol_table
 
     def func_declare(self, name, address, return_type):
         self.funcs[address] = {
             "name": name,
             "address": address,
             "return_type": return_type,
-            "symbol_table": {},
-            # "scope": scope_stack.top(),
+            "scope": self.symbol_table.scope_stack[-1],
             "line_num": self.scanner.line_number,
             "params": [],
             "params_type": [],
@@ -35,11 +36,3 @@ class FunctionTable:
         self.funcs[func]["params_type"].append(param_type)
         self.funcs[func]["params_address"].append(param_address)
         self.funcs[func]["params_array"].append(is_array)
-
-    def get_function_name(self, address):
-        return self.funcs[address]["name"]
-
-    def get_function_address(self, name):
-        for ad, value in self.funcs.items():
-            if name == value["name"]:
-                return ad

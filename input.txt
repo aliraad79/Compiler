@@ -1,35 +1,49 @@
-/*===  Sample 5  === */
-void printArray(int A[], int size)
-{
-    int i;
-    i = 0;
-    if (i < size) {
-    repeat {
-        output(A[i]);
-        i = i + 1;
-    } until (size < i + 1)
-    } endif
+/* === sample 9 ==== */
+int x[10];
+int minloc (  int a[],  int low,  int high 	)
+    {int i; int x;  int k;
+      k = low;
+      x = a[low];
+      i = low + 1;
+      if (i < high) {
+      repeat {
+          if (a[i] < x) {
+             x= a[i];
+             k =  i;
+          }
+          else { } endif
+          i =  i + 1;
+           } until (high < i + 1)
+      } endif
+      return k;
+}
+void sort( int a[], int low, int high) {
+     int i;
+     int k;
+     i = low;
+     if (i < high - 1) {
+     repeat {
+          int t;
+          k = minloc(a,i,high);
+          t = a[k];
+          a[k] = a[i];
+          a[i] =  t;
+          i = i+1;
+      } until (high - 2 < i)
+     } endif
 }
 
-void main(void)
-{
-    int arr[20];
-    int arrsize;
-    int i;
-    int j;
-    arrsize = 20;
-    i = 0;
-    repeat {
-	j = 0;
-	arr[i] = 2;
-	if (j < i) {
-	repeat {
-		arr[i] = arr[i] * (0-2);
-		j = j + 1;
-	} until (i < j + 1)
-	} endif
-	i = i + 1;
-    } until (arrsize < i + 1)
-
-    printArray(arr, arrsize);
+void main(void){
+  int i;
+  i = 0;
+  repeat{
+    x[i] =  i * i;
+    i = i + 1;
+  } until (9 < i)
+  sort(x,0,10);
+  i = 0;
+  repeat {
+    output(x[i]);
+    i = i + 1;
+  } until (9 < i)
 }

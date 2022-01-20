@@ -45,7 +45,7 @@ class SymbolTableRow:
         return __o == self.lexeme
 
     def __repr__(self) -> str:
-        return f"{self.lexeme}:{self.address}"
+        return f"{self.lexeme}:{self.address}:{self.scope}"
 
 
 class SymbolTable:
@@ -61,6 +61,7 @@ class SymbolTable:
             )
         )
         self.addres_pointer += 4
+        return self.addres_pointer - 4
 
     def include(self, lexeme: str) -> bool:
         return lexeme in self.table

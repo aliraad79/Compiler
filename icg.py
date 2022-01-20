@@ -1,5 +1,7 @@
 import os
-from scanner import Token, TokenType
+
+from black import json
+from scanner import Scanner, Token, TokenType
 from symbol_table import SymbolTable
 from utils import write_three_address_codes_to_file, write_semantic_errors
 from function_table import FunctionTable
@@ -7,7 +9,7 @@ from function_table import FunctionTable
 
 class IntermidateCodeGenerator:
     def __init__(
-        self, symbol_table: SymbolTable, function_table: FunctionTable
+        self, symbol_table: SymbolTable, function_table: FunctionTable, scanner: Scanner
     ) -> None:
         self.semantic_stack = []
         self.semantic_errors = []
@@ -17,16 +19,16 @@ class IntermidateCodeGenerator:
 
         self.function_table: FunctionTable = function_table
         self.symbol_table: SymbolTable = symbol_table
+        self.scanner: Scanner = scanner
 
         self.current_function_address = None
         self.arg_counter = -1
         self.func_call_stack = []
         self.retrun_stack = []
         self.main_added = False
+        self.is_inside_function_declaration = False
 
         self.retrun_temp = self.symbol_table.get_temp()
-
-        self.scope_stack = []
 
         self.inside_if = False
 
@@ -53,7 +55,7 @@ class IntermidateCodeGenerator:
     # functions
     def code_gen(self, action_symbol, current_token: Token):
         if self.debug:
-            print(self.semantic_stack, action_symbol, current_token.lexeme)
+            print(self.semantic_stack, action_symbol, current_token.lexeme, self.i)
         getattr(self, action_symbol)(current_token)
 
     def add_three_address_code(
@@ -82,9 +84,13 @@ class IntermidateCodeGenerator:
     # Actions
     def padd(self, current_token: Token):
         if current_token.type == TokenType.ID.name:
-            self.semantic_stack.append(
-                self.symbol_table.get_address(current_token.lexeme)
-            )
+            if not self.is_inside_function_declaration:
+                self.semantic_stack.append(
+                    self.symbol_table.get_address(current_token.lexeme)
+                )
+            else:
+                address = self.symbol_table.insert(current_token.lexeme,is_declred=True)
+                self.semantic_stack.append(address)
 
         elif current_token.type == TokenType.NUM.name:
             self.semantic_stack.append(f"#{current_token.lexeme}")
@@ -102,6 +108,9 @@ class IntermidateCodeGenerator:
         second_operand = self.semantic_stack.pop()
         operand = operand_map[self.semantic_stack.pop()]
         first_operand = self.semantic_stack.pop()
+
+        if operand == "LT" and "@" in str(first_operand):
+            self.add_three_address_code(f"(PRINT, {first_operand[1:]}, ,)")
 
         op_result = self.symbol_table.get_temp()
 
@@ -147,6 +156,8 @@ class IntermidateCodeGenerator:
         self.i += 1
 
     def declare_function(self, current_token: Token):
+        self.is_inside_function_declaration = True
+
         function_address = self.semantic_stack[-1]
         function_name = self.symbol_table.reverse_address(function_address)
 
@@ -267,13 +278,15 @@ class IntermidateCodeGenerator:
         # maybe we should do something here
 
     def set_func_start(self, current_token: Token):
+        self.is_inside_function_declaration = False
+
         self.function_table.funcs[self.semantic_stack[-1]]["start_address"] = self.i
 
     def new_scope(self, current_token: Token):
-        self.scope_stack.append("#50")
+        self.symbol_table.scope_stack.append(self.scanner.line_number)
 
     def end_scope(self, current_token: Token):
-        self.scope_stack.pop()
+        self.symbol_table.scope_stack.pop()
 
     def _return(self, current_token: Token):
         function_name = self.symbol_table.reverse_address(self.current_function_address)
@@ -288,6 +301,6 @@ class IntermidateCodeGenerator:
         ][self.arg_counter - 1]
 
         if current_arg_is_array:
-            self.add_three_address_code(f"(ASSIGN, #{src}, {dst}, )")
+            self.add_three_address_code(f"(ASSIGN, #{src}, {dst}, s)")
         else:
             self.add_three_address_code(f"(ASSIGN, {src}, {dst}, )")
