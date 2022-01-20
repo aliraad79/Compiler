@@ -1,6 +1,3 @@
-import os
-
-from black import json
 from scanner import Scanner, Token, TokenType
 from symbol_table import FuncOrVar, SymbolTable, SymbolTableRow, SymbolTableRowType
 from utils import write_three_address_codes_to_file, write_semantic_errors
@@ -78,9 +75,6 @@ class IntermidateCodeGenerator:
             self.three_addres_codes = {}
         write_three_address_codes_to_file(self.three_addres_codes)
         write_semantic_errors(self.semantic_errors)
-
-    def run_output(self):
-        os.system("./tester_Linux.out")
 
     def func_arg_is_array(self, arg_address):
         current_func_info = self.function_table.funcs[self.current_function_address]

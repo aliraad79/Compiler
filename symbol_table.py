@@ -1,4 +1,4 @@
-from typing import Dict, List
+from typing import List
 from utils import add_symbols_to_file
 from enum import Enum
 
