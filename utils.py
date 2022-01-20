@@ -122,6 +122,7 @@ def write_three_address_codes_to_file(addresses: Dict[int, str]):
 def write_semantic_errors(errors: List[str]):
     with open("semantic_errors.txt", "w") as file:
         if len(errors) == 0:
-            errors = ["The input program is semantically correct."]
-        for i in errors:
-            file.write(f"{i}\n")
+            file.write("The input program is semantically correct.")
+        else:
+            for i in errors:
+                file.write(f"{i}\n")
