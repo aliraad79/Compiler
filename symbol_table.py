@@ -72,6 +72,16 @@ class SymbolTable:
             if i.lexeme == lexeme:
                 return i.address
 
+    def get_row(self, lexeme: str) -> SymbolTableRow:
+        for i in self.table[::-1]:
+            if i.lexeme == lexeme:
+                return i
+
+    def reverse_address(self, address: int) -> SymbolTableRow:
+        for i in self.table[::-1]:
+            if i.address == address:
+                return i
+
     def get_rows(self) -> List[SymbolTableRow]:
         return [i for i in self.table]
 
@@ -79,11 +89,6 @@ class SymbolTable:
         t = self.addres_pointer
         self.addres_pointer += 4
         return t
-
-    def reverse_address(self, address: int) -> SymbolTableRow:
-        for i in self.table[::-1]:
-            if i.address == address:
-                return i
 
     def save_to_file(self) -> None:
         add_symbols_to_file([i.lexeme for i in self.table])

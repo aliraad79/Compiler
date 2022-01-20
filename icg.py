@@ -2,7 +2,7 @@ import os
 
 from black import json
 from scanner import Scanner, Token, TokenType
-from symbol_table import SymbolTable, SymbolTableRowType
+from symbol_table import FuncOrVar, SymbolTable, SymbolTableRow, SymbolTableRowType
 from utils import write_three_address_codes_to_file, write_semantic_errors
 from function_table import FunctionTable
 
@@ -114,6 +114,8 @@ class IntermidateCodeGenerator:
         operand = operand_map[self.semantic_stack.pop()]
         first_operand = self.semantic_stack.pop()
 
+        self.check_operand_missmatch(first_operand, second_operand)
+
         if operand == "LT" and "@" in str(first_operand):
             self.add_three_address_code(f"(PRINT, {first_operand[1:]}, ,)")
 
@@ -164,17 +166,20 @@ class IntermidateCodeGenerator:
         self.is_inside_function_declaration = True
 
         function_address = self.semantic_stack[-1]
-        function_name = self.symbol_table.reverse_address(function_address)
+        function_row = self.symbol_table.reverse_address(function_address)
+        function_row.is_declred = True
+        function_row.func_or_var = FuncOrVar.func
 
-        self.function_table.func_declare(function_name, function_address, "void")
-        if function_name == "main":
+        self.function_table.func_declare(function_row, function_address, "void")
+        if function_row.lexeme == "main":
+            print(function_row)
             self.add_three_address_code(
                 f"(JP, {self.i}, , )", index=1, increase_i=False
             )
             self.main_added = True
 
         self.function_table.func_declare(
-            function_name, function_address, self.semantic_stack[-2]
+            function_row, function_address, self.semantic_stack[-2]
         )
 
         self.current_function_address = function_address
@@ -336,6 +341,26 @@ class IntermidateCodeGenerator:
                     + f"'{function_name}'. Expected '{arg_type}' but got '{var.type.name}' instead."
                 )
 
+    def check_operand_missmatch(self, first, second):
+        first_row = self.symbol_table.reverse_address(first)
+        first_row = first_row.type.name if first_row else "int"
+
+        second_row = self.symbol_table.reverse_address(second)
+        second_row = second_row.type.name if second_row else "int"
+
+        if first_row != second_row:
+            self.semantic_errors.append(
+                f"#{self.scanner.line_number} : Semantic Error! Type mismatch in operands, "
+                + f"Got {second_row} instead of {first_row}."
+            )
+
+    def check_not_void(self, row: SymbolTableRow):
+        if row.type == SymbolTableRowType.void and row.func_or_var == FuncOrVar.var:
+            print("Error")
+            self.semantic_errors.append(
+                f"#{self.scanner.line_number} : Semantic Error! Illegal type of void for '{row.lexeme}'."
+            )
+
     def pdeclare(self, current_token: Token):
         var_type = self.semantic_stack[-2]
         var_row = self.symbol_table.reverse_address(self.semantic_stack[-1])
@@ -346,6 +371,16 @@ class IntermidateCodeGenerator:
         )
         var_row.is_declred = True
 
+        self.check_not_void(var_row)
+
     def make_var_array(self, current_token: Token):
         var_row = self.symbol_table.reverse_address(self.semantic_stack[-2])
         var_row.type = SymbolTableRowType.array
+
+    def check_declare(self, current_token: Token):
+        address = self.semantic_stack[-1]
+        row = self.symbol_table.reverse_address(address)
+        if not row.is_declred:
+            self.semantic_errors.append(
+                f"#{self.scanner.line_number} : Semantic Error! '{row.lexeme}' is not defined."
+            )

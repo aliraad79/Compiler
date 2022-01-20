@@ -170,9 +170,15 @@ def get_transation_diagrams():
 
 def arg_list_prime_diagram():
     end = DiagramNode(next_edges=[])
-    arg_list_prime = DiagramEdge(next_node=end, non_terminal="arg_list_prime", action_symbols=["assign_arg"])
+    arg_list_prime = DiagramEdge(
+        next_node=end, non_terminal="arg_list_prime", action_symbols=["assign_arg"]
+    )
     arg_list_prime_node = DiagramNode(next_edges=[arg_list_prime])
-    expression = DiagramEdge(next_node=arg_list_prime_node, non_terminal="expression", action_symbols=['push_arg'])
+    expression = DiagramEdge(
+        next_node=arg_list_prime_node,
+        non_terminal="expression",
+        action_symbols=["push_arg"],
+    )
     expression_node = DiagramNode(next_edges=[expression])
     comma = DiagramEdge(next_node=expression_node, terminal=",")
 
@@ -278,7 +284,9 @@ def factor_diagram():
     var_call_prime = DiagramEdge(next_node=end, non_terminal="var_call_prime")
     var_call_prime_node = DiagramNode(next_edges=[var_call_prime])
     _id = DiagramEdge(
-        next_node=var_call_prime_node, terminal="ID", action_symbols=["padd"]
+        next_node=var_call_prime_node,
+        terminal="ID",
+        action_symbols=["padd", "check_declare"],
     )
 
     num = DiagramEdge(next_node=end, terminal="NUM", action_symbols=["padd"])
@@ -477,7 +485,9 @@ def expression_diagram():
     end = DiagramNode(next_edges=[])
     _B_edge = DiagramEdge(next_node=end, non_terminal="b")
     _B_node = DiagramNode(next_edges=[_B_edge])
-    _id = DiagramEdge(next_node=_B_node, terminal="ID", action_symbols=["padd"])
+    _id = DiagramEdge(
+        next_node=_B_node, terminal="ID", action_symbols=["padd", "check_declare"]
+    )
 
     simple_expression_zegond = DiagramEdge(
         next_node=end, non_terminal="simple_expression_zegond"
@@ -495,7 +505,7 @@ def return_stmt_prime_diagram():
     semicolon_2_node = DiagramNode(next_edges=[semicolon_2])
     expression = DiagramEdge(next_node=semicolon_2_node, non_terminal="expression")
 
-    semicolon = DiagramEdge(next_node=end, terminal=";", action_symbols=['_return'])
+    semicolon = DiagramEdge(next_node=end, terminal=";", action_symbols=["_return"])
 
     return DiagramNode(next_edges=[semicolon, expression], is_first=True)
 
@@ -636,7 +646,9 @@ def compound_stmt():
 def param_prime_diagram():
     end = DiagramNode(next_edges=[])
     close_bracket = DiagramEdge(
-        next_node=end, terminal="]", action_symbols=["param_added", "make_var_array"] #TODO
+        next_node=end,
+        terminal="]",
+        action_symbols=["param_added", "make_var_array"],  # TODO
     )
     close_bracket_node = DiagramNode(next_edges=[close_bracket])
     open_bracket = DiagramEdge(next_node=close_bracket_node, terminal="[")
@@ -650,7 +662,9 @@ def param_prime_diagram():
 
 def param_diagram():
     end = DiagramNode(next_edges=[])
-    param_prime = DiagramEdge(next_node=end, non_terminal="param_prime")
+    param_prime = DiagramEdge(
+        next_node=end, non_terminal="param_prime", action_symbols=["pdeclare"]
+    )
     decl = DiagramNode(next_edges=[param_prime])
     decl_edge = DiagramEdge(next_node=decl, non_terminal="declaration_initial")
 
@@ -734,7 +748,9 @@ def var_declaration_prime_diagram():
     semicolon = DiagramEdge(next_node=end, terminal=";", action_symbols=["var"])
 
     semicolon_2 = DiagramEdge(
-        next_node=end, terminal=";", action_symbols=["make_var_array", "declare_global_arr"]
+        next_node=end,
+        terminal=";",
+        action_symbols=["make_var_array", "declare_global_arr"],
     )
     semicolon_2_node = DiagramNode(next_edges=[semicolon_2])
     close_t = DiagramEdge(next_node=semicolon_2_node, terminal="]")
