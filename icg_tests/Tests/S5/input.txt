@@ -1,4 +1,4 @@
-/*=== Sample 4 == */
+/*==== Sample S5 ====*/
 int abs(int a) {
     if (a < 0) {
         return 0-a;
@@ -11,10 +11,10 @@ int isMultiplier(int a, int b) {
     int i;
     int step;
     int flag;
-
+    int c[10];
     if (b == 0) {
         return 0;
-    } else {
+    } else {break;
         i = 1;
         flag = 0;
     } endif
@@ -34,42 +34,34 @@ int isMultiplier(int a, int b) {
     } endif
 
     step = i;
-    i = i - abs(i);
-    if (abs(i) < abs(a) + 1) {
-    repeat {
+    i = i - abs(i,1);
+   repeat {
         if (i * b == a) {
             flag = 1;
             break;
         } else {
             i = i + step;
         } endif
-    } until (abs(a) < abs(i))
-    } endif
+    } until (abs(i) == abs(a) + c - 1)
     return flag;
 
 }
 
 
 void main(void) {
+    void b; 
+    int a[10];
     int i;
     int j;
     int sum;
     i = 1;
     j = 1;
-    repeat {
+     repeat {
         sum = 0;
         j = 0;
-        repeat {
-            j = j + 1;
-            if (isMultiplier(j, 2)) {
-                sum = sum + 0;
-            } else {
-                sum = sum + j;
-            } endif
-        }  until (i < j + 1)
-        output(sum);
-        i = i + 1;
-
-    } until (10 < i)
+        break;        
+	output(sum);
+    i = i + 1;
+    } until(i == max - 1) 
 
 }

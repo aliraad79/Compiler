@@ -2,7 +2,7 @@ import os
 
 from black import json
 from scanner import Scanner, Token, TokenType
-from symbol_table import SymbolTable
+from symbol_table import SymbolTable, SymbolTableRowType
 from utils import write_three_address_codes_to_file, write_semantic_errors
 from function_table import FunctionTable
 
@@ -42,9 +42,10 @@ class IntermidateCodeGenerator:
     def add_output_function(self) -> None:
         self.symbol_table.insert("output", is_declred=True)
         output_address = self.symbol_table.get_address("output")
+        output_row = self.symbol_table.reverse_address(output_address)
         output_input_param = self.symbol_table.get_temp()
 
-        self.function_table.func_declare("output", output_address, "void")
+        self.function_table.func_declare(output_row, output_address, "void")
         self.function_table.add_param(
             output_address, "a", "int", output_input_param, False
         )
@@ -67,6 +68,8 @@ class IntermidateCodeGenerator:
     def save_to_file(self):
         print("ss stack at the end : ", self.semantic_stack)
         print("Symbol table : ", self.symbol_table.table)
+        if len(self.semantic_errors) != 0:
+            self.three_addres_codes = {}
         write_three_address_codes_to_file(self.three_addres_codes)
         write_semantic_errors(self.semantic_errors)
 
@@ -89,7 +92,9 @@ class IntermidateCodeGenerator:
                     self.symbol_table.get_address(current_token.lexeme)
                 )
             else:
-                address = self.symbol_table.insert(current_token.lexeme,is_declred=True)
+                address = self.symbol_table.insert(
+                    current_token.lexeme, is_declred=True
+                )
                 self.semantic_stack.append(address)
 
         elif current_token.type == TokenType.NUM.name:
@@ -262,12 +267,18 @@ class IntermidateCodeGenerator:
         self.arg_counter = 0
 
     def push_arg(self, current_token: Token):
-        self.semantic_stack.append(
-            self.function_table.funcs[self.func_call_stack[-1]]["params_address"][
-                self.arg_counter
-            ]
-        )
-        self.arg_counter += 1
+        function_info = self.function_table.funcs[self.func_call_stack[-1]]
+        try:
+            self.semantic_stack.append(
+                function_info["params_address"][self.arg_counter]
+            )
+            self.arg_counter += 1
+        except IndexError:
+            self.semantic_stack.append("#20")  # TODO change this temp
+            function_name = function_info["name"].lexeme
+            self.semantic_errors.append(
+                f"#{self.scanner.line_number} : Semantic Error! Mismatch in numbers of arguments of '{function_name}'."
+            )
 
     def if_start(self, current_token: Token):
         self.inside_if = True
@@ -296,11 +307,45 @@ class IntermidateCodeGenerator:
     def assign_arg(self, current_token: Token):
         src = self.semantic_stack.pop()
         dst = self.semantic_stack.pop()
-        current_arg_is_array = self.function_table.funcs[self.func_call_stack[-1]][
-            "params_array"
-        ][self.arg_counter - 1]
+
+        function_info = self.function_table.funcs[self.func_call_stack[-1]]
+        current_arg_is_array = function_info["params_array"][self.arg_counter - 1]
+
+        self.check_missmatch_type(src, function_info)
 
         if current_arg_is_array:
-            self.add_three_address_code(f"(ASSIGN, #{src}, {dst}, s)")
+            self.add_three_address_code(f"(ASSIGN, #{src}, {dst}, )")
         else:
             self.add_three_address_code(f"(ASSIGN, {src}, {dst}, )")
+
+    # semantic errors
+    def check_missmatch_type(self, src, function_info):
+        current_arg_is_array = function_info["params_array"][self.arg_counter - 1]
+        var = self.symbol_table.reverse_address(src)
+        if var != None:
+            arg_type = function_info["params_type"][self.arg_counter - 1]
+            function_name = function_info["name"].lexeme
+            if current_arg_is_array and var.type != SymbolTableRowType.array:
+                self.semantic_errors.append(
+                    f"#{self.scanner.line_number} : Semantic Error! Mismatch in type of argument {self.arg_counter} of "
+                    + f"'{function_name}'. Expected 'array' but got '{var.type.name}' instead."
+                )
+            elif arg_type != var.type.name:
+                self.semantic_errors.append(
+                    f"#{self.scanner.line_number} : Semantic Error! Mismatch in type of argument {self.arg_counter} of "
+                    + f"'{function_name}'. Expected '{arg_type}' but got '{var.type.name}' instead."
+                )
+
+    def pdeclare(self, current_token: Token):
+        var_type = self.semantic_stack[-2]
+        var_row = self.symbol_table.reverse_address(self.semantic_stack[-1])
+        var_row.type = (
+            SymbolTableRowType.int
+            if var_type == SymbolTableRowType.int.name
+            else SymbolTableRowType.void
+        )
+        var_row.is_declred = True
+
+    def make_var_array(self, current_token: Token):
+        var_row = self.symbol_table.reverse_address(self.semantic_stack[-2])
+        var_row.type = SymbolTableRowType.array

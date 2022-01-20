@@ -5,8 +5,9 @@ from enum import Enum
 
 class SymbolTableRowType(Enum):
     int = 1
-    real = 2
-    none = 3
+    void = 2
+    array = 3
+    none = 4
 
 
 class FuncOrVar(Enum):
@@ -79,7 +80,7 @@ class SymbolTable:
         self.addres_pointer += 4
         return t
 
-    def reverse_address(self, address: int) -> str:
+    def reverse_address(self, address: int) -> SymbolTableRow:
         for i in self.table[::-1]:
             if i.address == address:
                 return i

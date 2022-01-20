@@ -636,7 +636,7 @@ def compound_stmt():
 def param_prime_diagram():
     end = DiagramNode(next_edges=[])
     close_bracket = DiagramEdge(
-        next_node=end, terminal="]", action_symbols=["param_added"]
+        next_node=end, terminal="]", action_symbols=["param_added", "make_var_array"] #TODO
     )
     close_bracket_node = DiagramNode(next_edges=[close_bracket])
     open_bracket = DiagramEdge(next_node=close_bracket_node, terminal="[")
@@ -679,7 +679,7 @@ def params_diagram():
     _id = DiagramEdge(
         next_node=param_prime_node,
         terminal="ID",
-        action_symbols=["push_int", "padd"],
+        action_symbols=["push_int", "padd", "pdeclare"],
     )
     id_node = DiagramNode(next_edges=[_id])
     _int = DiagramEdge(next_node=id_node, terminal="int")
@@ -734,7 +734,7 @@ def var_declaration_prime_diagram():
     semicolon = DiagramEdge(next_node=end, terminal=";", action_symbols=["var"])
 
     semicolon_2 = DiagramEdge(
-        next_node=end, terminal=";", action_symbols=["declare_global_arr"]
+        next_node=end, terminal=";", action_symbols=["make_var_array", "declare_global_arr"]
     )
     semicolon_2_node = DiagramNode(next_edges=[semicolon_2])
     close_t = DiagramEdge(next_node=semicolon_2_node, terminal="]")
@@ -763,7 +763,7 @@ def declaration_prime_diagram():
 
 def declaration_initial_diagram():
     end = DiagramNode(next_edges=[])
-    _id = DiagramEdge(next_node=end, terminal="ID", action_symbols=["padd"])
+    _id = DiagramEdge(next_node=end, terminal="ID", action_symbols=["padd","pdeclare"])
     id_node = DiagramNode(next_edges=[_id])
     type_specifier = DiagramEdge(next_node=id_node, non_terminal="type_specifier")
     return DiagramNode(next_edges=[type_specifier])
