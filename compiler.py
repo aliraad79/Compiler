@@ -5,7 +5,7 @@ from parser import Parser
 from icg import IntermidateCodeGenerator
 from symbol_table import SymbolTable
 from function_table import FunctionTable
-# import os
+import os
 
 symbol_table = SymbolTable()
 scanner = Scanner(symbol_table)

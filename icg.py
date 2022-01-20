@@ -68,8 +68,8 @@ class IntermidateCodeGenerator:
         self.semantic_errors.append(f"#{self.scanner.line_number} : " + error_text)
 
     def save_to_file(self):
-        print("ss stack at the end : ", self.semantic_stack)
-        print("Symbol table : ", self.symbol_table.table)
+        # print("ss stack at the end : ", self.semantic_stack)
+        # print("Symbol table : ", self.symbol_table.table)
         if len(self.semantic_errors) != 0 or self.is_recursive:
             self.three_addres_codes = {}
         write_three_address_codes_to_file(self.three_addres_codes)
@@ -314,6 +314,7 @@ class IntermidateCodeGenerator:
             self.add_three_address_code(f"(ASSIGN, {src}, {dst}, )")
 
     def break_temp(self, current_token: Token):
+        return
         break_temp = self.symbol_table.get_temp()
         self.semantic_stack.append(break_temp)
         self.semantic_stack.append(self.i)
@@ -322,11 +323,13 @@ class IntermidateCodeGenerator:
 
     def break_jump(self, current_token: Token):
         try:
+            raise IndexError
             self.add_three_address_code(f"(JP, @{self.semantic_stack[-5]}, , )")
         except IndexError:
             self.add_error("Semantic Error! No 'repeat ... until' found for 'break'.")
 
     def set_break_temp(self, current_token: Token):
+        return
         index = self.semantic_stack.pop()
         self.add_three_address_code(
             f"(ASSIGN, #{self.i}, {self.semantic_stack.pop()}, )", index=index
