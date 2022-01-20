@@ -521,7 +521,9 @@ def return_stmt_diagram():
 
 def iteration_stmt_diagram():
     end = DiagramNode(next_edges=[])
-    close_bracket = DiagramEdge(next_node=end, terminal=")", action_symbols=["until"])
+    close_bracket = DiagramEdge(
+        next_node=end, terminal=")", action_symbols=["until", "set_break_temp"]
+    )
     close_bracket_node = DiagramNode(next_edges=[close_bracket])
     expression = DiagramEdge(next_node=close_bracket_node, non_terminal="expression")
     expression_node = DiagramNode(next_edges=[expression])
@@ -533,7 +535,9 @@ def iteration_stmt_diagram():
         next_node=until_node, non_terminal="statement", action_symbols=["label"]
     )
     statement_node = DiagramNode(next_edges=[statement])
-    repeat = DiagramEdge(next_node=statement_node, terminal="repeat")
+    repeat = DiagramEdge(
+        next_node=statement_node, terminal="repeat", action_symbols=["break_temp"]
+    )
 
     return DiagramNode(next_edges=[repeat], is_first=True)
 
@@ -577,7 +581,7 @@ def expression_stmt_diagram():
 
     semicolon = DiagramEdge(next_node=end, terminal=";")
 
-    semicolon_2 = DiagramEdge(next_node=end, terminal=";", action_symbols=["_break"])
+    semicolon_2 = DiagramEdge(next_node=end, terminal=";", action_symbols=["break_jump"])
     semicolon_node = DiagramNode(next_edges=[semicolon_2])
     _break = DiagramEdge(next_node=semicolon_node, terminal="break")
 

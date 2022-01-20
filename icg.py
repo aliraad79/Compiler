@@ -223,13 +223,6 @@ class IntermidateCodeGenerator:
     def pop(self, current_token: Token):
         self.semantic_stack.pop()
 
-    def _break(self, current_token: Token):
-        try:
-            # What should i do?
-            raise IndexError
-        except IndexError:
-            self.add_error("Semantic Error! No 'repeat ... until' found for 'break'.")
-
     def assign_to_func(self, current_token: Token):
         if not self.main_added:
             self.add_three_address_code(
@@ -319,6 +312,25 @@ class IntermidateCodeGenerator:
             self.add_three_address_code(f"(ASSIGN, #{src}, {dst}, )")
         else:
             self.add_three_address_code(f"(ASSIGN, {src}, {dst}, )")
+
+    def break_temp(self, current_token: Token):
+        break_temp = self.symbol_table.get_temp()
+        self.semantic_stack.append(break_temp)
+        self.semantic_stack.append(self.i)
+        self.i += 1  # leave empty for further break fill
+        # self.break_bool = True
+
+    def break_jump(self, current_token: Token):
+        try:
+            self.add_three_address_code(f"(JP, @{self.semantic_stack[-5]}, , )")
+        except IndexError:
+            self.add_error("Semantic Error! No 'repeat ... until' found for 'break'.")
+
+    def set_break_temp(self, current_token: Token):
+        index = self.semantic_stack.pop()
+        self.add_three_address_code(
+            f"(ASSIGN, #{self.i}, {self.semantic_stack.pop()}, )", index=index
+        )
 
     # semantic errors
     def check_missmatch_type(self, src, function_info):
