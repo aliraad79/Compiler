@@ -46,7 +46,7 @@ class SymbolTableRow:
         return __o == self.lexeme
 
     def __repr__(self) -> str:
-        return f"{self.lexeme}:{self.address}:{self.scope}"
+        return f"{self.lexeme}:{self.address}:{self.scope}:{self.type.name}"
 
 
 class SymbolTable:

@@ -648,7 +648,7 @@ def param_prime_diagram():
     close_bracket = DiagramEdge(
         next_node=end,
         terminal="]",
-        action_symbols=["param_added", "make_var_array"],  # TODO
+        action_symbols=["array_param_added"],  # TODO
     )
     close_bracket_node = DiagramNode(next_edges=[close_bracket])
     open_bracket = DiagramEdge(next_node=close_bracket_node, terminal="[")
@@ -735,7 +735,7 @@ def fun_declaration_prime():
     params = DiagramEdge(
         next_node=close_par_node,
         non_terminal="params",
-        action_symbols=["declare_function", "new_scope"],
+        action_symbols=["declare_function", "pdeclare", "new_scope"],
     )
     params_node = DiagramNode(next_edges=[params])
     open_par = DiagramEdge(next_node=params_node, terminal="(")
@@ -769,7 +769,7 @@ def declaration_prime_diagram():
     )
 
     var_declaration_prime = DiagramEdge(
-        next_node=end, non_terminal="var_declaration_prime"
+        next_node=end, non_terminal="var_declaration_prime", action_symbols=["pdeclare"]
     )
 
     return DiagramNode(
@@ -779,7 +779,7 @@ def declaration_prime_diagram():
 
 def declaration_initial_diagram():
     end = DiagramNode(next_edges=[])
-    _id = DiagramEdge(next_node=end, terminal="ID", action_symbols=["padd","pdeclare"])
+    _id = DiagramEdge(next_node=end, terminal="ID", action_symbols=["padd"])
     id_node = DiagramNode(next_edges=[_id])
     type_specifier = DiagramEdge(next_node=id_node, non_terminal="type_specifier")
     return DiagramNode(next_edges=[type_specifier])

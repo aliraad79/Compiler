@@ -15,7 +15,7 @@ class IntermidateCodeGenerator:
         self.semantic_errors = []
         self.three_addres_codes = {}
         self.i = 0
-        self.debug = False
+        self.debug = False #
 
         self.function_table: FunctionTable = function_table
         self.symbol_table: SymbolTable = symbol_table
@@ -56,7 +56,7 @@ class IntermidateCodeGenerator:
     # functions
     def code_gen(self, action_symbol, current_token: Token):
         if self.debug:
-            print(self.semantic_stack, action_symbol, current_token.lexeme, self.i)
+            print(self.semantic_stack, action_symbol, current_token.lexeme, self.scanner.line_number)
         getattr(self, action_symbol)(current_token)
 
     def add_three_address_code(
@@ -172,7 +172,6 @@ class IntermidateCodeGenerator:
 
         self.function_table.func_declare(function_row, function_address, "void")
         if function_row.lexeme == "main":
-            print(function_row)
             self.add_three_address_code(
                 f"(JP, {self.i}, , )", index=1, increase_i=False
             )
@@ -327,19 +326,25 @@ class IntermidateCodeGenerator:
     def check_missmatch_type(self, src, function_info):
         current_arg_is_array = function_info["params_array"][self.arg_counter - 1]
         var = self.symbol_table.reverse_address(src)
-        if var != None:
-            arg_type = function_info["params_type"][self.arg_counter - 1]
-            function_name = function_info["name"].lexeme
-            if current_arg_is_array and var.type != SymbolTableRowType.array:
-                self.semantic_errors.append(
-                    f"#{self.scanner.line_number} : Semantic Error! Mismatch in type of argument {self.arg_counter} of "
-                    + f"'{function_name}'. Expected 'array' but got '{var.type.name}' instead."
-                )
-            elif arg_type != var.type.name:
-                self.semantic_errors.append(
-                    f"#{self.scanner.line_number} : Semantic Error! Mismatch in type of argument {self.arg_counter} of "
-                    + f"'{function_name}'. Expected '{arg_type}' but got '{var.type.name}' instead."
-                )
+        var_type = "int" if var == None else var.type.name
+        
+
+        arg_type = (
+            function_info["params_type"][self.arg_counter - 1]
+            if function_info["params_array"][self.arg_counter - 1] == False
+            else "array"
+        )
+        function_name = function_info["name"].lexeme
+        if current_arg_is_array and var_type != SymbolTableRowType.array.name:
+            self.semantic_errors.append(
+                f"#{self.scanner.line_number} : Semantic Error! Mismatch in type of argument {self.arg_counter} of "
+                + f"'{function_name}'. Expected 'array' but got '{var_type}' instead."
+            )
+        elif arg_type != var_type:
+            self.semantic_errors.append(
+                f"#{self.scanner.line_number} : Semantic Error! Mismatch in type of argument {self.arg_counter} of "
+                + f"'{function_name}'. Expected '{arg_type}' but got '{var_type}' instead."
+            )
 
     def check_operand_missmatch(self, first, second):
         first_row = self.symbol_table.reverse_address(first)
@@ -356,7 +361,6 @@ class IntermidateCodeGenerator:
 
     def check_not_void(self, row: SymbolTableRow):
         if row.type == SymbolTableRowType.void and row.func_or_var == FuncOrVar.var:
-            print("Error")
             self.semantic_errors.append(
                 f"#{self.scanner.line_number} : Semantic Error! Illegal type of void for '{row.lexeme}'."
             )
@@ -377,6 +381,11 @@ class IntermidateCodeGenerator:
         var_row = self.symbol_table.reverse_address(self.semantic_stack[-2])
         var_row.type = SymbolTableRowType.array
 
+    def array_param_added(self, current_token: Token):
+        var_row = self.symbol_table.reverse_address(self.semantic_stack[-1])
+        var_row.type = SymbolTableRowType.array
+        self.param_added(current_token)
+
     def check_declare(self, current_token: Token):
         address = self.semantic_stack[-1]
         row = self.symbol_table.reverse_address(address)
@@ -384,3 +393,4 @@ class IntermidateCodeGenerator:
             self.semantic_errors.append(
                 f"#{self.scanner.line_number} : Semantic Error! '{row.lexeme}' is not defined."
             )
+            row.type = SymbolTableRowType.int
