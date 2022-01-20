@@ -565,9 +565,7 @@ def selection_stmt_diagram():
     close_bracket_node = DiagramNode(next_edges=[close_bracket])
     expression = DiagramEdge(next_node=close_bracket_node, non_terminal="expression")
     expression_node = DiagramNode(next_edges=[expression])
-    open_bracket = DiagramEdge(
-        next_node=expression_node, terminal="(", action_symbols=["if_start"]
-    )
+    open_bracket = DiagramEdge(next_node=expression_node, terminal="(")
     open_bracket_node = DiagramNode(next_edges=[open_bracket])
     _if = DiagramEdge(next_node=open_bracket_node, terminal="if")
 

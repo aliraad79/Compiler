@@ -12,7 +12,7 @@ class IntermidateCodeGenerator:
         self.semantic_errors = []
         self.three_addres_codes = {}
         self.i = 0
-        self.debug = False  #
+        self.debug = False
 
         self.function_table: FunctionTable = function_table
         self.symbol_table: SymbolTable = symbol_table
@@ -21,13 +21,10 @@ class IntermidateCodeGenerator:
         self.current_function_address = None
         self.arg_counter = -1
         self.func_call_stack = []
-        self.retrun_stack = []
         self.main_added = False
         self.is_inside_function_declaration = False
 
         self.retrun_temp = self.symbol_table.get_temp()
-
-        self.inside_if = False
 
         self.init_program()
 
@@ -38,15 +35,14 @@ class IntermidateCodeGenerator:
 
     def add_output_function(self) -> None:
         self.symbol_table.insert("output", is_declred=True)
-        output_address = self.symbol_table.get_address("output")
-        output_row = self.symbol_table.reverse_address(output_address)
+        output_row = self.symbol_table.get_row("output")
         output_input_param = self.symbol_table.get_temp()
 
-        self.function_table.func_declare(output_row, output_address, "void")
+        self.function_table.func_declare(output_row, output_row.address, "void")
         self.function_table.add_param(
-            output_address, "a", "int", output_input_param, False
+            output_row.address, "a", "int", output_input_param, False
         )
-        self.function_table.funcs[output_address]["start_address"] = self.i
+        self.function_table.funcs[output_row.address]["start_address"] = self.i
         self.add_three_address_code(f"(PRINT, {output_input_param}, ,)")
         self.add_three_address_code(f"(JP, @{self.retrun_temp}, , )")
 
@@ -67,10 +63,12 @@ class IntermidateCodeGenerator:
         self.three_addres_codes[index if index else self.i] = text
         self.i += 1 if increase_i else 0
 
+    def add_error(self, error_text) -> None:
+        self.semantic_errors.append(f"#{self.scanner.line_number} : " + error_text)
+
     def save_to_file(self):
-        if self.debug:
-            print("ss stack at the end : ", self.semantic_stack)
-            print("Symbol table : ", self.symbol_table.table)
+        print("ss stack at the end : ", self.semantic_stack)
+        print("Symbol table : ", self.symbol_table.table)
         if len(self.semantic_errors) != 0:
             self.three_addres_codes = {}
         write_three_address_codes_to_file(self.three_addres_codes)
@@ -226,15 +224,10 @@ class IntermidateCodeGenerator:
 
     def _break(self, current_token: Token):
         try:
-            if self.inside_if:
-                self.add_three_address_code(f"(JP, @{self.semantic_stack[-7]}, , )")
-                self.inside_if = False
-            else:
-                self.add_three_address_code(f"(JP, @{self.semantic_stack[-5]}, , )")
+            # What should i do?
+            raise IndexError
         except IndexError:
-            self.semantic_errors.append(
-                f"#{self.scanner.line_number} : Semantic Error! No 'repeat ... until' found for 'break'."
-            )
+            self.add_error("Semantic Error! No 'repeat ... until' found for 'break'.")
 
     def assign_to_func(self, current_token: Token):
         if not self.main_added:
@@ -285,12 +278,9 @@ class IntermidateCodeGenerator:
         except IndexError:
             self.semantic_stack.append("#20")  # TODO change this temp
             function_name = function_info["name"].lexeme
-            self.semantic_errors.append(
-                f"#{self.scanner.line_number} : Semantic Error! Mismatch in numbers of arguments of '{function_name}'."
+            self.add_error(
+                f"Semantic Error! Mismatch in numbers of arguments of '{function_name}'."
             )
-
-    def if_start(self, current_token: Token):
-        self.inside_if = True
 
     def end_function(self, current_token: Token):
         function_address = self.semantic_stack.pop()
@@ -340,14 +330,12 @@ class IntermidateCodeGenerator:
         )
         function_name = function_info["name"].lexeme
         if current_arg_is_array and var_type != SymbolTableRowType.array.name:
-            self.semantic_errors.append(
-                f"#{self.scanner.line_number} : Semantic Error! Mismatch in type of argument {self.arg_counter} of "
-                + f"'{function_name}'. Expected 'array' but got '{var_type}' instead."
+            self.add_error(
+                f"Semantic Error! Mismatch in type of argument {self.arg_counter} of '{function_name}'. Expected 'array' but got '{var_type}' instead."
             )
         elif arg_type != var_type:
-            self.semantic_errors.append(
-                f"#{self.scanner.line_number} : Semantic Error! Mismatch in type of argument {self.arg_counter} of "
-                + f"'{function_name}'. Expected '{arg_type}' but got '{var_type}' instead."
+            self.add_error(
+                f"Semantic Error! Mismatch in type of argument {self.arg_counter} of '{function_name}'. Expected '{arg_type}' but got '{var_type}' instead."
             )
 
     def check_operand_missmatch(self, first, second):
@@ -358,16 +346,13 @@ class IntermidateCodeGenerator:
         second_row = second_row.type.name if second_row else "int"
 
         if first_row != second_row:
-            self.semantic_errors.append(
-                f"#{self.scanner.line_number} : Semantic Error! Type mismatch in operands, "
-                + f"Got {second_row} instead of {first_row}."
+            self.add_error(
+                f"Semantic Error! Type mismatch in operands, Got {second_row} instead of {first_row}."
             )
 
     def check_not_void(self, row: SymbolTableRow):
         if row.type == SymbolTableRowType.void and row.func_or_var == FuncOrVar.var:
-            self.semantic_errors.append(
-                f"#{self.scanner.line_number} : Semantic Error! Illegal type of void for '{row.lexeme}'."
-            )
+            self.add_error(f"Semantic Error! Illegal type of void for '{row.lexeme}'.")
 
     def pdeclare(self, current_token: Token):
         var_type = self.semantic_stack[-2]
@@ -394,7 +379,5 @@ class IntermidateCodeGenerator:
         address = self.semantic_stack[-1]
         row = self.symbol_table.reverse_address(address)
         if not row.is_declred:
-            self.semantic_errors.append(
-                f"#{self.scanner.line_number} : Semantic Error! '{row.lexeme}' is not defined."
-            )
+            self.add_error(f"Semantic Error! '{row.lexeme}' is not defined.")
             row.type = SymbolTableRowType.int

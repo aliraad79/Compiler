@@ -28,7 +28,7 @@ Statement ->  Return_stmt
 Expression_stmt ->  Expression #pop ;
 Expression_stmt ->  break #break ;
 Expression_stmt ->  ;
-Selection_stmt ->  if #if_start ( Expression ) #save Statement Else_stmt
+Selection_stmt ->  if ( Expression ) #save Statement Else_stmt
 Else_stmt ->  #jpf endif
 Else_stmt ->  else #jpf_save Statement #jp endif
 Iteration_stmt ->  repeat #label Statement until ( Expression ) #until
