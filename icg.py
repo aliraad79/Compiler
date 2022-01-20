@@ -15,7 +15,7 @@ class IntermidateCodeGenerator:
         self.semantic_errors = []
         self.three_addres_codes = {}
         self.i = 0
-        self.debug = False #
+        self.debug = False  #
 
         self.function_table: FunctionTable = function_table
         self.symbol_table: SymbolTable = symbol_table
@@ -56,7 +56,12 @@ class IntermidateCodeGenerator:
     # functions
     def code_gen(self, action_symbol, current_token: Token):
         if self.debug:
-            print(self.semantic_stack, action_symbol, current_token.lexeme, self.scanner.line_number)
+            print(
+                self.semantic_stack,
+                action_symbol,
+                current_token.lexeme,
+                self.scanner.line_number,
+            )
         getattr(self, action_symbol)(current_token)
 
     def add_three_address_code(
@@ -225,11 +230,16 @@ class IntermidateCodeGenerator:
         self.semantic_stack.pop()
 
     def _break(self, current_token: Token):
-        if self.inside_if:
-            self.add_three_address_code(f"(JP, @{self.semantic_stack[-7]}, , )")
-            self.inside_if = False
-        else:
-            self.add_three_address_code(f"(JP, @{self.semantic_stack[-5]}, , )")
+        try:
+            if self.inside_if:
+                self.add_three_address_code(f"(JP, @{self.semantic_stack[-7]}, , )")
+                self.inside_if = False
+            else:
+                self.add_three_address_code(f"(JP, @{self.semantic_stack[-5]}, , )")
+        except IndexError:
+            self.semantic_errors.append(
+                f"#{self.scanner.line_number} : Semantic Error! No 'repeat ... until' found for 'break'."
+            )
 
     def assign_to_func(self, current_token: Token):
         if not self.main_added:
@@ -327,7 +337,6 @@ class IntermidateCodeGenerator:
         current_arg_is_array = function_info["params_array"][self.arg_counter - 1]
         var = self.symbol_table.reverse_address(src)
         var_type = "int" if var == None else var.type.name
-        
 
         arg_type = (
             function_info["params_type"][self.arg_counter - 1]
