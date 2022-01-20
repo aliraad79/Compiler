@@ -71,8 +71,9 @@ class IntermidateCodeGenerator:
         self.i += 1 if increase_i else 0
 
     def save_to_file(self):
-        print("ss stack at the end : ", self.semantic_stack)
-        print("Symbol table : ", self.symbol_table.table)
+        if self.debug:
+            print("ss stack at the end : ", self.semantic_stack)
+            print("Symbol table : ", self.symbol_table.table)
         if len(self.semantic_errors) != 0:
             self.three_addres_codes = {}
         write_three_address_codes_to_file(self.three_addres_codes)
