@@ -12,7 +12,7 @@ class IntermidateCodeGenerator:
         self.semantic_errors = []
         self.three_addres_codes = {}
         self.i = 0
-        self.debug = False
+        self.debug = True
 
         self.function_table: FunctionTable = function_table
         self.symbol_table: SymbolTable = symbol_table
@@ -61,6 +61,7 @@ class IntermidateCodeGenerator:
     def add_three_address_code(
         self, text: str, index: int = None, increase_i: bool = True
     ) -> None:
+        print(text, index if index else self.i)
         self.three_addres_codes[index if index else self.i] = text
         self.i += 1 if increase_i else 0
 
@@ -68,8 +69,9 @@ class IntermidateCodeGenerator:
         self.semantic_errors.append(f"#{self.scanner.line_number} : " + error_text)
 
     def save_to_file(self):
-        # print("ss stack at the end : ", self.semantic_stack)
-        # print("Symbol table : ", self.symbol_table.table)
+        if self.debug:
+            print("ss stack at the end : ", self.semantic_stack)
+            print("Symbol table : ", self.symbol_table.table)
         if len(self.semantic_errors) != 0 or self.is_recursive:
             self.three_addres_codes = {}
         write_three_address_codes_to_file(self.three_addres_codes)
@@ -115,9 +117,6 @@ class IntermidateCodeGenerator:
 
         self.check_operand_missmatch(first_operand, second_operand)
 
-        if operand == "LT" and "@" in str(first_operand):
-            self.add_three_address_code(f"(PRINT, {first_operand[1:]}, ,)")
-
         op_result = self.symbol_table.get_temp()
 
         self.add_three_address_code(
@@ -145,7 +144,7 @@ class IntermidateCodeGenerator:
         self.semantic_stack.append(self.i)
 
         self.add_three_address_code(
-            text=f"(JPF, {condition}, {self.i + 1}, )", index=pb_empty_place
+            text=f"(JPF, {condition}, {self.i + 1}, )", index=pb_empty_place, increase_i=False
         )
 
     def jpf(self, current_token: Token):
@@ -314,7 +313,6 @@ class IntermidateCodeGenerator:
             self.add_three_address_code(f"(ASSIGN, {src}, {dst}, )")
 
     def break_temp(self, current_token: Token):
-        return
         break_temp = self.symbol_table.get_temp()
         self.semantic_stack.append(break_temp)
         self.semantic_stack.append(self.i)
@@ -323,16 +321,17 @@ class IntermidateCodeGenerator:
 
     def break_jump(self, current_token: Token):
         try:
-            raise IndexError
             self.add_three_address_code(f"(JP, @{self.semantic_stack[-5]}, , )")
+            # raise IndexError
         except IndexError:
             self.add_error("Semantic Error! No 'repeat ... until' found for 'break'.")
 
     def set_break_temp(self, current_token: Token):
-        return
         index = self.semantic_stack.pop()
         self.add_three_address_code(
-            f"(ASSIGN, #{self.i}, {self.semantic_stack.pop()}, )", index=index
+            f"(ASSIGN, #{self.i}, {self.semantic_stack.pop()}, )",
+            index=index,
+            increase_i=False,
         )
 
     # semantic errors
