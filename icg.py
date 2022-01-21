@@ -363,6 +363,10 @@ class IntermidateCodeGenerator:
             self.add_error(
                 f"Semantic Error! Type mismatch in operands, Got {second_row} instead of {first_row}."
             )
+        
+        #TODO remove this after fix break
+        if first == second:
+            self.is_recursive = True
 
     def check_not_void(self, row: SymbolTableRow):
         if row.type == SymbolTableRowType.void and row.func_or_var == FuncOrVar.var:
