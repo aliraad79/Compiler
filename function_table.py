@@ -28,7 +28,6 @@ class FunctionTable:
             "params_type": [],
             "params_address": [],
             "params_array": [],
-            "return_addresses": [],
         }
 
     def add_param(self, func, param_name, param_type, param_address, is_array):

@@ -12,7 +12,7 @@ class IntermidateCodeGenerator:
         self.semantic_errors = []
         self.three_addres_codes = {}
         self.i = 0
-        self.debug = True
+        self.debug = False
 
         self.function_table: FunctionTable = function_table
         self.symbol_table: SymbolTable = symbol_table
@@ -61,7 +61,6 @@ class IntermidateCodeGenerator:
     def add_three_address_code(
         self, text: str, index: int = None, increase_i: bool = True
     ) -> None:
-        print(text, index if index else self.i)
         self.three_addres_codes[index if index else self.i] = text
         self.i += 1 if increase_i else 0
 
@@ -82,8 +81,7 @@ class IntermidateCodeGenerator:
         if arg_address not in current_func_info["params_address"]:
             return False
         arg_index = current_func_info["params_address"].index(arg_address)
-        is_arg_array = current_func_info["params_array"][arg_index]
-        return is_arg_array
+        return current_func_info["params_array"][arg_index]
 
     # Actions
     def padd(self, current_token: Token):
@@ -144,7 +142,7 @@ class IntermidateCodeGenerator:
         self.semantic_stack.append(self.i)
 
         self.add_three_address_code(
-            text=f"(JPF, {condition}, {self.i + 1}, )", index=pb_empty_place, increase_i=False
+            text=f"(JPF, {condition}, {self.i + 1}, )", index=pb_empty_place
         )
 
     def jpf(self, current_token: Token):
@@ -322,7 +320,6 @@ class IntermidateCodeGenerator:
     def break_jump(self, current_token: Token):
         try:
             self.add_three_address_code(f"(JP, @{self.semantic_stack[-5]}, , )")
-            # raise IndexError
         except IndexError:
             self.add_error("Semantic Error! No 'repeat ... until' found for 'break'.")
 
