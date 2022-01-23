@@ -86,6 +86,8 @@ class IntermidateCodeGenerator:
     # Actions
     def padd(self, current_token: Token):
         if current_token.type == TokenType.ID.name:
+            # check_if_scoped_changed = self.symbol_table.get_address(current_token.lexeme)
+            # print(current_token, check_if_scoped_changed)
             if not self.is_inside_function_declaration:
                 self.semantic_stack.append(
                     self.symbol_table.get_address(current_token.lexeme)
@@ -241,7 +243,6 @@ class IntermidateCodeGenerator:
 
     def func_call_started(self, current_token: Token):
         func_name = self.semantic_stack[-1]
-        self.func_number_of_args = len(self.function_table.funcs[func_name]["params"])
         self.arg_counter = 0
         self.func_call_stack.append(func_name)
 
@@ -260,6 +261,9 @@ class IntermidateCodeGenerator:
         self.add_three_address_code(f"(ASSIGN, {temp}, {self.retrun_temp},  )")
 
         self.arg_counter = 0
+        function_temp = self.symbol_table.get_temp()
+        self.add_three_address_code(f"(ASSIGN, {self.semantic_stack.pop()}, {function_temp}, )")
+        self.semantic_stack.append(function_temp)
 
     def push_arg(self, current_token: Token):
         function_info = self.function_table.funcs[self.func_call_stack[-1]]
@@ -363,8 +367,8 @@ class IntermidateCodeGenerator:
             self.add_error(
                 f"Semantic Error! Type mismatch in operands, Got {second_row} instead of {first_row}."
             )
-        
-        #TODO remove this after fix break
+
+        # TODO remove this after fix break
         if first == second:
             self.is_recursive = True
 

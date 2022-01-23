@@ -65,7 +65,10 @@ class SymbolTable:
         return self.addres_pointer - 4
 
     def include(self, lexeme: str) -> bool:
-        return lexeme in self.table
+        for i in self.table[::-1]:
+            if i.lexeme == lexeme:
+                return True
+        return False
 
     def get_address(self, lexeme: str) -> int:
         for i in self.table[::-1]:
@@ -78,7 +81,7 @@ class SymbolTable:
                 return i
 
     def reverse_address(self, address: int) -> SymbolTableRow:
-        for i in self.table[::-1]:
+        for i in self.table:
             if i.address == address:
                 return i
 
