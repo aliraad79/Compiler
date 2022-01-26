@@ -97,8 +97,6 @@ class IntermidateCodeGenerator:
     # Actions
     def padd(self, current_token: Token):
         if current_token.type == TokenType.ID.name:
-            # check_if_scoped_changed = self.symbol_table.get_address(current_token.lexeme)
-            # print(current_token, check_if_scoped_changed)
             if not self.is_inside_function_declaration:
                 self.semantic_stack.append(
                     self.symbol_table.get_address(current_token.lexeme)
@@ -129,9 +127,6 @@ class IntermidateCodeGenerator:
         self.check_operand_missmatch(first_operand, second_operand)
 
         op_result = self.symbol_table.get_temp()
-
-        if str(first_operand).startswith("@"):
-            self.add_three_address_code(f"(PRINT, {first_operand[1:]}, , )")
 
         self.add_three_address_code(
             f"({operand}, {first_operand}, {second_operand}, {op_result})"
@@ -325,9 +320,13 @@ class IntermidateCodeGenerator:
         function_info = self.function_table.funcs[self.func_call_stack[-1]]
         current_arg_is_array = function_info["params_array"][self.arg_counter - 1]
 
-        # self.check_missmatch_type(src, function_info)
+        self.check_missmatch_type(src, function_info)
 
-        if current_arg_is_array:
+        if (
+            current_arg_is_array
+            and self.function_table.funcs[self.current_function_address]["name"].lexeme
+            == "main"
+        ):
             self.add_three_address_code(f"(ASSIGN, #{src}, {dst},               )")
         else:
             self.add_three_address_code(f"(ASSIGN, {src}, {dst}, )")
@@ -375,6 +374,8 @@ class IntermidateCodeGenerator:
             )
 
     def check_operand_missmatch(self, first, second):
+        if "@" in  str(first) or "@" in  str(second):
+            return
         first_row = self.symbol_table.reverse_address(first)
         first_row = first_row.type.name if first_row else "int"
 
@@ -386,10 +387,6 @@ class IntermidateCodeGenerator:
                 f"Semantic Error! Type mismatch in operands, Got {second_row} instead of {first_row}."
             )
 
-        # TODO remove this after fix
-        # if first == second:
-        #     self.is_recursive = True
-
     def check_not_void(self, row: SymbolTableRow):
         if row.type == SymbolTableRowType.void and row.func_or_var == FuncOrVar.var:
             self.add_error(f"Semantic Error! Illegal type of void for '{row.lexeme}'.")
@@ -397,11 +394,12 @@ class IntermidateCodeGenerator:
     def pdeclare(self, current_token: Token):
         var_type = self.semantic_stack[-2]
         var_row = self.symbol_table.reverse_address(self.semantic_stack[-1])
-        var_row.type = (
-            SymbolTableRowType.int
-            if var_type == SymbolTableRowType.int.name
-            else SymbolTableRowType.void
-        )
+        if var_row.type != SymbolTableRowType.array:
+            var_row.type = (
+                SymbolTableRowType.int
+                if var_type == SymbolTableRowType.int.name
+                else SymbolTableRowType.void
+            )
         var_row.is_declred = True
 
         self.check_not_void(var_row)
