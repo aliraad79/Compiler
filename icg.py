@@ -259,11 +259,11 @@ class IntermidateCodeGenerator:
             f"(JP, {self.function_table.funcs[function_address]['start_address']}, , )"
         )
         self.add_three_address_code(f"(ASSIGN, {temp}, {self.retrun_temp},  )")
-
         self.arg_counter = 0
-        function_temp = self.symbol_table.get_temp()
-        self.add_three_address_code(f"(ASSIGN, {self.semantic_stack.pop()}, {function_temp}, )")
-        self.semantic_stack.append(function_temp)
+
+        # function_temp = self.symbol_table.get_temp()
+        # self.add_three_address_code(f"(ASSIGN, {self.semantic_stack.pop()}, {function_temp}, )")
+        # self.semantic_stack.append(function_temp)
 
     def push_arg(self, current_token: Token):
         function_info = self.function_table.funcs[self.func_call_stack[-1]]
