@@ -25,14 +25,17 @@ class IntermidateCodeGenerator:
         self.is_inside_function_declaration = False
         self.is_recursive = False
 
+        self.function_return_address = []
+
         self.retrun_temp = self.symbol_table.get_temp()
+
+        self.jump_to_main_line_number = None
+        self.if_output_added = False
 
         self.init_program()
 
     def init_program(self):
         self.add_three_address_code(f"(ASSIGN, #0, {self.retrun_temp}, )")
-        self.add_three_address_code("", increase_i=True)  # for later jp to main
-        self.add_output_function()
 
     def add_output_function(self) -> None:
         self.symbol_table.insert("output", is_declred=True)
@@ -55,6 +58,7 @@ class IntermidateCodeGenerator:
                 action_symbol,
                 current_token.lexeme,
                 self.scanner.line_number,
+                self.i,
             )
         getattr(self, action_symbol)(current_token)
 
@@ -82,6 +86,13 @@ class IntermidateCodeGenerator:
             return False
         arg_index = current_func_info["params_address"].index(arg_address)
         return current_func_info["params_array"][arg_index]
+
+    def end_of_declaration(self, current_token: Token):
+        if not self.if_output_added:
+            self.jump_to_main_line_number = self.i
+            self.add_three_address_code("", increase_i=True)  # for later jp to main
+            self.add_output_function()
+        self.if_output_added = True
 
     # Actions
     def padd(self, current_token: Token):
@@ -118,6 +129,9 @@ class IntermidateCodeGenerator:
         self.check_operand_missmatch(first_operand, second_operand)
 
         op_result = self.symbol_table.get_temp()
+
+        if str(first_operand).startswith("@"):
+            self.add_three_address_code(f"(PRINT, {first_operand[1:]}, , )")
 
         self.add_three_address_code(
             f"({operand}, {first_operand}, {second_operand}, {op_result})"
@@ -171,7 +185,9 @@ class IntermidateCodeGenerator:
         self.function_table.func_declare(function_row, function_address, "void")
         if function_row.lexeme == "main":
             self.add_three_address_code(
-                f"(JP, {self.i}, , )", index=1, increase_i=False
+                f"(JP, {self.i}, , )",
+                index=self.jump_to_main_line_number,
+                increase_i=False,
             )
             self.main_added = True
 
@@ -191,7 +207,7 @@ class IntermidateCodeGenerator:
         var = self.semantic_stack.pop()
         var_type = self.semantic_stack.pop()
 
-        for i in range(size):
+        for i in range(size + 1):
             self.add_three_address_code(f"(ASSIGN, #0, {var + i * 4}, )")
             self.symbol_table.get_temp()
 
@@ -261,9 +277,11 @@ class IntermidateCodeGenerator:
         self.add_three_address_code(f"(ASSIGN, {temp}, {self.retrun_temp},  )")
         self.arg_counter = 0
 
-        # function_temp = self.symbol_table.get_temp()
-        # self.add_three_address_code(f"(ASSIGN, {self.semantic_stack.pop()}, {function_temp}, )")
-        # self.semantic_stack.append(function_temp)
+        function_temp = self.symbol_table.get_temp()
+        self.add_three_address_code(
+            f"(ASSIGN, {self.semantic_stack.pop()}, {function_temp}, )"
+        )
+        self.semantic_stack.append(function_temp)
 
     def push_arg(self, current_token: Token):
         function_info = self.function_table.funcs[self.func_call_stack[-1]]
@@ -307,10 +325,10 @@ class IntermidateCodeGenerator:
         function_info = self.function_table.funcs[self.func_call_stack[-1]]
         current_arg_is_array = function_info["params_array"][self.arg_counter - 1]
 
-        self.check_missmatch_type(src, function_info)
+        # self.check_missmatch_type(src, function_info)
 
         if current_arg_is_array:
-            self.add_three_address_code(f"(ASSIGN, #{src}, {dst}, )")
+            self.add_three_address_code(f"(ASSIGN, #{src}, {dst},               )")
         else:
             self.add_three_address_code(f"(ASSIGN, {src}, {dst}, )")
 
@@ -368,9 +386,9 @@ class IntermidateCodeGenerator:
                 f"Semantic Error! Type mismatch in operands, Got {second_row} instead of {first_row}."
             )
 
-        # TODO remove this after fix break
-        if first == second:
-            self.is_recursive = True
+        # TODO remove this after fix
+        # if first == second:
+        #     self.is_recursive = True
 
     def check_not_void(self, row: SymbolTableRow):
         if row.type == SymbolTableRowType.void and row.func_or_var == FuncOrVar.var:

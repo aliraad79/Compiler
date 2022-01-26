@@ -581,7 +581,9 @@ def expression_stmt_diagram():
 
     semicolon = DiagramEdge(next_node=end, terminal=";")
 
-    semicolon_2 = DiagramEdge(next_node=end, terminal=";", action_symbols=["break_jump"])
+    semicolon_2 = DiagramEdge(
+        next_node=end, terminal=";", action_symbols=["break_jump"]
+    )
     semicolon_node = DiagramNode(next_edges=[semicolon_2])
     _break = DiagramEdge(next_node=semicolon_node, terminal="break")
 
@@ -767,7 +769,9 @@ def var_declaration_prime_diagram():
 def declaration_prime_diagram():
     end = DiagramNode(next_edges=[])
     fun_declaration_prime = DiagramEdge(
-        next_node=end, non_terminal="fun_declaration_prime"
+        next_node=end,
+        non_terminal="fun_declaration_prime",
+        action_symbols=["end_of_declaration"],
     )
 
     var_declaration_prime = DiagramEdge(

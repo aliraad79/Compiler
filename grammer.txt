@@ -3,7 +3,7 @@ Declaration_list ->  Declaration Declaration_list
 Declaration_list ->  ε
 Declaration ->  Declaration_initial Declaration_prime
 Declaration_initial ->  Type_specifier #padd ID
-Declaration_prime ->  Fun_Declaration_prime
+Declaration_prime ->  #end_of_declaration Fun_Declaration_prime
 Declaration_prime ->  #pdeclare Var_Declaration_prime
 Var_Declaration_prime ->  #var ;
 Var_Declaration_prime -> [ #padd NUM ] #make_var_array #declare_global_arr ;
