@@ -22,8 +22,8 @@ Statement_list ->  Statement Statement_list
 Statement_list ->  ε
 Statement ->  Expression_stmt
 Statement ->  Compound_stmt
-Statement ->  #new_scope Selection_stmt #end_scope
-Statement ->  #new_scope Iteration_stmt #end_scope
+Statement ->  Selection_stmt
+Statement ->  Iteration_stmt
 Statement ->  Return_stmt
 Expression_stmt ->  Expression #pop ;
 Expression_stmt ->  break #break_jump ;

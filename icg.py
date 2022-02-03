@@ -68,6 +68,12 @@ class IntermidateCodeGenerator:
     def add_error(self, error_text) -> None:
         self.semantic_errors.append(f"#{self.scanner.line_number} : " + error_text)
 
+    def is_in_main(self):
+        return (
+            self.function_table.funcs[self.current_function_address]["name"].lexeme
+            == "main"
+        )
+
     def save_to_file(self):
         if self.debug:
             print("ss stack at the end : ", self.semantic_stack)
@@ -312,11 +318,7 @@ class IntermidateCodeGenerator:
 
         self.check_missmatch_type(src, function_info)
 
-        if (
-            current_arg_is_array
-            and self.function_table.funcs[self.current_function_address]["name"].lexeme
-            == "main"
-        ):
+        if current_arg_is_array and self.is_in_main():
             self.add_three_address_code(f"(ASSIGN, #{src}, {dst}, )")
         else:
             self.add_three_address_code(f"(ASSIGN, {src}, {dst}, )")

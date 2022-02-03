@@ -597,24 +597,13 @@ def expression_stmt_diagram():
 def statement_diagram():
     end = DiagramNode(next_edges=[])
 
-    dummy_edge = DiagramEdge(next_node=end, terminal="ε", action_symbols=["end_scope"])
-    dummy_node = DiagramNode(next_edges=[dummy_edge])
-
     expression_stmt = DiagramEdge(next_node=end, non_terminal="expression_stmt")
 
     compound_stmt = DiagramEdge(next_node=end, non_terminal="compound_stmt")
 
-    selection_stmt = DiagramEdge(
-        next_node=dummy_node,
-        non_terminal="selection_stmt",
-        action_symbols=["new_scope"],
-    )
+    selection_stmt = DiagramEdge(next_node=end, non_terminal="selection_stmt")
 
-    iteration_stmt = DiagramEdge(
-        next_node=dummy_node,
-        non_terminal="iteration_stmt",
-        action_symbols=["new_scope"],
-    )
+    iteration_stmt = DiagramEdge(next_node=end, non_terminal="iteration_stmt")
 
     return_stmt = DiagramEdge(next_node=end, non_terminal="return_stmt")
 
