@@ -22,12 +22,10 @@ class IntermidateCodeGenerator:
         self.main_added = False
         self.is_inside_function_declaration = False
 
-        self.function_return_address = []
-
         self.retrun_temp = self.symbol_table.get_temp()
 
         self.jump_to_main_line_number = None
-        self.if_output_added = False
+        self.is_output_added = False
 
         self.init_program()
 
@@ -92,11 +90,11 @@ class IntermidateCodeGenerator:
         return current_func_info["params_array"][arg_index]
 
     def end_of_declaration(self, current_token: Token):
-        if not self.if_output_added:
+        if not self.is_output_added:
             self.jump_to_main_line_number = self.i
             self.add_three_address_code("", increase_i=True)  # for later jp to main
             self.add_output_function()
-        self.if_output_added = True
+        self.is_output_added = True
 
     # Actions
     def padd(self, current_token: Token):
