@@ -6,7 +6,7 @@ Declaration_initial ->  Type_specifier #padd ID
 Declaration_prime ->  #end_of_declaration Fun_Declaration_prime
 Declaration_prime ->  #pdeclare Var_Declaration_prime
 Var_Declaration_prime ->  #var ;
-Var_Declaration_prime -> [ #padd NUM ] #make_var_array #declare_global_arr ;
+Var_Declaration_prime -> [ #padd NUM ] #make_var_array #declare_arr ;
 Fun_Declaration_prime ->  ( #declare_function #pdeclare #new_scope Params ) #set_func_start Compound_stmt #return #end_scope #end_function
 Type_specifier ->  #push_int int
 Type_specifier ->  #push_void void
@@ -17,13 +17,13 @@ Param_list -> ε
 Param ->  Declaration_initial #pdeclare Param_prime
 Param_prime ->  [ #array_param_added ]
 Param_prime ->  #param_added ε
-Compound_stmt ->  { Declaration_list Statement_list }
+Compound_stmt ->  #new_scope { Declaration_list Statement_list } #end_scope
 Statement_list ->  Statement Statement_list
 Statement_list ->  ε
 Statement ->  Expression_stmt
 Statement ->  Compound_stmt
-Statement ->  Selection_stmt
-Statement ->  Iteration_stmt
+Statement ->  #new_scope Selection_stmt #end_scope
+Statement ->  #new_scope Iteration_stmt #end_scope
 Statement ->  Return_stmt
 Expression_stmt ->  Expression #pop ;
 Expression_stmt ->  break #break_jump ;

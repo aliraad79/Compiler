@@ -12,7 +12,7 @@ class IntermidateCodeGenerator:
         self.i = 0
         self.debug = False
 
-        self.function_table = FunctionTable(scanner, symbol_table)
+        self.function_table = FunctionTable(symbol_table)
         self.symbol_table: SymbolTable = symbol_table
         self.scanner: Scanner = scanner
 
@@ -72,6 +72,7 @@ class IntermidateCodeGenerator:
         if self.debug:
             print("ss stack at the end : ", self.semantic_stack)
             print("Symbol table : ", self.symbol_table.table)
+            print("Stack is : ", self.symbol_table.table)
         if len(self.semantic_errors) != 0:
             self.three_addres_codes = {}
         write_three_address_codes_to_file(self.three_addres_codes)
@@ -94,15 +95,9 @@ class IntermidateCodeGenerator:
     # Actions
     def padd(self, current_token: Token):
         if current_token.type == TokenType.ID.name:
-            if not self.is_inside_function_declaration:
-                self.semantic_stack.append(
-                    self.symbol_table.get_address(current_token.lexeme)
-                )
-            else:
-                address = self.symbol_table.insert(
-                    current_token.lexeme, is_declred=True
-                )
-                self.semantic_stack.append(address)
+            self.semantic_stack.append(
+                self.symbol_table.get_address(current_token.lexeme)
+            )
 
         elif current_token.type == TokenType.NUM.name:
             self.semantic_stack.append(f"#{current_token.lexeme}")
@@ -194,7 +189,7 @@ class IntermidateCodeGenerator:
         var_type = self.semantic_stack.pop()
         self.add_three_address_code(f"(ASSIGN, #0, {var}, )")
 
-    def declare_global_arr(self, current_token: Token):
+    def declare_arr(self, current_token: Token):
         size = int(self.semantic_stack.pop()[1:])  # remove # from int
         var = self.semantic_stack.pop()
         var_type = self.semantic_stack.pop()
@@ -298,10 +293,10 @@ class IntermidateCodeGenerator:
         self.function_table.funcs[self.semantic_stack[-1]]["start_address"] = self.i
 
     def new_scope(self, current_token: Token):
-        self.symbol_table.scope_stack.append(self.scanner.line_number)
+        self.symbol_table.increase_scope_stack()
 
     def end_scope(self, current_token: Token):
-        self.symbol_table.scope_stack.pop()
+        self.symbol_table.decrease_scope_stack()
 
     def _return(self, current_token: Token):
         function_name = self.symbol_table.reverse_address(self.current_function_address)
@@ -411,6 +406,7 @@ class IntermidateCodeGenerator:
     def check_declare(self, current_token: Token):
         address = self.semantic_stack[-1]
         row = self.symbol_table.reverse_address(address)
-        if not row.is_declred:
-            self.add_error(f"Semantic Error! '{row.lexeme}' is not defined.")
-            row.type = SymbolTableRowType.int
+        if not row or not row.is_declred:
+            self.add_error(f"Semantic Error! '{current_token.lexeme}' is not defined.")
+            if row:
+                row.type = SymbolTableRowType.int

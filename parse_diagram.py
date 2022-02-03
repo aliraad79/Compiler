@@ -597,13 +597,24 @@ def expression_stmt_diagram():
 def statement_diagram():
     end = DiagramNode(next_edges=[])
 
+    dummy_edge = DiagramEdge(next_node=end, terminal="ε", action_symbols=["end_scope"])
+    dummy_node = DiagramNode(next_edges=[dummy_edge])
+
     expression_stmt = DiagramEdge(next_node=end, non_terminal="expression_stmt")
 
     compound_stmt = DiagramEdge(next_node=end, non_terminal="compound_stmt")
 
-    selection_stmt = DiagramEdge(next_node=end, non_terminal="selection_stmt")
+    selection_stmt = DiagramEdge(
+        next_node=dummy_node,
+        non_terminal="selection_stmt",
+        action_symbols=["new_scope"],
+    )
 
-    iteration_stmt = DiagramEdge(next_node=end, non_terminal="iteration_stmt")
+    iteration_stmt = DiagramEdge(
+        next_node=dummy_node,
+        non_terminal="iteration_stmt",
+        action_symbols=["new_scope"],
+    )
 
     return_stmt = DiagramEdge(next_node=end, non_terminal="return_stmt")
 
@@ -754,7 +765,7 @@ def var_declaration_prime_diagram():
     semicolon_2 = DiagramEdge(
         next_node=end,
         terminal=";",
-        action_symbols=["make_var_array", "declare_global_arr"],
+        action_symbols=["make_var_array", "declare_arr"],
     )
     semicolon_2_node = DiagramNode(next_edges=[semicolon_2])
     close_t = DiagramEdge(next_node=semicolon_2_node, terminal="]")

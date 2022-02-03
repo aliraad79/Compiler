@@ -50,9 +50,11 @@ class SymbolTableRow:
 
 
 class SymbolTable:
+    START_ADDRESS = 500
+
     def __init__(self) -> None:
         self.table: List[SymbolTableRow] = []
-        self.addres_pointer = 500
+        self.addres_pointer = self.START_ADDRESS
         self.scope_stack = [0]
 
     def insert(self, lexeme: str, is_declred: bool = False) -> None:
@@ -92,6 +94,21 @@ class SymbolTable:
         t = self.addres_pointer
         self.addres_pointer += 4
         return t
+
+    def increase_scope_stack(self) -> None:
+        self.scope_stack.append(
+            (self.addres_pointer - self.START_ADDRESS) // 4,
+        )
+
+    def decrease_scope_stack(self) -> None:
+        last_index = self.scope_stack.pop()
+        list_cut_point = None
+        for index, i in enumerate(self.table):
+            if i.scope == last_index:
+                list_cut_point = index
+                break
+        if list_cut_point:
+            self.table = self.table[:list_cut_point]
 
     def save_to_file(self) -> None:
         add_symbols_to_file([i.lexeme for i in self.table])

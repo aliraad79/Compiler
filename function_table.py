@@ -12,9 +12,8 @@ class FunctionEntry:
 
 
 class FunctionTable:
-    def __init__(self, scanner, symbol_table: SymbolTable):
+    def __init__(self, symbol_table: SymbolTable):
         self.funcs = {}
-        self.scanner: Scanner = scanner
         self.symbol_table: SymbolTable = symbol_table
 
     def func_declare(self, name, address, return_type):
@@ -23,7 +22,6 @@ class FunctionTable:
             "address": address,
             "return_type": return_type,
             "scope": self.symbol_table.scope_stack[-1],
-            "line_num": self.scanner.line_number,
             "params": [],
             "params_type": [],
             "params_address": [],
